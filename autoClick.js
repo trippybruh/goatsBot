@@ -1,6 +1,8 @@
 const cloudscraper = require('cloudscraper');
 const axios = require('axios');
+const express = require('express');
 
+const app = express();
 const startTime = Date.now();
 const DELAY = 400; // ms
 const bearer = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjZmMDI2NGZhNzVkYjBjZjYzYmY4YjAwIiwiaWF0IjoxNzI3NjI3MzY0LCJleHAiOjE3Mjc3MTM3NjQsInR5cGUiOiJhY2Nlc3MifQ.kJ__EfYByp9jxeWngzc3jZpfAZ5UHkqMIy2aYu4OEQc';
@@ -93,4 +95,11 @@ function start() {
 }
 
 
+
+// Imposta la porta su quella assegnata da Heroku o utilizza una porta predefinita per lo sviluppo locale
+const port = process.env.PORT || 3000;
+// Aggiungi il listener della porta
+app.listen(port, () => {
+    console.log(`Service is running on port ${port}`);
+});
 start(); // Avvia il ciclo con proxy
