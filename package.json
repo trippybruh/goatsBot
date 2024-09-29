@@ -1,6 +1,14 @@
 {
+  "name": "goatsbot",
+  "version": "1.0.0",
+  "description": "Tu madre è fissa a peora",
+  "main": "autoClick.js",
+  "scripts": {
+    "start": "node autoClick.js"
+  },
   "dependencies": {
     "axios": "^1.7.7",
     "cloudscraper": "^4.6.0"
   }
 }
+
