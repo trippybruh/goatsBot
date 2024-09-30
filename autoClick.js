@@ -4,7 +4,8 @@ const express = require('express');
 
 const app = express();
 const startTime = Date.now();
-const DELAY = 400; // ms
+const REQ_INTERVAL_DELAY = 330; // ms
+const INTRA_REQ_DELAY = 300;
 const bearer = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjZmMDI2NGZhNzVkYjBjZjYzYmY4YjAwIiwiaWF0IjoxNzI3NjI3MzY0LCJleHAiOjE3Mjc3MTM3NjQsInR5cGUiOiJhY2Nlc3MifQ.kJ__EfYByp9jxeWngzc3jZpfAZ5UHkqMIy2aYu4OEQc';
 const bearerTokens = [
     //bearerPrefix.concat('E8YZmA0aBznfiOF92H3OJxZqCIWqX_fW_dxwTvSSoh0')
@@ -34,7 +35,7 @@ async function makeRequest(data, bearerToken) {
     try {
         const response = await cloudscraper(options);
         const jsonResponse = JSON.parse(response);
-        await sleep(300);
+        await sleep(INTRA_REQ_DELAY);
         successCount++;
         return jsonResponse;
     } catch (error) {
@@ -58,19 +59,19 @@ function logStatistics(response) {
 
     if (response) {
         const gained = successCount * 0.66;
-        const percentGain = ((((gained + response?.user?.balance)/response?.user?.balance)-1)*100).toFixed(2);
+        // const percentGain = ((((gained + response?.user?.balance)/response?.user?.balance)-1)*100).toFixed(2);
 
         console.log(`Tempo dall'avvio: ${elapsedTime} secondi (${(elapsedTimeMin).toFixed(0)} minuti)
-        Richieste elaborate: ${successCount} --- Richieste fallite: ${failureCount} --- Guadagno: ${gained.toFixed(0)} GOATS (${percentGain} % sul totale)
+        Richieste elaborate: ${successCount} --- Richieste fallite: ${failureCount} --- Guadagno: ${gained.toFixed(0)} GOATS 
         Successi/Fallimenti: ${ratioWL} --- Successi/min: ${(successCount/elapsedTimeMin).toFixed(2)} --- Fallimenti/min: ${(failureCount/elapsedTimeMin).toFixed(2)}
-        Richieste totali: ${successCount + failureCount} --- Richieste totali/min: ${((successCount + failureCount)/elapsedTimeMin).toFixed(2)} (target: ${60000/DELAY})`);
+        Richieste totali: ${successCount + failureCount} --- Richieste totali/min: ${((successCount + failureCount)/elapsedTimeMin).toFixed(2)} (target: ${60000/REQ_INTERVAL_DELAY})`);
     } else {
         console.log("Teruuuun!!!")
     }
 }
 
 async function performRequestCycle(bearerToken) {
-    const consoleLogStep = 100;
+    const consoleLogStep = 500;
     var cycles = 0;
     const data = {
         "point_milestone": 66,
@@ -80,16 +81,17 @@ async function performRequestCycle(bearerToken) {
 
     setInterval(async () => {
         const response = await makeRequest(data, bearerToken);
-        cycles++;
         if (response && (cycles % consoleLogStep == 0)) {
             logStatistics(bearerToken, response);
         }
-    }, DELAY)
+        cycles++;
+    }, REQ_INTERVAL_DELAY)
 }
 
 function start() {
     bearerTokens.forEach(async (bearerToken) => {
-        console.log(`Inizio cicli di richieste per Bearer Token: ${bearerToken.slice(0, 5)}...${bearerToken.slice(-5)} --- Configurato per eseguire ${(1000/DELAY).toFixed(2)} richieste/s`);
+        console.log(`Inizio cicli di richieste per Bearer Token: ${bearerToken.slice(0, 5)}...${bearerToken.slice(-5)}
+        Configurato per eseguire max ${(1000/REQ_INTERVAL_DELAY).toFixed(2)} richieste/s --- Timeout minimo tra una richiesta ed un altra: ${(INTRA_REQ_DELAY/1000).toFixed(3)} s`);
         await performRequestCycle(bearerToken);
     });
 }
