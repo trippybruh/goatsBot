@@ -1,7 +1,7 @@
 const cloudscraper = require('cloudscraper');
 const axios = require('axios');
 
-const CALLS_PER_SECOND = 1; // ad account
+const CALLS_PER_SECOND = 1; 
 const DELAY = 0
 
 const bearerTokens = [
