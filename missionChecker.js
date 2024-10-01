@@ -1,8 +1,9 @@
 const cloudscraper = require('cloudscraper');
 const axios = require('axios');
+const express = require('express');
 
 const startTime = Date.now();
-const bearer = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjZmMDI2NGZhNzVkYjBjZjYzYmY4YjAwIiwiaWF0IjoxNzI3NzE2MTYzLCJleHAiOjE3Mjc4MDI1NjMsInR5cGUiOiJhY2Nlc3MifQ.FQKHjGla5xcr5tmLY7-AXJfxhXVVZuAiqU0_u2bkV8E';
+const bearer = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjZmMDI2NGZhNzVkYjBjZjYzYmY4YjAwIiwiaWF0IjoxNzI3NjI3MzY0LCJleHAiOjE3Mjc3MTM3NjQsInR5cGUiOiJhY2Nlc3MifQ.kJ__EfYByp9jxeWngzc3jZpfAZ5UHkqMIy2aYu4OEQc';
 const bearerTokens = [
     //bearerPrefix.concat('E8YZmA0aBznfiOF92H3OJxZqCIWqX_fW_dxwTvSSoh0')
     bearer
@@ -157,6 +158,11 @@ function startHourlyProcess() {
     setInterval(processAllBearers, 60 * 60 * 1000); // Ripeti ogni ora
 }
 
+const port = process.env.PORT || 3000;
+// Aggiungi il listener della porta
+app.listen(port, () => {
+    console.log(`Service is running on port ${port}`);
+});
 startHourlyProcess() // controllo missioni generali
 start() // esegue la missione da 200 ogni minuto
 
