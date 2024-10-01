@@ -58,7 +58,7 @@ function logStatistics(response) {
     } 
 
     if (response) {
-        const gained = successCount * 0.66;
+        const gained = successCount * 0.32;
         // const percentGain = ((((gained + response?.user?.balance)/response?.user?.balance)-1)*100).toFixed(2);
 
         console.log(`Tempo dall'avvio: ${elapsedTime} secondi (${(elapsedTimeMin).toFixed(0)} minuti)
