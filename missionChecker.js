@@ -4,7 +4,7 @@ const express = require('express');
 
 const app = express();
 const startTime = Date.now();
-const bearer = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjZmMDI2NGZhNzVkYjBjZjYzYmY4YjAwIiwiaWF0IjoxNzI3NzE2MTYzLCJleHAiOjE3Mjc4MDI1NjMsInR5cGUiOiJhY2Nlc3MifQ.FQKHjGla5xcr5tmLY7-AXJfxhXVVZuAiqU0_u2bkV8E';
+const bearer = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjZmMDI2NGZhNzVkYjBjZjYzYmY4YjAwIiwiaWF0IjoxNzI3ODAyODcxLCJleHAiOjE3Mjc4ODkyNzEsInR5cGUiOiJhY2Nlc3MifQ.Rq00pzsPDfHyiz-B6LiU-O2su0DV_i6XTpJ4OoIF8eQ';
 const bearerTokens = [
     //bearerPrefix.concat('E8YZmA0aBznfiOF92H3OJxZqCIWqX_fW_dxwTvSSoh0')
     bearer
