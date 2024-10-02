@@ -82,7 +82,7 @@ async function performRequestCycle(bearerToken) {
         if (response) {
             logStatistics(bearerToken, response);
         }
-    }, 65001); 
+    }, 60500);
 }
 
 function start() {
