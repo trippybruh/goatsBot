@@ -14,16 +14,28 @@ const INTRA_REQ_DELAY = 750;
 let successCount = 0;
 let failureCount = 0;
 
-// head or tail game stats
+// head or tail game config
 const totalBets = 100;
-const betAmount = 1000;
+const betAmount = 10000;
 const expectedVolume = totalBets * betAmount * 1.5;
 const expectedTimeRequired = totalBets * (REQ_INTERVAL_DELAY/1000);
 let head_tail = "HEADS";
+
+// head or tail game stats
 let winRate = 0;
 let winCount = 0;
 let lossCount = 0;
+let winStreakCount = 0;
+let lossStreakCount = 0;
+let lastResult = true;
+let winStreak = 0;
+let lossStreak = 0;
+
+// balance stats
 let netChange = 0;
+let netMaxUpside = 0;
+let netMaxDownside = 0;
+
 
 function getElapsedTimeInSeconds() {
     const currentTime = Date.now();
@@ -80,15 +92,16 @@ function printStatistics() {
     let currentVolume = (winCount*betAmount*2) + (lossCount*betAmount);
 
     console.log(`Tempo dall'avvio: ${elapsedTime} secondi (${(elapsedTimeMin).toFixed(0)} minuti) --- Al completamento: ${expectedTimeRequired - elapsedTime} secondi
-        Richieste totali: ${successCount + failureCount} --- Richieste totali/min: ${((successCount + failureCount)/elapsedTimeMin).toFixed(2)} (target: ${60000/REQ_INTERVAL_DELAY})
+        Richieste totali: ${successCount + failureCount} --- Richieste totali/min: ${((successCount + failureCount)/elapsedTimeMin).toFixed(2)} (target/min: ${60000/REQ_INTERVAL_DELAY})
         Successi: ${successCount} --- Fallimenti: ${failureCount} --- Successi/Fallimenti: ${ratioWLreq}
         Successi/min: ${(successCount/elapsedTimeMin).toFixed(2)} --- Fallimenti/min: ${(failureCount/elapsedTimeMin).toFixed(2)}
-        Vincite totali: ${winCount} --- Perdite totali: ${lossCount} --- Win rate attuale: ${winRate} % --- Guadagno/perdita: ${netChange} GOATS 
+        Vincite totali: ${winCount} --- Sconfitte totali: ${lossCount} --- Win rate attuale: ${winRate} % --- Guadagno/perdita: ${netChange} GOATS
+        Serie più lunga di vittorie: ${winStreak} --- Serie più lunga di sconfitte: ${lossStreak} --- Max upside: ${netMaxUpside} --- Max downside: ${netMaxDownside} 
         Volume effettivo generato: ${currentVolume} GOATS (target: ${expectedVolume} -> ${(currentVolume/expectedVolume) * 100} % completato)`);
 }
 
 async function performRequestCycle(bearerToken) {
-    const consoleLogStep = 100;
+    const consoleLogStep = 30;
     let cycles = 0;
     const data = {
         "head_tail": head_tail,
@@ -114,49 +127,6 @@ function start() {
         await performRequestCycle(bearerToken);
     });
 }
-
-function testLogStats(result) {
-    if (result) {
-        winCount++
-    } else {
-        lossCount++;
-    }
-    if (lossCount !== 0) {
-        winRate = (winCount/(winCount+lossCount)).toFixed(4) * 100;
-    }
-    netChange = (winCount*betAmount) - (lossCount*betAmount);
-}
-
-function testRandomResult() {
-    return Math.random() < 0.5;
-}
-
-async function testRequestCycle() {
-    const consoleLogStep = 100;
-    let cycles = 0;
-    const data = {
-        "head_tail": head_tail,
-        "bet_amount": betAmount
-    };
-    setInterval(async () => {
-        testLogStats(testRandomResult());
-         if (cycles % consoleLogStep === 0) {
-            printStatistics();
-        }
-        cycles++;
-    }, REQ_INTERVAL_DELAY);
-}
-
-function testStart() {
-    bearerTokens.forEach(async (bearerToken) => {
-        console.log(`Inizio cicli di flipping per Bearer Token: ${bearer.slice(0, 5)}...${bearer.slice(-5)} --- TEST FUNCTION WITH GAME SIMULATOR
-        Configurato per eseguire max ${(1000 / REQ_INTERVAL_DELAY).toFixed(2)} richieste/s --- Timeout minimo tra una richiesta ed un altra: ${(INTRA_REQ_DELAY / 1000).toFixed(3)} s
-        Configurato per eseguire max ${totalBets} richieste (partite) --- Importo per partita: ${betAmount} GOATS --- Volume atteso: ${(expectedVolume)}
-        Tempo stimato per eseguire tutte le richieste: ${expectedTimeRequired} secondi (${(expectedTimeRequired / 60).toFixed(0)} minuti)`);
-        await testRequestCycle();
-    });
-}
-
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
