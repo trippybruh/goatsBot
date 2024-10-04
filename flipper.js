@@ -121,13 +121,13 @@ function printStatistics() {
         Successi: ${successCount} --- Fallimenti: ${failureCount} --- Successi/Fallimenti: ${ratioWLreq}
         Successi/min: ${(successCount/elapsedTimeMin).toFixed(2)} --- Fallimenti/min: ${(failureCount/elapsedTimeMin).toFixed(2)}
         Vincite totali: ${winCount} --- Sconfitte totali: ${lossCount} --- Win rate attuale: ${winRate} % --- Guadagno/perdita: ${netChange} GOATS
-        Serie più lunga di vittorie: ${winStreak} --- Serie più lunga di sconfitte: ${lossStreak} --- Max upside: ${netMaxUpside} --- Max downside: ${netMaxDownside} 
-        Volume effettivo generato: ${currentVolume} GOATS (target: ${expectedVolume} -> ${(currentVolume/expectedVolume) * 100} % completato)
-        Valore nominale stop loss: ${maxLoss} --- Attivato: ${netMaxDownside < maxLoss}`);
+        Valore nominale stop loss: ${maxLoss} GOATS --- Attivato: ${netMaxDownside < maxLoss}
+        Serie più lunga di vittorie: ${winStreak} --- Serie più lunga di sconfitte: ${lossStreak} --- Max upside: ${netMaxUpside} G --- Max downside: ${netMaxDownside} G
+        Volume effettivo generato: ${currentVolume} GOATS (target: ${expectedVolume} -> ${(currentVolume/expectedVolume) * 100} % completato)`);
 }
 
 async function performRequestCycle(bearerToken) {
-    const consoleLogStep = 30;
+    const consoleLogStep = 3;
     let cycles = 0;
     const data = {
         "head_tail": head_tail,
