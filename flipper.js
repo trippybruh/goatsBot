@@ -3,20 +3,20 @@ const axios = require('axios');
 const express = require('express');
 const app = express();
 const startTime = Date.now();
-const bearer = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjZmMDI2NGZhNzVkYjBjZjYzYmY4YjAwIiwiaWF0IjoxNzI3ODkwMTU1LCJleHAiOjE3Mjc5NzY1NTUsInR5cGUiOiJhY2Nlc3MifQ.OIvv3TonWy7xl-j3mkicIycMHT1Z2RZWV1CvIhA5daQ';
+const bearer = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjZmYjI3N2M4ZmY0ZWI3YmI3N2IyMGYzIiwiaWF0IjoxNzI4MDYwMzA2LCJleHAiOjE3MjgxNDY3MDYsInR5cGUiOiJhY2Nlc3MifQ.U287eutGHbKQFGzsOQaf9w8T6L25knUJAW2_NT8XJc0';
 const bearerTokens = [
     bearer
 ];
 
 // request stats
-const REQ_INTERVAL_DELAY = 800; // ms
-const INTRA_REQ_DELAY = 750;
+const REQ_INTERVAL_DELAY = 333; // ms
+const INTRA_REQ_DELAY = 300;
 let successCount = 0;
 let failureCount = 0;
 
 // head or tail game config
-const totalBets = 100;
-const betAmount = 10000;
+const totalBets = 10;
+const betAmount = 1000;
 const expectedVolume = totalBets * betAmount * 1.5;
 const expectedTimeRequired = totalBets * (REQ_INTERVAL_DELAY/1000);
 let head_tail = "HEADS";
@@ -32,6 +32,7 @@ let winStreak = 0;
 let lossStreak = 0;
 
 // balance stats
+const maxLoss = 300000;
 let netChange = 0;
 let netMaxUpside = 0;
 let netMaxDownside = 0;
@@ -71,15 +72,39 @@ async function sleep(ms) {
 }
 
 function logStatistics(response) {
-    if (response?.flip?.is_win) {
+    const result = response?.flip?.is_win;
+    if (result) {
         winCount++;
+        if (lastResult) {
+            winStreakCount++;
+        } else {
+            if (winStreakCount > winStreak) {
+                winStreak = winStreakCount;
+            }
+            winStreakCount = 0;
+        }
+        lastResult = result;
     } else {
         lossCount++;
+        if (!lastResult) {
+            lossStreakCount++;
+        } else {
+            if (lossStreakCount > lossStreak) {
+                lossStreak = lossStreakCount;
+            }
+            lossStreakCount = 0;
+        }
+        lastResult = result;
     }
     if (lossCount !== 0) {
         winRate = (winCount/(winCount+lossCount)).toFixed(4) * 100;
     }
     netChange = (winCount*betAmount) - (lossCount*betAmount);
+    if (netChange > netMaxUpside) {
+        netMaxUpside = netChange;
+    } else if (netChange < netMaxDownside) {
+        netMaxDownside = netChange;
+    }
 }
 
 function printStatistics() {
@@ -97,7 +122,8 @@ function printStatistics() {
         Successi/min: ${(successCount/elapsedTimeMin).toFixed(2)} --- Fallimenti/min: ${(failureCount/elapsedTimeMin).toFixed(2)}
         Vincite totali: ${winCount} --- Sconfitte totali: ${lossCount} --- Win rate attuale: ${winRate} % --- Guadagno/perdita: ${netChange} GOATS
         Serie più lunga di vittorie: ${winStreak} --- Serie più lunga di sconfitte: ${lossStreak} --- Max upside: ${netMaxUpside} --- Max downside: ${netMaxDownside} 
-        Volume effettivo generato: ${currentVolume} GOATS (target: ${expectedVolume} -> ${(currentVolume/expectedVolume) * 100} % completato)`);
+        Volume effettivo generato: ${currentVolume} GOATS (target: ${expectedVolume} -> ${(currentVolume/expectedVolume) * 100} % completato)
+        Valore nominale stop loss: ${maxLoss} --- Attivato: ${netMaxDownside < maxLoss}`);
 }
 
 async function performRequestCycle(bearerToken) {
@@ -109,6 +135,11 @@ async function performRequestCycle(bearerToken) {
     };
 
     setInterval(async () => {
+        if (netMaxDownside < maxLoss || successCount === totalBets) {
+            printStatistics();
+            await sleep(1000);
+            process.exit(0);
+        }
         const response = await makeRequest(data, bearerToken);
         logStatistics(response);
         if (cycles % consoleLogStep === 0) {
@@ -132,4 +163,4 @@ const port = process.env.PORT || 3000;
 app.listen(port, () => {
     console.log(`Service is running on port ${port}`);
 });
-testStart();
+start();
