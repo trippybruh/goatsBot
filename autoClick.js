@@ -41,7 +41,7 @@ async function makeRequest(data, bearerToken) {
         failureStreak = 0;
         return jsonResponse;
     } catch (error) {
-        console.log(`Errore richiesta: ${error.msg}`)
+        console.log(`Errore richiesta: ${error.message}`)
         failureCount++;
         failureStreak++;
         if (failureStreak >= 100) {
