@@ -8,8 +8,8 @@
   },
   "dependencies": {
     "axios": "^1.7.7",
+    "chance": "^1.1.12",
     "cloudscraper": "^4.6.0",
     "express": "^4.17.1"
   }
 }
-
