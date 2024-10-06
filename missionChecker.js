@@ -10,6 +10,7 @@ const bearerTokens = [
 let bigMissSuccess = 0;
 let successCount = 0;
 let failureCount = 0;
+let failureStreak = 0;
 
 function getElapsedTimeInSeconds() {
     const currentTime = Date.now();
@@ -30,11 +31,19 @@ async function makeRequest(bearerToken) {
         const response = await cloudscraper(options);
         const jsonResponse = JSON.parse(response);
         successCount++;
+        failureStreak = 0;
         return jsonResponse;
     } catch (error) {
-        logError(error.message, bearerToken);
+        console.log(`Errore richiesta: ${error.message}`)
         failureCount++;
-        return null;
+        failureStreak++;
+        if (failureStreak >= 100) {
+            console.log(`100 richieste di fila fallite... chiusura autoclicker...`)
+            await sleep(1000);
+            process.exit(1);
+        } else {
+            return null;
+        }
     }
 }
 
