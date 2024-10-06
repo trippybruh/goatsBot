@@ -94,7 +94,7 @@ function printSessionsStats() {
     const avgStreak = (streaks.reduce((acc, val) => acc + val, 0) / streaks.length).toFixed(2);
     const avgUpDownSides = (upDownSides.reduce((acc, val) => acc + val, 0) / upDownSides.length).toFixed(2);
     console.log(`Sessioni simulate: ${sessions} --- Partite per sessione: ${totalBets} --- Importo per partita: ${betAmount} GOATS --- Volume atteso per partita: ${(expectedVolume)} GOATS
-    Win rate medio: ${avgWR} % --- Strisce consecutiva media: ${avgStreak} (max: ${Math.max(streaks)}) --- Swing medio a rialzo/ribasso: +/- ${avgUpDownSides} (max: +/- ${Math.max(upDownSides)})
+    Win rate medio: ${avgWR} % --- Strisce consecutiva media: ${avgStreak} (max: ${Math.max(...streaks)}) --- Swing medio a rialzo/ribasso: +/- ${avgUpDownSides} (max: +/- ${Math.max(...upDownSides)})
     Std dev WR: ${stdDev(winRates)} % --- Std dev strisce: ${stdDev(streaks)} --- Std dev swing: +/- ${stdDev(upDownSides)}`)
 }
 
