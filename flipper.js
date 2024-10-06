@@ -1,5 +1,4 @@
 const cloudscraper = require('cloudscraper');
-const axios = require('axios');
 const express = require('express');
 const app = express();
 const startTime = Date.now();
