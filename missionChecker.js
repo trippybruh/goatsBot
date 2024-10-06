@@ -1,23 +1,11 @@
 const cloudscraper = require('cloudscraper');
-const axios = require('axios');
 const express = require('express');
-
 const app = express();
 const startTime = Date.now();
 const bearer = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjZmMDI2NGZhNzVkYjBjZjYzYmY4YjAwIiwiaWF0IjoxNzI4MTcyMTY0LCJleHAiOjE3MjgyNTg1NjQsInR5cGUiOiJhY2Nlc3MifQ.nJldYI-BRjNfNXRzZZdFdKGLOqScY7nMA_qTpcy0RTA';
 const bearerTokens = [
-    //bearerPrefix.concat('E8YZmA0aBznfiOF92H3OJxZqCIWqX_fW_dxwTvSSoh0')
     bearer
 ];
-const proxies = [
-    {host:'109.236.83.153', port: '8888', username:'', password:''},
-    {host:'111.59.4.88', port: '9002', username:'', password:''},
-    {host:'135.181.154.225', port: '80', username:'', password:''},
-    {host:'113.108.242.106', port: '8181', username:'', password:''},
-    {host:'106.227.95.142', port: '3129', username:'', password:''},
-    {host:'152.26.229.34', port: '9443', username:'', password:''},
-    {host:'134.209.29.120', port: '3128', username:'', password:''}
-]
 
 let bigMissSuccess = 0;
 let successCount = 0;
@@ -28,12 +16,7 @@ function getElapsedTimeInSeconds() {
     return ((currentTime - startTime) / 1000).toFixed(2);
 }
 
-function getRandomProxy() {
-    return proxies[Math.floor(Math.random() * proxies.length)];
-}
-
 async function makeRequest(bearerToken) {
-    //let randomProxy = getRandomProxy();
     const options = {
         method: 'POST',
         url: 'https://dev-api.goatsbot.xyz/missions/action/66db47e2ff88e4527783327e',
@@ -41,7 +24,6 @@ async function makeRequest(bearerToken) {
             'Authorization': `Bearer ${bearerToken}`,
             'Content-Type': 'application/json'
         }
-        //proxy: `http://${randomProxy.host}:${randomProxy.port}`
     };
 
     try {
@@ -92,7 +74,6 @@ function start() {
 }
 
 async function getMissions(bearerToken) {
-    //let randomProxy = getRandomProxy();
     const options = {
         method: 'GET',
         url: 'https://api-mission.goatsbot.xyz/missions/user',
@@ -100,12 +81,11 @@ async function getMissions(bearerToken) {
             'Authorization': `Bearer ${bearerToken}`,
             'Content-Type': 'application/json'
         },
-        //proxy: `http://${randomProxy.host}:${randomProxy.port}`
     };
 
     try {
         const response = await cloudscraper(options);
-        return JSON.parse(response); // Restituisce i dati delle missioni
+        return JSON.parse(response);
     } catch (error) {
         console.error(`Errore nel recuperare le missioni per Bearer Token: ${bearerToken}`, error.message);
         return null;
@@ -155,15 +135,14 @@ async function processAllBearers() {
 }
 
 function startHourlyProcess() {
-    processAllBearers(); // Esegui la prima volta
+    processAllBearers();
     setInterval(processAllBearers, 60 * 60 * 1000); // Ripeti ogni ora
 }
 
 const port = process.env.PORT || 3000;
-// Aggiungi il listener della porta
 app.listen(port, () => {
     console.log(`Service is running on port ${port}`);
 });
-startHourlyProcess() // controllo missioni generali
-start() // esegue la missione da 200 ogni minuto
+startHourlyProcess();
+start();
 
