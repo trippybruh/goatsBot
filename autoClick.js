@@ -8,16 +8,17 @@ const REQ_INTERVAL_DELAY = 330; // ms
 const INTRA_REQ_DELAY = 300;
 const bearer = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjZmMDI2NGZhNzVkYjBjZjYzYmY4YjAwIiwiaWF0IjoxNzI4MTcyMTY0LCJleHAiOjE3MjgyNTg1NjQsInR5cGUiOiJhY2Nlc3MifQ.nJldYI-BRjNfNXRzZZdFdKGLOqScY7nMA_qTpcy0RTA';
 const bearerTokens = [
-    //bearerPrefix.concat('E8YZmA0aBznfiOF92H3OJxZqCIWqX_fW_dxwTvSSoh0')
     bearer
 ];
 
+const winChanceMilestone = 90;
+const bet_amount = 5;
 let successCount = 0;
 let failureCount = 0;
+let failureStreak = 0;
 
 function getElapsedTimeInSeconds() {
-    const currentTime = Date.now();
-    return ((currentTime - startTime) / 1000).toFixed(2);
+    return ((Date.now() - startTime) / 1000).toFixed(2);
 }
 
 async function makeRequest(data, bearerToken) {
@@ -37,10 +38,19 @@ async function makeRequest(data, bearerToken) {
         const jsonResponse = JSON.parse(response);
         await sleep(INTRA_REQ_DELAY);
         successCount++;
+        failureStreak = 0;
         return jsonResponse;
     } catch (error) {
+        console.log(`Errore richiesta: ${error.msg}`)
         failureCount++;
-        return null;
+        failureStreak++;
+        if (failureStreak >= 100) {
+            console.log(`100 richieste di fila fallite... chiusura autoclicker...`)
+            await sleep(1000);
+            process.exit(1);
+        } else {
+            return null;
+        }
     }
 }
 
@@ -53,35 +63,31 @@ function logStatistics(response) {
     const elapsedTimeMin = elapsedTime/60;
     let ratioWL = 'inf';
 
-    if (failureCount != 0) {
+    if (failureCount !== 0) {
         ratioWL = (successCount/failureCount).toFixed(4);
-    } 
+    }
 
     if (response) {
-        const gained = successCount * 0.32;
-        // const percentGain = ((((gained + response?.user?.balance)/response?.user?.balance)-1)*100).toFixed(2);
-
+        const gained = successCount * 0.4;
         console.log(`Tempo dall'avvio: ${elapsedTime} secondi (${(elapsedTimeMin).toFixed(0)} minuti)
         Richieste elaborate: ${successCount} --- Richieste fallite: ${failureCount} --- Guadagno: ${gained.toFixed(0)} GOATS 
         Successi/Fallimenti: ${ratioWL} --- Successi/min: ${(successCount/elapsedTimeMin).toFixed(2)} --- Fallimenti/min: ${(failureCount/elapsedTimeMin).toFixed(2)}
         Richieste totali: ${successCount + failureCount} --- Richieste totali/min: ${((successCount + failureCount)/elapsedTimeMin).toFixed(2)} (target: ${60000/REQ_INTERVAL_DELAY})`);
-    } else {
-        console.log("Teruuuun!!!")
     }
 }
 
 async function performRequestCycle(bearerToken) {
     const consoleLogStep = 500;
-    var cycles = 0;
+    let cycles = 0;
     const data = {
-        "point_milestone": 66,
+        "point_milestone": winChanceMilestone,
         "is_upper": false,
-        "bet_amount": 1
+        "bet_amount": bet_amount
     };
 
     setInterval(async () => {
         const response = await makeRequest(data, bearerToken);
-        if (response && (cycles % consoleLogStep == 0)) {
+        if (cycles % consoleLogStep === 0) {
             logStatistics(bearerToken, response);
         }
         cycles++;
@@ -98,10 +104,8 @@ function start() {
 
 
 
-// Imposta la porta su quella assegnata da Heroku o utilizza una porta predefinita per lo sviluppo locale
 const port = process.env.PORT || 3000;
-// Aggiungi il listener della porta
 app.listen(port, () => {
     console.log(`Service is running on port ${port}`);
 });
-start(); // Avvia il ciclo con proxy
+start();
