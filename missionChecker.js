@@ -47,6 +47,10 @@ async function makeRequest(bearerToken) {
     }
 }
 
+async function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 function logStatistics(response) {
     const elapsedTime = getElapsedTimeInSeconds();
     const elapsedTimeMin = elapsedTime/60;
