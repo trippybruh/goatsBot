@@ -34,11 +34,13 @@ async function makeRequest(bearerToken) {
         failureStreak = 0;
         return jsonResponse;
     } catch (error) {
-        console.log(`Errore richiesta: ${error.message}`)
+        console.log(`Errore richiesta: ${(error.message).slice(0, 5)}`)
         failureCount++;
         failureStreak++;
         if (failureStreak >= 100) {
-            console.log(`100 richieste di fila fallite... chiusura autoclicker...`)
+            console.log(`100 richieste di fila fallite...
+            Ultimo errore richiesta: ${error.message} 
+            chiusura mission checker...`)
             await sleep(1000);
             process.exit(1);
         } else {
