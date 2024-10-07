@@ -2,7 +2,7 @@ const cloudscraper = require('cloudscraper');
 const express = require('express');
 const app = express();
 const startTime = Date.now();
-const bearer = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjZmMDI2NGZhNzVkYjBjZjYzYmY4YjAwIiwiaWF0IjoxNzI4MjU4ODIwLCJleHAiOjE3MjgzNDUyMjAsInR5cGUiOiJhY2Nlc3MifQ.6JLTabyVJJdi84KY-5IYQT94UNqrxdiGL6o4xyVyEO';
+const bearer = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjZmMDI2NGZhNzVkYjBjZjYzYmY4YjAwIiwiaWF0IjoxNzI4MjU4ODIwLCJleHAiOjE3MjgzNDUyMjAsInR5cGUiOiJhY2Nlc3MifQ.6JLTabyVJJdi84KY-5IYQT94UNqrxdiGL6o4xyVyEO8';
 const bearerTokens = [
     bearer
 ];
@@ -63,13 +63,6 @@ function logStatistics(response) {
         Richieste elaborate: ${successCount} --- Richieste fallite: ${failureCount}
         Guadagno: ${gained.toFixed(0)} GOATS --- Richieste misisoni speciali elaborate: ${bigMissSuccess}`)
     } 
-}
-
-function logError(msg, bearerToken) {
-    const elapsedTime = getElapsedTimeInSeconds();
-    const elapsedTimeMin = elapsedTime/60;
-    console.log(`Tempo dall'avvio: ${elapsedTime} secondi (${(elapsedTimeMin).toFixed(0)}) minuti
-    ${msg} --- Token:  ${bearerToken.slice(0, 5)}...${bearerToken.slice(-5)}`);// | proxy(host: ${proxy.host} - port: ${proxy.port})`);
 }
 
 async function performRequestCycle(bearerToken) {
