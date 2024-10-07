@@ -1,4 +1,4 @@
-import math
+import json
 
 wrMultipliers = {
     0.99: 1.0,
@@ -77,8 +77,9 @@ def getBestEVs(bestEVs: dict):
             if bestEVs[betValue][mult] > greatestEV:
                 greatestEV = bestEVs[betValue][mult]
                 multiplier = mult
-        betMultTopCombos[betValue] = (multiplier, greatestEV)
-    return betMultTopCombos
+        if greatestEV != 0:
+            betMultTopCombos[betValue] = (multiplier, greatestEV)
+    return json.dumps(betMultTopCombos, indent=1)
 
 
 if __name__ == '__main__':
