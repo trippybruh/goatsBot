@@ -52,7 +52,58 @@ wrMultipliers = {
     1.9: 0.52,
     1.94: 0.51,
     1.98: 0.50,
+    2.02: 0.49,
+    2.06: 0.48,
+    2.11: 0.47,
+    2.15: 0.46,
+    2.20: 0.45,
+    2.25: 0.44,
+    2.3: 0.43,
+    2.36: 0.42,
+    2.41: 0.41,
+    2.47: 0.40,
+    2.54: 0.39,
+    2.61: 0.38,
+    2.68: 0.37,
+    2.75: 0.36,
+    2.83: 0.35,
+    2.91: 0.34,
+    3.0: 0.33,
+    3.09: 0.32,
+    3.19: 0.31,
+    3.30: 0.30,
+    3.41: 0.29,
+    3.54: 0.28,
+    3.67: 0.27,
+    3.81: 0.26,
+    3.96: 0.25,
+    4.13: 0.24,
+    4.30: 0.23,
+    4.50: 0.22,
+    4.71: 0.21,
+    4.95: 0.20,
+    5.21: 0.19,
+    5.50: 0.18,
+    5.82: 0.17,
+    6.19: 0.16,
+    6.60: 0.15,
+    7.07: 0.14,
+    7.62: 0.13,
+    8.25: 0.12,
+    9.0: 0.11,
+    9.90: 0.10,
+    11.0: 0.09,
+    12.38: 0.08,
+    14.14: 0.07,
+    16.5: 0.06,
+    19.8: 0.05,
+    24.75: 0.04,
+    33.0: 0.03,
+    49.5: 0.02,
+    99.0: 0.01,
 }
+
+MIN_NEG_EV = -0.4
 
 
 def calculateEVs(betMaxRange: int):
@@ -62,7 +113,7 @@ def calculateEVs(betMaxRange: int):
         for multiplier in wrMultipliers.keys():
             winRate = wrMultipliers[multiplier]
             expectedValue = round(((round(bet * multiplier) - bet) * winRate) + (bet * -1 * (1 - winRate)), 4)
-            if expectedValue >= 0:
+            if expectedValue >= MIN_NEG_EV:
                 expectedValues[multiplier] = expectedValue
         betsEVs[bet] = expectedValues
     return betsEVs
@@ -70,17 +121,26 @@ def calculateEVs(betMaxRange: int):
 
 def getBestEVs(bestEVs: dict):
     betMultTopCombos = {}
+    betMultTopNegCombos = {}
     for betValue in bestEVs.keys():
         greatestEV = 0
+        greatestNegEV = MIN_NEG_EV
         multiplier = None
+        multiplierNeg = None
         for mult in bestEVs[betValue].keys():
             if bestEVs[betValue][mult] > greatestEV:
                 greatestEV = bestEVs[betValue][mult]
                 multiplier = mult
+            elif greatestNegEV < bestEVs[betValue][mult] < 0:
+                greatestNegEV = bestEVs[betValue][mult]
+                multiplierNeg = mult
         if greatestEV != 0:
             betMultTopCombos[betValue] = (multiplier, greatestEV)
+        if greatestNegEV != MIN_NEG_EV:
+            betMultTopNegCombos[betValue] = (multiplierNeg, greatestNegEV)
+    print(json.dumps(betMultTopNegCombos, indent=1))
     return json.dumps(betMultTopCombos, indent=1)
 
 
 if __name__ == '__main__':
-    print(getBestEVs(calculateEVs(100)))
+    print(getBestEVs(calculateEVs(1000)))
