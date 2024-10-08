@@ -42,9 +42,8 @@ async function makeRequest(bearerToken) {
         if (failureStreak >= 100) {
             console.log(`100 richieste di fila fallite...
             Ultimo errore richiesta: ${error.message} 
-            chiusura mission checker...`)
-            await sleep(1000);
-            process.exit(1);
+            Rimozione bearer da mission checker...`)
+            bearerTokens.splice(bearerTokens.indexOf(bearerToken), 1);
         } else {
             return null;
         }
@@ -69,10 +68,13 @@ function logStatistics(token, response) {
 }
 
 async function performRequestCycle(bearerToken) {
-    setInterval(async () => {
+    const intervalId = setInterval(async () => {
         const response = await makeRequest(bearerToken)
         if (response) {
             logStatistics(bearerToken, response);
+        }
+        if (!bearerTokens.includes(bearerToken)) {
+            clearInterval(intervalId);
         }
     }, 60500);
 }
