@@ -145,6 +145,7 @@ async function processAllBearers() {
 }
 
 function startHourlyProcess() {
+    processAllBearers();
     setInterval(processAllBearers, 60 * 60 * 1000); // Ripeti ogni ora
 }
 
