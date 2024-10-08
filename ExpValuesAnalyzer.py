@@ -103,7 +103,7 @@ wrMultipliers = {
     99.0: 0.01,
 }
 
-MIN_NEG_EV = -2
+MIN_NEG_EV = -3
 
 
 def calculateEVs(betMaxRange: int):
@@ -143,4 +143,4 @@ def getBestEVs(bestEVs: dict):
 
 
 if __name__ == '__main__':
-    print(getBestEVs(calculateEVs(1000)))
+    print(getBestEVs(calculateEVs(10000)))
