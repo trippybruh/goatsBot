@@ -2,10 +2,11 @@ const cloudscraper = require('cloudscraper');
 const express = require('express');
 const app = express();
 const startTime = Date.now();
-const bearer = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjZmMDI2NGZhNzVkYjBjZjYzYmY4YjAwIiwiaWF0IjoxNzI4MjU4ODIwLCJleHAiOjE3MjgzNDUyMjAsInR5cGUiOiJhY2Nlc3MifQ.6JLTabyVJJdi84KY-5IYQT94UNqrxdiGL6o4xyVyEO8';
+const myBearer = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjZmMDI2NGZhNzVkYjBjZjYzYmY4YjAwIiwiaWF0IjoxNzI4MzQ2NzE0LCJleHAiOjE3Mjg0MzMxMTQsInR5cGUiOiJhY2Nlc3MifQ.ffrpLDegsogtLnJBpiuYB2RATmNet2S1AZPvntXe2jg';
 const bearerTokens = [
-    bearer,
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjcwNDBhNjYzOGE4ZTVkMjY0YTk2Mjg2IiwiaWF0IjoxNzI4MzE4MTM1LCJleHAiOjE3Mjg0MDQ1MzUsInR5cGUiOiJhY2Nlc3MifQ.VPwhyFiENkDGVFvTQvZEFRRiRq7cu4ZIzbdjJUKNLAk'
+    myBearer,
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjcwNDBhNjYzOGE4ZTVkMjY0YTk2Mjg2IiwiaWF0IjoxNzI4MzE4MTM1LCJleHAiOjE3Mjg0MDQ1MzUsInR5cGUiOiJhY2Nlc3MifQ.VPwhyFiENkDGVFvTQvZEFRRiRq7cu4ZIzbdjJUKNLAk',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjcwNDc5YTMwMTRmNDcwZTVhYjViZDdlIiwiaWF0IjoxNzI4MzQ2NTg0LCJleHAiOjE3Mjg0MzI5ODQsInR5cGUiOiJhY2Nlc3MifQ.mu09P4JzMX_w1r1WX5n2_Ii1wV3YJXora8b3nspB1Dw'
 ];
 
 let bigMissSuccess = 0;
@@ -54,22 +55,22 @@ async function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-function logStatistics(response) {
-    const elapsedTime = getElapsedTimeInSeconds();
-    const elapsedTimeMin = elapsedTime/60;
-
-    if (response) {
+function logStatistics(token, response) {
+    if (response && token === myBearer) {
+        const elapsedTime = getElapsedTimeInSeconds();
         const gained = (successCount * 200) + (bigMissSuccess * 1000);
-        console.log(`Tempo dall'avvio: ${elapsedTime} secondi (${(elapsedTimeMin).toFixed(0)}) minuti
-        Richieste elaborate: ${successCount} --- Richieste fallite: ${failureCount}
-        Guadagno: ${gained.toFixed(0)} GOATS --- Richieste misisoni speciali elaborate: ${bigMissSuccess}`)
+        console.log(`Tempo dall'avvio: ${elapsedTime} secondi (${(elapsedTime/60).toFixed(0)}) minuti 
+        Richieste elaborate: ${successCount} --- Richieste fallite: ${failureCount} --- Richieste misisoni speciali elaborate: ${bigMissSuccess}
+        Guadagno: ${gained.toFixed(0)} GOATS --- Missioni in esecuzione su ${bearerTokens.length} bearers:`)
+        for (const bearerToken of bearerTokens) {
+            console.log(`-${bearerTokens.indexOf(bearerToken)}) ${bearerToken.slice(0, 5)}...${bearerToken.slice(-5)}`)
+        }
     } 
 }
 
 async function performRequestCycle(bearerToken) {
     setInterval(async () => {
-        const response = await makeRequest(bearerToken); 
-        
+        const response = await makeRequest(bearerToken)
         if (response) {
             logStatistics(bearerToken, response);
         }
@@ -144,7 +145,6 @@ async function processAllBearers() {
 }
 
 function startHourlyProcess() {
-    processAllBearers();
     setInterval(processAllBearers, 60 * 60 * 1000); // Ripeti ogni ora
 }
 
@@ -152,6 +152,7 @@ const port = process.env.PORT || 3000;
 app.listen(port, () => {
     console.log(`Service is running on port ${port}`);
 });
+
 startHourlyProcess();
 start();
 
