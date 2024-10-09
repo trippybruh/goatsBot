@@ -5,7 +5,7 @@ const app = express();
 const startTime = Date.now();
 const REQ_INTERVAL_DELAY = 330; // ms
 const INTRA_REQ_DELAY = 300;
-const bearer = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjZmMDI2NGZhNzVkYjBjZjYzYmY4YjAwIiwiaWF0IjoxNzI4MzQ2NzE0LCJleHAiOjE3Mjg0MzMxMTQsInR5cGUiOiJhY2Nlc3MifQ.ffrpLDegsogtLnJBpiuYB2RATmNet2S1AZPvntXe2jg';
+const bearer = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjZmMDI2NGZhNzVkYjBjZjYzYmY4YjAwIiwiaWF0IjoxNzI4NDMzOTYxLCJleHAiOjE3Mjg1MjAzNjEsInR5cGUiOiJhY2Nlc3MifQ.E84zQIhFb9ZZEkotop5foT-yf86x-dVCHqpWPYoMPR4';
 const bearerTokens = [
     bearer
 ];
@@ -40,7 +40,9 @@ async function makeRequest(data, bearerToken) {
         failureStreak = 0;
         return jsonResponse;
     } catch (error) {
-        console.log(`Errore richiesta: ${(error.message).slice(0, 5)}`)
+        if (failureStreak % 25 === 0) {
+            console.log(`Errore richiesta: ${(error.message).slice(0, 5)}`)
+        }
         failureCount++;
         failureStreak++;
         if (failureStreak >= 100) {
