@@ -14,7 +14,7 @@ const winChanceMilestone = 90;
 const bet_amount = 5;
 let successCount = 0;
 let failureCount = 0;
-let failureStreak = 0;
+let failureStreak = 1;
 
 function getElapsedTimeInSeconds() {
     return ((Date.now() - startTime) / 1000).toFixed(2);
@@ -37,7 +37,7 @@ async function makeRequest(data, bearerToken) {
         const jsonResponse = JSON.parse(response);
         await sleep(INTRA_REQ_DELAY);
         successCount++;
-        failureStreak = 0;
+        failureStreak = 1;
         return jsonResponse;
     } catch (error) {
         if (failureStreak % 25 === 0) {
