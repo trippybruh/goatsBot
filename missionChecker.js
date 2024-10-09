@@ -5,14 +5,13 @@ const startTime = Date.now();
 const myBearer = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjZmMDI2NGZhNzVkYjBjZjYzYmY4YjAwIiwiaWF0IjoxNzI4MzQ2NzE0LCJleHAiOjE3Mjg0MzMxMTQsInR5cGUiOiJhY2Nlc3MifQ.ffrpLDegsogtLnJBpiuYB2RATmNet2S1AZPvntXe2jg';
 const bearerTokens = [
     myBearer,
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjcwNDBhNjYzOGE4ZTVkMjY0YTk2Mjg2IiwiaWF0IjoxNzI4MzE4MTM1LCJleHAiOjE3Mjg0MDQ1MzUsInR5cGUiOiJhY2Nlc3MifQ.VPwhyFiENkDGVFvTQvZEFRRiRq7cu4ZIzbdjJUKNLAk',
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjcwNDc5YTMwMTRmNDcwZTVhYjViZDdlIiwiaWF0IjoxNzI4MzQ2NTg0LCJleHAiOjE3Mjg0MzI5ODQsInR5cGUiOiJhY2Nlc3MifQ.mu09P4JzMX_w1r1WX5n2_Ii1wV3YJXora8b3nspB1Dw'
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjcwNDBhNjYzOGE4ZTVkMjY0YTk2Mjg2IiwiaWF0IjoxNzI4NDI5NzM1LCJleHAiOjE3Mjg1MTYxMzUsInR5cGUiOiJhY2Nlc3MifQ.UWmiNeMFy6ClSxVia10m7x0pY7TbV1fRedwSkVDyj7A',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjcwNDc5YTMwMTRmNDcwZTVhYjViZDdlIiwiaWF0IjoxNzI4NDMzNjg0LCJleHAiOjE3Mjg1MjAwODQsInR5cGUiOiJhY2Nlc3MifQ.UTft22gZ1TCHmp0xcr5iZrw4rO1Ok35eLnJfXEizJ1E'
 ];
 
 let bigMissSuccess = 0;
 let successCount = 0;
 let failureCount = 0;
-let failureStreak = 0;
 
 function getElapsedTimeInSeconds() {
     const currentTime = Date.now();
@@ -33,20 +32,11 @@ async function makeRequest(bearerToken) {
         const response = await cloudscraper(options);
         const jsonResponse = JSON.parse(response);
         successCount++;
-        failureStreak = 0;
         return jsonResponse;
     } catch (error) {
         console.log(`Errore richiesta: ${(error.message).slice(0, 5)}`)
         failureCount++;
-        failureStreak++;
-        if (failureStreak >= 100) {
-            console.log(`100 richieste di fila fallite...
-            Ultimo errore richiesta: ${error.message} 
-            Rimozione bearer da mission checker...`)
-            bearerTokens.splice(bearerTokens.indexOf(bearerToken), 1);
-        } else {
-            return null;
-        }
+        return null;
     }
 }
 
@@ -72,9 +62,6 @@ async function performRequestCycle(bearerToken) {
         const response = await makeRequest(bearerToken)
         if (response) {
             logStatistics(bearerToken, response);
-        }
-        if (!bearerTokens.includes(bearerToken)) {
-            clearInterval(intervalId);
         }
     }, 60500);
 }
