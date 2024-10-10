@@ -1,0 +1,17 @@
+version: '3'
+services:
+  node-script:
+    build: .
+    container_name: coolify-node-script
+    restart: always
+    environment:
+      - NODE_ENV=production
+    volumes:
+      - .:/usr/src/app
+    networks:
+      - coolify-network
+    command: "node missionChecker.js"
+
+networks:
+  coolify-network:
+    driver: bridge
