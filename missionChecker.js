@@ -1,6 +1,5 @@
 const cloudscraper = require('cloudscraper');
-const express = require('express');
-const app = express();
+
 const startTime = Date.now();
 const myBearer = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjZmMDI2NGZhNzVkYjBjZjYzYmY4YjAwIiwiaWF0IjoxNzI4NTIwOTU4LCJleHAiOjE3Mjg2MDczNTgsInR5cGUiOiJhY2Nlc3MifQ.eVHabhaDoblI5-8WkU5O_2ul35eNh8lSuWl7gEqI6wo';
 const bearerTokens = [
@@ -139,11 +138,6 @@ function startHourlyProcess() {
     processAllBearers();
     setInterval(processAllBearers, 60 * 60 * 1000); // Ripeti ogni ora
 }
-
-const port = process.env.PORT || 3000;
-app.listen(port, () => {
-    console.log(`Service is running on port ${port}`);
-});
 
 startHourlyProcess();
 start();
