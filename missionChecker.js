@@ -35,9 +35,10 @@ async function makeRequest(bearerToken) {
         successCount++;
         return jsonResponse;
     } catch (error) {
-        console.log(`Errore richiesta: ${(error.message).slice(0, 5)}`)
+        console.log(`Errore richiesta: ${(error.message).slice(0, 4)}`)
         failureCount++;
-        return null;
+        await sleep(Math.randomInt(5000, 25000));
+        return makeRequest(bearerToken);
     }
 }
 
@@ -45,24 +46,22 @@ async function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-function logStatistics(token, response) {
-    if (response && token === myBearer) {
-        const elapsedTime = getElapsedTimeInSeconds();
-        const gained = (successCount * 200) + (bigMissSuccess * 1000);
-        console.log(`Tempo dall'avvio: ${elapsedTime} secondi (${(elapsedTime/60).toFixed(0)}) minuti 
-        Richieste elaborate: ${successCount} --- Richieste fallite: ${failureCount} --- Richieste misisoni speciali elaborate: ${bigMissSuccess}
-        Guadagno: ${gained.toFixed(0)} GOATS --- Missioni in esecuzione su ${bearerTokens.length} bearers:`)
-        for (const bearerToken of bearerTokens) {
-            console.log(`-${bearerTokens.indexOf(bearerToken)}) ${bearerToken.slice(0, 5)}...${bearerToken.slice(-5)}`)
-        }
-    } 
+function logStatistics() {
+    const elapsedTime = getElapsedTimeInSeconds();
+    const gained = (successCount * 200) + (bigMissSuccess * 1000);
+    console.log(`Tempo dall'avvio: ${elapsedTime} secondi (${(elapsedTime/60).toFixed(0)}) minuti 
+    Richieste elaborate: ${successCount} --- Richieste fallite: ${failureCount} --- Richieste misisoni speciali elaborate: ${bigMissSuccess}
+    Guadagno: ${gained.toFixed(0)} GOATS --- Missioni in esecuzione su ${bearerTokens.length} bearers:`)
+    for (const bearerToken of bearerTokens) {
+        console.log(`-${bearerTokens.indexOf(bearerToken)}) ${bearerToken.slice(0, 5)}...${bearerToken.slice(-5)}`)
+    }
 }
 
 async function performRequestCycle(bearerToken) {
     const intervalId = setInterval(async () => {
-        const response = await makeRequest(bearerToken)
-        if (response) {
-            logStatistics(bearerToken, response);
+        const response = await makeRequest(bearerToken);
+        if (response && bearerToken === myBearer) {
+            logStatistics();
         }
     }, 60500);
 }
