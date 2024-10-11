@@ -37,7 +37,7 @@ async function makeRequest(bearerToken) {
     } catch (error) {
         console.log(`Errore richiesta: ${(error.message).slice(0, 4)}`)
         failureCount++;
-        await sleep(Math.randomInt(5000, 25000));
+        await sleep((Math.random()*20000).toFixed(0));
         return makeRequest(bearerToken);
     }
 }
