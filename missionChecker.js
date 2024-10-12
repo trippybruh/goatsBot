@@ -13,6 +13,7 @@ const bearerTokens = [
 let bigMissSuccess = 0;
 let successCount = 0;
 let failureCount = 0;
+let cumulativeBalance;
 
 function getElapsedTimeInSeconds() {
     const currentTime = Date.now();
@@ -50,7 +51,8 @@ function logStatistics() {
     const gained = (successCount * 200) + (bigMissSuccess * 1000);
     console.log(`Tempo dall'avvio: ${elapsedTime} secondi (${(elapsedTime/60).toFixed(0)}) minuti 
     Richieste elaborate: ${successCount} --- Richieste fallite: ${failureCount} --- Richieste misisoni speciali elaborate: ${bigMissSuccess}
-    Guadagno: ${gained.toFixed(0)} GOATS --- Missioni in esecuzione su ${bearerTokens.length} bearers:`)
+    Totale cumulativo accounts: ${cumulativeBalance} GOATS --- Guadagno: ${gained.toFixed(0)} GOATS
+    Missioni in esecuzione su ${bearerTokens.length} bearers:`)
     for (const bearerToken of bearerTokens) {
         console.log(`-${bearerTokens.indexOf(bearerToken)}) ${bearerToken.slice(0, 5)}...${bearerToken.slice(-5)}`)
     }
@@ -59,14 +61,19 @@ function logStatistics() {
 async function performRequestCycle(bearerToken) {
     const intervalId = setInterval(async () => {
         const response = await makeRequest(bearerToken);
-        if (response && bearerToken === myBearer) {
+        cumulativeBalance += response?.user?.balance;
+        if (response && bearerTokens.indexOf(bearerToken) === bearerTokens.length - 1) {
             logStatistics();
+            cumulativeBalance = 0;
         }
     }, 60500);
 }
 
 function start() {
     bearerTokens.forEach(async (bearerToken) => {
+        if (bearerTokens.indexOf(bearerToken) !== 0) {
+            await sleep(5000 * bearerTokens.indexOf(bearerToken));
+        }
         await performRequestCycle(bearerToken); 
     });
 }
