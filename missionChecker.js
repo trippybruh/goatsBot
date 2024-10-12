@@ -13,7 +13,7 @@ const bearerTokens = [
 let bigMissSuccess = 0;
 let successCount = 0;
 let failureCount = 0;
-let cumulativeBalance;
+let cumulativeBalance = 0;
 
 function getElapsedTimeInSeconds() {
     const currentTime = Date.now();
