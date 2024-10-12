@@ -34,6 +34,7 @@ async function makeRequest(bearerToken) {
         const response = await cloudscraper(options);
         const jsonResponse = JSON.parse(response);
         successCount++;
+        console.log(jsonResponse)
         const {user = {}} = jsonResponse
         cumulativeBalance += user?.balance;
         return jsonResponse;
