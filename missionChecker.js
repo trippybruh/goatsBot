@@ -36,7 +36,7 @@ async function makeRequest(bearerToken) {
         successCount++;
         console.log(jsonResponse)
         const {user = {}} = jsonResponse
-        cumulativeBalance += user?.balance;
+        cumulativeBalance += +user?.balance;
         return jsonResponse;
     } catch (error) {
         console.log(`Errore richiesta: ${(error.message).slice(0, 4)}`)
