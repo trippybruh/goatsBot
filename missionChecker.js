@@ -61,7 +61,7 @@ function logStatistics() {
 async function performRequestCycle(bearerToken) {
     const intervalId = setInterval(async () => {
         const response = await makeRequest(bearerToken);
-        cumulativeBalance += response?.user?.balance;
+        cumulativeBalance += response?.user?.Balance;
         if (response && bearerTokens.indexOf(bearerToken) === bearerTokens.length - 1) {
             logStatistics();
             cumulativeBalance = 0;
