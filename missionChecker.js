@@ -34,6 +34,8 @@ async function makeRequest(bearerToken) {
         const response = await cloudscraper(options);
         const jsonResponse = JSON.parse(response);
         successCount++;
+        const {user = {}} = jsonResponse
+        cumulativeBalance += user?.balance;
         return jsonResponse;
     } catch (error) {
         console.log(`Errore richiesta: ${(error.message).slice(0, 4)}`)
@@ -61,7 +63,6 @@ function logStatistics() {
 async function performRequestCycle(bearerToken) {
     const intervalId = setInterval(async () => {
         const response = await makeRequest(bearerToken);
-        cumulativeBalance += response?.user?.Balance;
         if (response && bearerTokens.indexOf(bearerToken) === bearerTokens.length - 1) {
             logStatistics();
             cumulativeBalance = 0;
