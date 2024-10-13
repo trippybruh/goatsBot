@@ -12,6 +12,11 @@ const bearerTokens = [
 
 const winChanceMilestone = 88;
 const bet_amount = 958;
+const data = {
+    "point_milestone": winChanceMilestone,
+    "is_upper": false,
+    "bet_amount": bet_amount
+};
 let successCount = 0;
 let failureCount = 0;
 let failureStreak = 0;
@@ -20,7 +25,7 @@ function getElapsedTimeInSeconds() {
     return ((Date.now() - startTime) / 1000).toFixed(2);
 }
 
-async function makeRequest(data, bearerToken) {
+async function makeRequest(bearerToken) {
     const options = {
         method: 'POST',
         url: 'https://api-dice.goatsbot.xyz/dice/action',
@@ -61,7 +66,7 @@ async function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-function logStatistics(response) {
+function logStatistics() {
     const elapsedTime = getElapsedTimeInSeconds();
     const elapsedTimeMin = elapsedTime/60;
     let ratioWL = 'inf';
@@ -69,30 +74,21 @@ function logStatistics(response) {
     if (failureCount !== 0) {
         ratioWL = (successCount/failureCount).toFixed(4);
     }
-
-    if (response) {
-        const gained = (successCount * -4.96) + (elapsedTimeMin.toFixed(0) * 200);
-        const volume = (bet_amount * successCount) + (successCount * bet_amount * 0.1144);
-        console.log(`Tempo dall'avvio: ${elapsedTime} secondi (${(elapsedTimeMin).toFixed(0)} minuti)
-        Richieste elaborate: ${successCount} --- Richieste fallite: ${failureCount} --- Richieste totali/min: ${((successCount + failureCount)/elapsedTimeMin).toFixed(2)} (target: ${60000/REQ_INTERVAL_DELAY}) 
-        Successi/Fallimenti: ${ratioWL} --- Successi/min: ${(successCount/elapsedTimeMin).toFixed(2)} --- Fallimenti/min: ${(failureCount/elapsedTimeMin).toFixed(2)}
-        Saldo dall'avvio (con missioni attive): ${gained.toFixed(0)} GOATS --- Volume generato: ${volume.toFixed(0)} GOATS`);
-    }
+    const gained = (successCount * -4.96) + (elapsedTimeMin.toFixed(0) * 200);
+    const volume = (bet_amount * successCount) + Math.round((successCount * bet_amount * 0.1144));
+    console.log(`Tempo dall'avvio: ${elapsedTime} secondi (${(elapsedTimeMin).toFixed(0)} minuti)
+    Richieste elaborate: ${successCount} --- Richieste fallite: ${failureCount} --- Richieste totali/min: ${((successCount + failureCount)/elapsedTimeMin).toFixed(2)} (target: ${60000/REQ_INTERVAL_DELAY}) 
+    Successi/Fallimenti: ${ratioWL} --- Successi/min: ${(successCount/elapsedTimeMin).toFixed(2)} --- Fallimenti/min: ${(failureCount/elapsedTimeMin).toFixed(2)}
+    Saldo dall'avvio (con missioni attive): ${gained.toFixed(0)} GOATS --- Volume generato: ${volume} GOATS`);
 }
 
 async function performRequestCycle(bearerToken) {
-    const consoleLogStep = 500;
+    const consoleLogStep = 100;
     let cycles = 0;
-    const data = {
-        "point_milestone": winChanceMilestone,
-        "is_upper": false,
-        "bet_amount": bet_amount
-    };
-
     setInterval(async () => {
-        const response = await makeRequest(data, bearerToken);
+        const response = await makeRequest(bearerToken);
         if (cycles % consoleLogStep === 0) {
-            logStatistics(bearerToken, response);
+            logStatistics();
         }
         cycles++;
     }, REQ_INTERVAL_DELAY)
