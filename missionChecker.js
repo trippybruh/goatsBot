@@ -1,13 +1,13 @@
 const cloudscraper = require('cloudscraper');
 
 const startTime = Date.now();
-const myBearer = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjZmMDI2NGZhNzVkYjBjZjYzYmY4YjAwIiwiaWF0IjoxNzI4Njk5MTg1LCJleHAiOjE3Mjg3ODU1ODUsInR5cGUiOiJhY2Nlc3MifQ.Xz9PKpgRA90HwuvLK3hq8jVUqr000-85bwWmnQ5FIgA';
+const myBearer = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjZmMDI2NGZhNzVkYjBjZjYzYmY4YjAwIiwiaWF0IjoxNzI4NzgzMTkyLCJleHAiOjE3Mjg4Njk1OTIsInR5cGUiOiJhY2Nlc3MifQ.Px9e4Rh0wVF_UKKBZrd72cgVlmOUUTYGjt1Jt1aPJEo';
 const bearerTokens = [
     myBearer,
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjcwNDBhNjYzOGE4ZTVkMjY0YTk2Mjg2IiwiaWF0IjoxNzI4Njk5MTAxLCJleHAiOjE3Mjg3ODU1MDEsInR5cGUiOiJhY2Nlc3MifQ.YX0cYpmM_am71SKq4ayMsuZSr3IE0lJxhquPjbp3IVQ',
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjcwNDc5YTMwMTRmNDcwZTVhYjViZDdlIiwiaWF0IjoxNzI4Njk5MDMyLCJleHAiOjE3Mjg3ODU0MzIsInR5cGUiOiJhY2Nlc3MifQ.4WMMZLITyPHEvHZJvYE0AjPFQKjxBh80SHZiOkafKWg',
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjcwNzIxOTkwMTRmNDcwZTVhMDUxNjcxIiwiaWF0IjoxNzI4Njk4OTQ2LCJleHAiOjE3Mjg3ODUzNDYsInR5cGUiOiJhY2Nlc3MifQ.iwM_GFY7yA6MbJiK959xytx8IaUx0cpNJO9AoXmhEDI',
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjcwNzI1NWM3NDU0ZmY1MGRmYjhjZjM0IiwiaWF0IjoxNzI4Njk4ODYzLCJleHAiOjE3Mjg3ODUyNjMsInR5cGUiOiJhY2Nlc3MifQ.PKEiEwoiDvWvzoDG1-YGG63d6jqlsAbS4n_iLPY-Bts'
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjcwNzI1NWM3NDU0ZmY1MGRmYjhjZjM0IiwiaWF0IjoxNzI4Nzg0MDI0LCJleHAiOjE3Mjg4NzA0MjQsInR5cGUiOiJhY2Nlc3MifQ.8G8hdvOuX2ZRTEdOE9CmaH7Ap4VEfflw0D9zzoELKHc'
 ];
 
 let bigMissSuccess = 0;
@@ -18,6 +18,17 @@ let cumulativeBalance = 0;
 function getElapsedTimeInSeconds() {
     const currentTime = Date.now();
     return ((currentTime - startTime) / 1000).toFixed(2);
+}
+
+async function makeBetRequest(bearerToken) {
+    const options = {
+        method: 'POST',
+        url: 'https://dev-api.goatsbot.xyz/dice/action',
+        headers: {
+            'Authorization': `Bearer ${bearerToken}`,
+            'Content-Type': 'application/json'
+        }
+    };
 }
 
 async function makeRequest(bearerToken) {
@@ -34,9 +45,6 @@ async function makeRequest(bearerToken) {
         const response = await cloudscraper(options);
         const jsonResponse = JSON.parse(response);
         successCount++;
-        console.log(jsonResponse)
-        const {user = {}} = jsonResponse
-        cumulativeBalance += +user?.balance;
         return jsonResponse;
     } catch (error) {
         console.log(`Errore richiesta: ${(error.message).slice(0, 4)}`)
@@ -64,7 +72,10 @@ function logStatistics() {
 async function performRequestCycle(bearerToken) {
     const intervalId = setInterval(async () => {
         const response = await makeRequest(bearerToken);
-        if (response && bearerTokens.indexOf(bearerToken) === bearerTokens.length - 1) {
+        // const betResponse = await makeBetRequest(bearerToken);
+        // const {user = {}} = betResponse
+        cumulativeBalance += +user?.balance;
+        if (bearerTokens.indexOf(bearerToken) === bearerTokens.length - 1) {
             logStatistics();
             cumulativeBalance = 0;
         }
