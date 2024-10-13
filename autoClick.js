@@ -69,14 +69,12 @@ function logStatistics(response) {
     if (failureCount !== 0) {
         ratioWL = (successCount/failureCount).toFixed(4);
     }
-
-    if (response) {
-        const gained = successCount * 0.4;
-        console.log(`Tempo dall'avvio: ${elapsedTime} secondi (${(elapsedTimeMin).toFixed(0)} minuti)
-        Richieste elaborate: ${successCount} --- Richieste fallite: ${failureCount} --- Guadagno: ${gained.toFixed(0)} GOATS 
-        Successi/Fallimenti: ${ratioWL} --- Successi/min: ${(successCount/elapsedTimeMin).toFixed(2)} --- Fallimenti/min: ${(failureCount/elapsedTimeMin).toFixed(2)}
-        Richieste totali: ${successCount + failureCount} --- Richieste totali/min: ${((successCount + failureCount)/elapsedTimeMin).toFixed(2)} (target: ${60000/REQ_INTERVAL_DELAY})`);
-    }
+    const gained = successCount * 0.4;
+    const volume = bet_amount*successCount + (successCount * (winChanceMilestone/100));
+    console.log(`Tempo dall'avvio: ${elapsedTime} secondi (${(elapsedTimeMin).toFixed(0)} minuti)
+    Richieste elaborate: ${successCount} --- Richieste fallite: ${failureCount} --- Richieste totali/min: ${((successCount + failureCount)/elapsedTimeMin).toFixed(2)} (target: ${60000/REQ_INTERVAL_DELAY})
+    Successi/Fallimenti: ${ratioWL} --- Successi/min: ${(successCount/elapsedTimeMin).toFixed(2)} --- Fallimenti/min: ${(failureCount/elapsedTimeMin).toFixed(2)}
+    Guadagno (solo clicker): ${gained.toFixed(0)} GOATS --- Volume: ${volume} GOATS `);
 }
 
 async function performRequestCycle(bearerToken) {
