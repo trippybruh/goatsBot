@@ -12,6 +12,11 @@ const bearerTokens = [
 
 const winChanceMilestone = 90;
 const bet_amount = 5;
+const data = {
+    "point_milestone": winChanceMilestone,
+    "is_upper": false,
+    "bet_amount": bet_amount
+};
 let successCount = 0;
 let failureCount = 0;
 let failureStreak = 1;
@@ -20,7 +25,7 @@ function getElapsedTimeInSeconds() {
     return ((Date.now() - startTime) / 1000).toFixed(2);
 }
 
-async function makeRequest(data, bearerToken) {
+async function makeRequest(bearerToken) {
     const options = {
         method: 'POST',
         url: 'https://api-dice.goatsbot.xyz/dice/action',
@@ -61,7 +66,7 @@ async function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-function logStatistics(response) {
+function logStatistics() {
     const elapsedTime = getElapsedTimeInSeconds();
     const elapsedTimeMin = elapsedTime/60;
     let ratioWL = 'inf';
@@ -87,9 +92,9 @@ async function performRequestCycle(bearerToken) {
     };
 
     setInterval(async () => {
-        const response = await makeRequest(data, bearerToken);
-        if (cycles % consoleLogStep === 0) {
-            logStatistics(bearerToken, response);
+        const response = await makeRequest(bearerToken);
+        if (response && cycles % consoleLogStep === 0) {
+            logStatistics();
         }
         cycles++;
     }, REQ_INTERVAL_DELAY)
