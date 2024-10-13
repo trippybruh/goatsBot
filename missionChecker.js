@@ -4,12 +4,17 @@ const startTime = Date.now();
 const myBearer = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjZmMDI2NGZhNzVkYjBjZjYzYmY4YjAwIiwiaWF0IjoxNzI4NzgzMTkyLCJleHAiOjE3Mjg4Njk1OTIsInR5cGUiOiJhY2Nlc3MifQ.Px9e4Rh0wVF_UKKBZrd72cgVlmOUUTYGjt1Jt1aPJEo';
 const bearerTokens = [
     myBearer,
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjcwNDBhNjYzOGE4ZTVkMjY0YTk2Mjg2IiwiaWF0IjoxNzI4Njk5MTAxLCJleHAiOjE3Mjg3ODU1MDEsInR5cGUiOiJhY2Nlc3MifQ.YX0cYpmM_am71SKq4ayMsuZSr3IE0lJxhquPjbp3IVQ',
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjcwNDc5YTMwMTRmNDcwZTVhYjViZDdlIiwiaWF0IjoxNzI4Njk5MDMyLCJleHAiOjE3Mjg3ODU0MzIsInR5cGUiOiJhY2Nlc3MifQ.4WMMZLITyPHEvHZJvYE0AjPFQKjxBh80SHZiOkafKWg',
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjcwNzIxOTkwMTRmNDcwZTVhMDUxNjcxIiwiaWF0IjoxNzI4Njk4OTQ2LCJleHAiOjE3Mjg3ODUzNDYsInR5cGUiOiJhY2Nlc3MifQ.iwM_GFY7yA6MbJiK959xytx8IaUx0cpNJO9AoXmhEDI',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjcwNDBhNjYzOGE4ZTVkMjY0YTk2Mjg2IiwiaWF0IjoxNzI4Nzg2MDgyLCJleHAiOjE3Mjg4NzI0ODIsInR5cGUiOiJhY2Nlc3MifQ.uDLl9O6PXtBiXGNk7DKlBz-j8CvDj-ITJVqFoKkAJTs',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjcwNDc5YTMwMTRmNDcwZTVhYjViZDdlIiwiaWF0IjoxNzI4Nzg2MDExLCJleHAiOjE3Mjg4NzI0MTEsInR5cGUiOiJhY2Nlc3MifQ.FaOcfZd6b2btm_bvIfBqhqRIqtEFHBFON0ljLGcmw4s',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjcwNzIxOTkwMTRmNDcwZTVhMDUxNjcxIiwiaWF0IjoxNzI4Nzg1OTM5LCJleHAiOjE3Mjg4NzIzMzksInR5cGUiOiJhY2Nlc3MifQ.DyWZIWoLO7l3unSPT0qHL31N5cY9q94xtVl8MaJApcI',
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjcwNzI1NWM3NDU0ZmY1MGRmYjhjZjM0IiwiaWF0IjoxNzI4Nzg0MDI0LCJleHAiOjE3Mjg4NzA0MjQsInR5cGUiOiJhY2Nlc3MifQ.8G8hdvOuX2ZRTEdOE9CmaH7Ap4VEfflw0D9zzoELKHc'
 ];
 
+const data = {
+    "point_milestone": 90,
+    "is_upper": false,
+    "bet_amount": 5
+};
 let bigMissSuccess = 0;
 let successCount = 0;
 let failureCount = 0;
@@ -27,7 +32,9 @@ async function makeBetRequest(bearerToken) {
         headers: {
             'Authorization': `Bearer ${bearerToken}`,
             'Content-Type': 'application/json'
-        }
+        },
+        body: JSON.stringify(data),
+        timeout: 5000
     };
 }
 
@@ -71,9 +78,10 @@ function logStatistics() {
 
 async function performRequestCycle(bearerToken) {
     const intervalId = setInterval(async () => {
-        const response = await makeRequest(bearerToken);
-        // const betResponse = await makeBetRequest(bearerToken);
-        // const {user = {}} = betResponse
+        await makeRequest(bearerToken);
+        await sleep(1000);
+        const betResponse = await makeBetRequest(bearerToken);
+        const {user = {}} = betResponse
         cumulativeBalance += +user?.balance;
         if (bearerTokens.indexOf(bearerToken) === bearerTokens.length - 1) {
             logStatistics();
