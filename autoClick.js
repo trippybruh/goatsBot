@@ -11,7 +11,7 @@ const bearerTokens = [
 ];
 
 const winChanceMilestone = 88;
-const bet_amount = 1666;
+const bet_amount = 2027;
 const data = {
     "point_milestone": winChanceMilestone,
     "is_upper": false,
@@ -74,13 +74,13 @@ function logStatistics() {
     if (failureCount !== 0) {
         ratioWL = (successCount/failureCount).toFixed(4);
     }
-    const active_clickers = 7;
-    const gained = (successCount * -8.96) + (elapsedTimeMin.toFixed(0) * 200);
+    const active_clickers = 12;
+    const gained = (successCount * -10.92) + (elapsedTimeMin.toFixed(0) * 200);
     const volume = (bet_amount * successCount) + Math.round((successCount * bet_amount * 0.1144));
     console.log(`Tempo dall'avvio: ${elapsedTime} secondi (${(elapsedTimeMin).toFixed(0)} minuti)
     Richieste elaborate: ${successCount} --- Richieste fallite: ${failureCount} --- Richieste totali/min: ${((successCount + failureCount)/elapsedTimeMin).toFixed(2)} (target: ${60000/REQ_INTERVAL_DELAY}) 
     Successi/Fallimenti: ${ratioWL} --- Successi/min: ${(successCount/elapsedTimeMin).toFixed(2)} --- Fallimenti/min: ${(failureCount/elapsedTimeMin).toFixed(2)}
-    Saldo dall'avvio (con missioni attive): ${gained.toFixed(0)} GOATS --- Saldo dall'avvio (missioni + clickers): ${(gained + (70*active_clickers*elapsedTimeMin)).toFixed(0)} GOATS
+    Saldo dall'avvio (con missioni attive): ${gained.toFixed(0)} GOATS --- Saldo dall'avvio (missioni + clickers): ${(gained + (68*active_clickers*elapsedTimeMin)).toFixed(0)} GOATS
     Volume generato: ${volume} GOATS`);
 }
 
