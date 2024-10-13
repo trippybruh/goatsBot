@@ -3,15 +3,15 @@ const express = require('express');
 
 const app = express();
 const startTime = Date.now();
-const REQ_INTERVAL_DELAY = 330; // ms
-const INTRA_REQ_DELAY = 300;
-const bearer = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjZmMDI2NGZhNzVkYjBjZjYzYmY4YjAwIiwiaWF0IjoxNzI4MjU4ODIwLCJleHAiOjE3MjgzNDUyMjAsInR5cGUiOiJhY2Nlc3MifQ.6JLTabyVJJdi84KY-5IYQT94UNqrxdiGL6o4xyVyEO8';
+const REQ_INTERVAL_DELAY = 550; // ms
+const INTRA_REQ_DELAY = 500;
+const bearer = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjcwNzI1NWM3NDU0ZmY1MGRmYjhjZjM0IiwiaWF0IjoxNzI4Nzg0MDI0LCJleHAiOjE3Mjg4NzA0MjQsInR5cGUiOiJhY2Nlc3MifQ.8G8hdvOuX2ZRTEdOE9CmaH7Ap4VEfflw0D9zzoELKHc';
 const bearerTokens = [
     bearer
 ];
 
-const winChanceMilestone = 90;
-const bet_amount = 5;
+const winChanceMilestone = 88;
+const bet_amount = 958;
 let successCount = 0;
 let failureCount = 0;
 let failureStreak = 0;
@@ -94,6 +94,7 @@ async function performRequestCycle(bearerToken) {
         cycles++;
     }, REQ_INTERVAL_DELAY)
 }
+
 
 function start() {
     bearerTokens.forEach(async (bearerToken) => {
