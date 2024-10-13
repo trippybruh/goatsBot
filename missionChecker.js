@@ -153,6 +153,13 @@ async function processMissionsForBearer(bearerToken) {
 }
 
 function startHourlyProcess() {
+    for (const bearerToken of bearerTokens) {
+        if (bearerTokens.indexOf(bearerToken) !== 0) {
+            sleep(5000 * bearerTokens.indexOf(bearerToken));
+        }
+        console.log(`Controllo missioni da eseguire per Bearer Token: ${bearerToken.slice(0, 5)}...${bearerToken.slice(-5)}`);
+        processMissionsForBearer(bearerToken);
+    }
     setInterval(async () => {
         for (const bearerToken of bearerTokens) {
             if (bearerTokens.indexOf(bearerToken) !== 0) {
