@@ -3,15 +3,15 @@ const express = require('express');
 
 const app = express();
 const startTime = Date.now();
-const REQ_INTERVAL_DELAY = 750; // ms
-const INTRA_REQ_DELAY = 675;
+const REQ_INTERVAL_DELAY = 700; // ms
+const INTRA_REQ_DELAY = 650;
 const bearer = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjcwNzI1NWM3NDU0ZmY1MGRmYjhjZjM0IiwiaWF0IjoxNzI4Nzg0MDI0LCJleHAiOjE3Mjg4NzA0MjQsInR5cGUiOiJhY2Nlc3MifQ.8G8hdvOuX2ZRTEdOE9CmaH7Ap4VEfflw0D9zzoELKHc';
 const bearerTokens = [
     bearer
 ];
 
 const winChanceMilestone = 88;
-const bet_amount = 2027;
+const bet_amount = 2381;
 const data = {
     "point_milestone": winChanceMilestone,
     "is_upper": false,
@@ -74,8 +74,8 @@ function logStatistics() {
     if (failureCount !== 0) {
         ratioWL = (successCount/failureCount).toFixed(4);
     }
-    const active_clickers = 12;
-    const gained = (successCount * -10.92) + (elapsedTimeMin.toFixed(0) * 200);
+    const active_clickers = 16;
+    const gained = (successCount * -12.92) + (elapsedTimeMin.toFixed(0) * 200);
     const volume = (bet_amount * successCount) + Math.round((successCount * bet_amount * 0.1144));
     console.log(`Tempo dall'avvio: ${elapsedTime} secondi (${(elapsedTimeMin).toFixed(0)} minuti)
     Richieste elaborate: ${successCount} --- Richieste fallite: ${failureCount} --- Richieste totali/min: ${((successCount + failureCount)/elapsedTimeMin).toFixed(2)} (target: ${60000/REQ_INTERVAL_DELAY}) 
