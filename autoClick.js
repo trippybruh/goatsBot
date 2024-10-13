@@ -85,12 +85,6 @@ function logStatistics() {
 async function performRequestCycle(bearerToken) {
     const consoleLogStep = 500;
     let cycles = 0;
-    const data = {
-        "point_milestone": winChanceMilestone,
-        "is_upper": false,
-        "bet_amount": bet_amount
-    };
-
     setInterval(async () => {
         const response = await makeRequest(bearerToken);
         if (response && cycles % consoleLogStep === 0) {
