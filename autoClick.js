@@ -3,8 +3,8 @@ const express = require('express');
 
 const app = express();
 const startTime = Date.now();
-const REQ_INTERVAL_DELAY = 550; // ms
-const INTRA_REQ_DELAY = 500;
+const REQ_INTERVAL_DELAY = 1333; // ms
+const INTRA_REQ_DELAY = 1100;
 const bearer = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjcwNzI1NWM3NDU0ZmY1MGRmYjhjZjM0IiwiaWF0IjoxNzI4Nzg0MDI0LCJleHAiOjE3Mjg4NzA0MjQsInR5cGUiOiJhY2Nlc3MifQ.8G8hdvOuX2ZRTEdOE9CmaH7Ap4VEfflw0D9zzoELKHc';
 const bearerTokens = [
     bearer
@@ -37,10 +37,12 @@ async function makeRequest(data, bearerToken) {
         const jsonResponse = JSON.parse(response);
         await sleep(INTRA_REQ_DELAY);
         successCount++;
-        failureStreak = 0;
+        failureStreak = 1;
         return jsonResponse;
     } catch (error) {
-        console.log(`Errore richiesta: ${(error.message).slice(0, 5)}`)
+        if (failureStreak % 25 === 0) {
+            console.log(`Errore richiesta: ${(error.message).slice(0, 5)}`)
+        }
         failureCount++;
         failureStreak++;
         if (failureStreak >= 100) {
@@ -69,11 +71,12 @@ function logStatistics(response) {
     }
 
     if (response) {
-        const gained = successCount * 0.4;
+        const gained = (successCount * -4.96) + (elapsedTimeMin.toFixed(0) * 200);
+        const volume = (bet_amount * successCount) + (successCount * bet_amount * 0.1144);
         console.log(`Tempo dall'avvio: ${elapsedTime} secondi (${(elapsedTimeMin).toFixed(0)} minuti)
-        Richieste elaborate: ${successCount} --- Richieste fallite: ${failureCount} --- Guadagno: ${gained.toFixed(0)} GOATS 
+        Richieste elaborate: ${successCount} --- Richieste fallite: ${failureCount} --- Richieste totali/min: ${((successCount + failureCount)/elapsedTimeMin).toFixed(2)} (target: ${60000/REQ_INTERVAL_DELAY}) 
         Successi/Fallimenti: ${ratioWL} --- Successi/min: ${(successCount/elapsedTimeMin).toFixed(2)} --- Fallimenti/min: ${(failureCount/elapsedTimeMin).toFixed(2)}
-        Richieste totali: ${successCount + failureCount} --- Richieste totali/min: ${((successCount + failureCount)/elapsedTimeMin).toFixed(2)} (target: ${60000/REQ_INTERVAL_DELAY})`);
+        Saldo dall'avvio (con missioni attive): ${gained.toFixed(0)} GOATS --- Volume generato: ${volume.toFixed(0)} GOATS`);
     }
 }
 

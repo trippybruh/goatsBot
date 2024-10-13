@@ -103,7 +103,7 @@ wrMultipliers = {
     99.0: 0.01,
 }
 
-MIN_NEG_EV = -2
+MIN_NEG_EV = -5
 
 
 def calculateEVs(betMaxRange: int):
