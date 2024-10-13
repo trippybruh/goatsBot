@@ -77,12 +77,11 @@ function logStatistics() {
 }
 
 async function performRequestCycle(bearerToken) {
-    const intervalId = setInterval(async () => {
+    setInterval(async () => {
         await makeRequest(bearerToken);
         await sleep(1000);
         const betResponse = await makeBetRequest(bearerToken);
-        const {user = {}} = betResponse
-        cumulativeBalance += +user?.balance;
+        cumulativeBalance += +betResponse?.user?.balance;
         if (bearerTokens.indexOf(bearerToken) === bearerTokens.length - 1) {
             logStatistics();
             cumulativeBalance = 0;
@@ -93,7 +92,7 @@ async function performRequestCycle(bearerToken) {
 function start() {
     bearerTokens.forEach(async (bearerToken) => {
         if (bearerTokens.indexOf(bearerToken) !== 0) {
-            await sleep(5000 * bearerTokens.indexOf(bearerToken));
+            await sleep(3000 * bearerTokens.indexOf(bearerToken));
         }
         await performRequestCycle(bearerToken); 
     });
@@ -153,16 +152,16 @@ async function processMissionsForBearer(bearerToken) {
     }
 }
 
-async function processAllBearers() {
-    for (const bearerToken of bearerTokens) {
-        console.log(`Controllo missioni da eseguire per Bearer Token: ${bearerToken.slice(0, 5)}...${bearerToken.slice(-5)}`);
-        await processMissionsForBearer(bearerToken);
-    }
-}
-
 function startHourlyProcess() {
-    processAllBearers();
-    setInterval(processAllBearers, 60 * 60 * 1000); // Ripeti ogni ora
+    setInterval(async () => {
+        for (const bearerToken of bearerTokens) {
+            if (bearerTokens.indexOf(bearerToken) !== 0) {
+                await sleep(5000 * bearerTokens.indexOf(bearerToken));
+            }
+            console.log(`Controllo missioni da eseguire per Bearer Token: ${bearerToken.slice(0, 5)}...${bearerToken.slice(-5)}`);
+            await processMissionsForBearer(bearerToken);
+        }
+    }, 60 * 60 * 1000); // Ripeti ogni ora
 }
 
 startHourlyProcess();
