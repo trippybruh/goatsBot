@@ -11,7 +11,7 @@ const bearerTokens = [
 ];
 
 const winChanceMilestone = 88;
-const bet_amount = 3627;
+const bet_amount = 5427;
 const data = {
     "point_milestone": winChanceMilestone,
     "is_upper": false,
@@ -74,8 +74,8 @@ function logStatistics() {
     if (failureCount !== 0) {
         ratioWL = (successCount/failureCount).toFixed(4);
     }
-    const active_clickers = 18;
-    const gained = (successCount * -19.88) + (elapsedTimeMin.toFixed(0) * 200);
+    const active_clickers = 20;
+    const gained = (successCount * -29.96) + (elapsedTimeMin.toFixed(0) * 200);
     const volume = (bet_amount * successCount) + Math.round((successCount * bet_amount * 0.1144));
     console.log(`Tempo dall'avvio: ${elapsedTime} secondi (${(elapsedTimeMin).toFixed(0)} minuti)
     Richieste elaborate: ${successCount} --- Richieste fallite: ${failureCount} --- Richieste totali/min: ${((successCount + failureCount)/elapsedTimeMin).toFixed(2)} (target: ${60000/REQ_INTERVAL_DELAY}) 
