@@ -77,7 +77,7 @@ function logStatistics() {
     }
     const gained = successCount * 0.4;
     const volume = bet_amount*successCount*(winChanceMilestone/100);
-    console.log(`Tempo dall'avvio: ${elapsedHours} ore ${elapsedTimeMin} minuti ${((elapsedTime % 60).toFixed(0)} secondi
+    console.log(`Tempo dall'avvio: ${elapsedHours} ore ${elapsedTimeMin} minuti ${(elapsedTime % 60).toFixed(0)} secondi
     Richieste elaborate: ${successCount} --- Richieste fallite: ${failureCount} --- Richieste totali/min: ${((successCount + failureCount)/elapsedTimeMin).toFixed(2)} (target: ${(60000/REQ_INTERVAL_DELAY).toFixed(1)})
     Successi/Fallimenti: ${ratioWL} --- Successi/min: ${(successCount/elapsedTimeMin).toFixed(2)} --- Fallimenti/min: ${(failureCount/elapsedTimeMin).toFixed(2)}
     Guadagno (solo clicker): ${Math.round(gained)} GOATS --- Volume: ${Math.round(volume)} GOATS `);
