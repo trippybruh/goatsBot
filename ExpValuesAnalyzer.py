@@ -103,14 +103,17 @@ wrMultipliers = {
     99.0: 0.01,
 }
 
-MIN_NEG_EV = -30;
+MIN_NEG_EV = -30
 
+filterMultipliers = []
 
 def calculateEVs(betMaxRange: int):
+
     betsEVs = {}
     for bet in range(1, betMaxRange + 1):
         expectedValues = {}
         for multiplier in wrMultipliers.keys():
+            if multiplier not in filterMultipliers and len(filterMultipliers) != 0: continue
             winRate = wrMultipliers[multiplier]
             expectedValue = round(((round(bet * multiplier) - bet) * winRate) + (bet * -1 * (1 - winRate)), 4)
             if expectedValue >= MIN_NEG_EV:
