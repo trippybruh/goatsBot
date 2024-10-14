@@ -36,6 +36,13 @@ async function makeBetRequest(bearerToken) {
         body: JSON.stringify(data),
         timeout: 5000
     };
+    try {
+        const response = await cloudscraper(options);
+        return JSON.parse(response);
+    } catch (error) {
+        console.log(`Errore richiesta bet di controllo: ${(error.message).slice(0, 4)}`);
+        return null;
+    }
 }
 
 async function makeRequest(bearerToken) {
@@ -67,21 +74,23 @@ async function sleep(ms) {
 function logStatistics() {
     const elapsedTime = getElapsedTimeInSeconds();
     const gained = (successCount * 200) + (bigMissSuccess * 1000);
-    console.log(`Tempo dall'avvio: ${elapsedTime} secondi (${(elapsedTime/60).toFixed(0)}) minuti 
+    console.log(`Tempo dall'avvio: ${(elapsedTime/3600).toFixed(0)} ore ${((elapsedTime/60) % 60).toFixed(0)} minuti ${(elapsedTime % 60).toFixed(0)} secondi 
     Richieste elaborate: ${successCount} --- Richieste fallite: ${failureCount} --- Richieste misisoni speciali elaborate: ${bigMissSuccess}
-    Totale cumulativo accounts: ${cumulativeBalance} GOATS --- Guadagno: ${gained.toFixed(0)} GOATS
-    Missioni in esecuzione su ${bearerTokens.length} bearers:`)
+    Guadagn sessione: ${gained.toFixed(0)} GOATS --- Missioni in esecuzione su ${bearerTokens.length} bearers:`)
     for (const bearerToken of bearerTokens) {
         console.log(`-${bearerTokens.indexOf(bearerToken)}) ${bearerToken.slice(0, 5)}...${bearerToken.slice(-5)}`)
     }
+    console.log(`Balance totale: ${cumulativeBalance} GOATS`);
 }
 
 async function performRequestCycle(bearerToken) {
     setInterval(async () => {
         await makeRequest(bearerToken);
-        await sleep(1000);
+        await sleep(1500);
         const betResponse = await makeBetRequest(bearerToken);
-        cumulativeBalance += +betResponse?.user?.balance;
+        if (betResponse) {
+            cumulativeBalance += +betResponse?.user?.balance;
+        }
         if (bearerTokens.indexOf(bearerToken) === bearerTokens.length - 1) {
             logStatistics();
             cumulativeBalance = 0;
@@ -130,7 +139,6 @@ async function executeMission(bearerToken, missionId) {
     try {
         const response = await cloudscraper(options);
         console.log(`Missione ${missionId} completata con successo.`);
-
         return JSON.parse(response);
     } catch (error) {
         console.error(`Errore nell'eseguire la missione ${missionId} per Bearer Token: ${bearerToken}`, error.message);
@@ -171,6 +179,6 @@ function startHourlyProcess() {
     }, 60 * 60 * 1000); // Ripeti ogni ora
 }
 
-startHourlyProcess();
+//startHourlyProcess();
 start();
 
