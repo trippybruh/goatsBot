@@ -74,7 +74,7 @@ async function sleep(ms) {
 function logStatistics() {
     const elapsedTime = getElapsedTimeInSeconds();
     const gained = (successCount * 200) + (bigMissSuccess * 1000);
-    console.log(`Tempo dall'avvio: ${(elapsedTime/3600).toFixed(0)} ore ${((elapsedTime/60) % 60).toFixed(0)} minuti ${(elapsedTime % 60).toFixed(0)} secondi 
+    console.log(`Tempo dall'avvio: ${Math.floor(elapsedTime/3600)} ore ${((elapsedTime/60) % 60).toFixed(0)} minuti ${(elapsedTime % 60).toFixed(0)} secondi 
     Richieste elaborate: ${successCount} --- Richieste fallite: ${failureCount} --- Richieste misisoni speciali elaborate: ${bigMissSuccess}
     Guadagn sessione: ${gained.toFixed(0)} GOATS --- Missioni in esecuzione su ${bearerTokens.length} bearers:`)
     for (const bearerToken of bearerTokens) {
