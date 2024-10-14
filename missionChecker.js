@@ -76,7 +76,7 @@ function logStatistics() {
     const gained = (successCount * 200) + (bigMissSuccess * 1000);
     console.log(`Tempo dall'avvio: ${Math.floor(elapsedTime/3600)} ore ${((elapsedTime/60) % 60).toFixed(0)} minuti ${(elapsedTime % 60).toFixed(0)} secondi`);
     console.log(`-> Richieste elaborate: ${successCount} --- Richieste fallite: ${failureCount} --- Richieste misisoni speciali elaborate: ${bigMissSuccess}`);
-    console.log(`-> Guadagn sessione: ${gained.toFixed(0)} GOATS --- Missioni in esecuzione su ${bearerTokens.length} bearers:`);
+    console.log(`-> Guadagno sessione: ${gained.toFixed(0)} GOATS --- Missioni in esecuzione su ${bearerTokens.length} bearers:`);
     for (const bearerToken of bearerTokens) {
         console.log(`-> (${bearerTokens.indexOf(bearerToken)}): ${bearerToken.slice(0, 5)}...${bearerToken.slice(-5)}`)
     }
@@ -86,7 +86,7 @@ function logStatistics() {
 async function performRequestCycle(bearerToken) {
     setInterval(async () => {
         await makeRequest(bearerToken);
-        await sleep(1500);
+        await sleep(7500);
         const betResponse = await makeBetRequest(bearerToken);
         if (betResponse) {
             cumulativeBalance += +betResponse?.user?.balance;
@@ -101,7 +101,7 @@ async function performRequestCycle(bearerToken) {
 function start() {
     bearerTokens.forEach(async (bearerToken) => {
         if (bearerTokens.indexOf(bearerToken) !== 0) {
-            await sleep(3000 * bearerTokens.indexOf(bearerToken));
+            await sleep(4000 * bearerTokens.indexOf(bearerToken));
         }
         await performRequestCycle(bearerToken); 
     });
