@@ -53,12 +53,10 @@ async function makeRequest(bearerToken) {
         if (failureStreak >= 100) {
             console.log(`100 richieste di fila fallite...
             Ultimo errore richiesta: ${error.message} 
-            chiusura autoclicker...`)
-            await sleep(1000);
-            process.exit(1);
-        } else {
-            return null;
+            pausa 5 minuti autoclicker...`)
+            await sleep(300000);
         }
+        return null;
     }
 }
 
@@ -86,8 +84,8 @@ async function performRequestCycle(bearerToken) {
     const consoleLogStep = 500;
     let cycles = 0;
     setInterval(async () => {
-        const response = await makeRequest(bearerToken);
-        if (response && cycles % consoleLogStep === 0) {
+        await makeRequest(bearerToken);
+        if (cycles % consoleLogStep === 0) {
             logStatistics();
         }
         cycles++;
