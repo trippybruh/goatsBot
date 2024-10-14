@@ -28,7 +28,7 @@ function getElapsedTimeInSeconds() {
 async function makeBetRequest(bearerToken) {
     const options = {
         method: 'POST',
-        url: 'https://dev-api.goatsbot.xyz/dice/action',
+        url: 'https://api-dice.goatsbot.xyz/dice/action',
         headers: {
             'Authorization': `Bearer ${bearerToken}`,
             'Content-Type': 'application/json'
