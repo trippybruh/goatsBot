@@ -86,11 +86,11 @@ function logStatistics() {
 async function performRequestCycle(bearerToken) {
     setInterval(async () => {
         await makeRequest(bearerToken);
-        await sleep(7500);
-        const betResponse = await makeBetRequest(bearerToken);
-        if (betResponse) {
-            cumulativeBalance += +betResponse?.user?.balance;
-        }
+        //await sleep(7500);
+        //const betResponse = await makeBetRequest(bearerToken);
+        //if (betResponse) {
+            //cumulativeBalance += +betResponse?.user?.balance;
+        //}
         if (bearerTokens.indexOf(bearerToken) === bearerTokens.length - 1) {
             logStatistics();
             cumulativeBalance = 0;
