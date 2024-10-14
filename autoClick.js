@@ -3,8 +3,8 @@ const express = require('express');
 
 const app = express();
 const startTime = Date.now();
-const REQ_INTERVAL_DELAY = 760; // ms
-const INTRA_REQ_DELAY = 650;
+const REQ_INTERVAL_DELAY = 1250; // ms
+const INTRA_REQ_DELAY = 1100;
 const bearer = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjcwNzI1NWM3NDU0ZmY1MGRmYjhjZjM0IiwiaWF0IjoxNzI4Nzg0MDI0LCJleHAiOjE3Mjg4NzA0MjQsInR5cGUiOiJhY2Nlc3MifQ.8G8hdvOuX2ZRTEdOE9CmaH7Ap4VEfflw0D9zzoELKHc';
 const bearerTokens = [
     bearer
@@ -78,11 +78,11 @@ function logStatistics() {
     const active_clickers = 20;
     const gained = (successCount * negEV) + (elapsedTimeMin.toFixed(0) * 200);
     const volume = (bet_amount * successCount * (winChanceMilestone/100).toFixed(2));
-    console.log(`Tempo dall'avvio: ${elapsedTime} secondi (${(elapsedTimeMin).toFixed(0)} minuti)
+    console.log(`Tempo dall'avvio: ${(elapsedTime/3600).toFixed(0)} ore ${((elapsedTime/60) % 60).toFixed(0)} minuti ${(elapsedTime % 60).toFixed(0)} secondi
     Richieste elaborate: ${successCount} --- Richieste fallite: ${failureCount} --- Richieste totali/min: ${((successCount + failureCount)/elapsedTimeMin).toFixed(2)} (target: ${60000/REQ_INTERVAL_DELAY}) 
     Successi/Fallimenti: ${ratioWL} --- Successi/min: ${(successCount/elapsedTimeMin).toFixed(2)} --- Fallimenti/min: ${(failureCount/elapsedTimeMin).toFixed(2)}
     Saldo dall'avvio (con missioni attive): ${gained.toFixed(0)} GOATS --- Saldo dall'avvio (missioni + clickers): ${(gained + (65*active_clickers*elapsedTimeMin)).toFixed(0)} GOATS
-    Volume generato: ${volume} GOATS`);
+    Volume generato: ${volume.toFixed(0)} GOATS`);
 }
 
 async function performRequestCycle(bearerToken) {
