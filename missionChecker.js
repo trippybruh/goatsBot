@@ -74,13 +74,13 @@ async function sleep(ms) {
 function logStatistics() {
     const elapsedTime = getElapsedTimeInSeconds();
     const gained = (successCount * 200) + (bigMissSuccess * 1000);
-    console.log(`Tempo dall'avvio: ${Math.floor(elapsedTime/3600)} ore ${((elapsedTime/60) % 60).toFixed(0)} minuti ${(elapsedTime % 60).toFixed(0)} secondi 
-    Richieste elaborate: ${successCount} --- Richieste fallite: ${failureCount} --- Richieste misisoni speciali elaborate: ${bigMissSuccess}
-    Guadagn sessione: ${gained.toFixed(0)} GOATS --- Missioni in esecuzione su ${bearerTokens.length} bearers:`)
+    console.log(`Tempo dall'avvio: ${Math.floor(elapsedTime/3600)} ore ${((elapsedTime/60) % 60).toFixed(0)} minuti ${(elapsedTime % 60).toFixed(0)} secondi`);
+    console.log(`-> Richieste elaborate: ${successCount} --- Richieste fallite: ${failureCount} --- Richieste misisoni speciali elaborate: ${bigMissSuccess}`);
+    console.log(`-> Guadagn sessione: ${gained.toFixed(0)} GOATS --- Missioni in esecuzione su ${bearerTokens.length} bearers:`);
     for (const bearerToken of bearerTokens) {
-        console.log(`-${bearerTokens.indexOf(bearerToken)}) ${bearerToken.slice(0, 5)}...${bearerToken.slice(-5)}`)
+        console.log(`-> (${bearerTokens.indexOf(bearerToken)}): ${bearerToken.slice(0, 5)}...${bearerToken.slice(-5)}`)
     }
-    console.log(`Balance totale: ${cumulativeBalance} GOATS`);
+    console.log(`-> Balance totale: ${cumulativeBalance} GOATS`);
 }
 
 async function performRequestCycle(bearerToken) {
