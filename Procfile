@@ -1,1 +1,1 @@
-web: node autoClick.js
+web: node autoStupidBet.js

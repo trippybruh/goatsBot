@@ -2,9 +2,9 @@
   "name": "goatsbot",
   "version": "1.0.0",
   "description": "Tu madre è fissa a peora",
-  "main": "autoClick.js",
+  "main": "autoStupidBet.js",
   "scripts": {
-    "start": "node autoClick.js"
+    "start": "node autoStupidBet.js"
   },
   "dependencies": {
     "axios": "^1.7.7",
