@@ -69,20 +69,21 @@ function logStatistics() {
     const elapsedTime = getElapsedTimeInSeconds();
     const elapsedTimeMin = elapsedTime/60;
     const elapsedTimeHours = elapsedTime/3600;
-    let ratioWL = 'inf';
-
-    if (failureCount !== 0) {
-        ratioWL = (successCount/failureCount).toFixed(4);
-    }
     const active_clickers = 19;
     const avgClickerGainMin = 68;
     const gained = (successCount * negEV) + (elapsedTimeMin.toFixed(0) * 200);
     const volume = (bet_amount * successCount * (winChanceMilestone/100).toFixed(2));
+    let ratioWL = 'inf';
+    if (failureCount !== 0) {
+        ratioWL = (successCount/failureCount).toFixed(4);
+    }
+
     console.log(`Tempo dall'avvio: ${Math.floor(elapsedTimeHours)} ore ${((elapsedTime/60) % 60).toFixed(0)} minuti ${(elapsedTime % 60).toFixed(0)} secondi`);
     console.log(`-> Richieste elaborate: ${successCount} --- Richieste fallite: ${failureCount} --- Richieste totali/min: ${((successCount + failureCount)/elapsedTimeMin).toFixed(2)} (target: ${60000/REQ_INTERVAL_DELAY})`);
     console.log(`-> Successi/Fallimenti: ${ratioWL} --- Successi/min: ${(successCount/elapsedTimeMin).toFixed(2)} --- Fallimenti/min: ${(failureCount/elapsedTimeMin).toFixed(2)}`);
     console.log(`-> Saldo dall'avvio (con missioni attive): ${gained.toFixed(0)} GOATS --- Saldo dall'avvio (missioni + clickers): ${(gained + (avgClickerGainMin*active_clickers*elapsedTimeMin)).toFixed(0)} GOATS`);
-    console.log(`-> Volume generato: ${volume.toFixed(0)} CAPRE MUNTE -> (al secondo: ${(volume/elapsedTime).toFixed(2)} al millisecondo: ${(volume/(elapsedTime*1000)).toFixed(2)})`);
+    console.log(`-> Volume generato: ${volume.toFixed(0)} CAPRE MUNTE -> (${(volume/elapsedTime).toFixed(2)}/sec --- ${(volume/(elapsedTime*1000)).toFixed(2)}/millisec)`);
+    //console.log(`-> GOATS/SEC SMA200: `);
 }
 
 async function performRequestCycle(bearerToken) {
