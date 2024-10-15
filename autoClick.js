@@ -10,9 +10,9 @@ const bearerTokens = [
     bearer
 ];
 
-const negEV = -27.96;
+const negEV = -24.92;
 const winChanceMilestone = 88;
-const bet_amount = 5058;
+const bet_amount = 4527;
 const data = {
     "point_milestone": winChanceMilestone,
     "is_upper": false,
@@ -69,7 +69,7 @@ function logStatistics() {
     const elapsedTime = getElapsedTimeInSeconds();
     const elapsedTimeMin = elapsedTime/60;
     const elapsedTimeHours = elapsedTime/3600;
-    const active_clickers = 19;
+    const active_clickers = 16;
     const avgClickerGainMin = 68;
     const gained = (successCount * negEV) + (elapsedTimeMin.toFixed(0) * 200);
     const volume = (bet_amount * successCount * (winChanceMilestone/100).toFixed(2));
