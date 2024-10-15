@@ -80,7 +80,7 @@ function logStatistics() {
     console.log(`-> Richieste elaborate: ${successCount} --- Richieste fallite: ${failureCount} --- Richieste totali/min: ${((successCount + failureCount)/elapsedTimeMin).toFixed(2)} (target: ${60000/REQ_INTERVAL_DELAY})`);
     console.log(`-> Successi/Fallimenti: ${ratioWL} --- Successi/min: ${(successCount/elapsedTimeMin).toFixed(2)} --- Fallimenti/min: ${(failureCount/elapsedTimeMin).toFixed(2)}`);
     console.log(`-> Saldo dall'avvio (con missioni attive): ${gained.toFixed(0)} GOATS --- Saldo dall'avvio (missioni + clickers): ${(gained + (65*active_clickers*elapsedTimeMin)).toFixed(0)} GOATS`);
-    console.log(`-> Volume generato: ${volume.toFixed(0)} GOATS\`);`);
+    console.log(`-> Volume generato: ${volume.toFixed(0)} GOATS`);
 }
 
 async function performRequestCycle(bearerToken) {
