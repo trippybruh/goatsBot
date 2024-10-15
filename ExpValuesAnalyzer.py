@@ -103,14 +103,14 @@ wrMultipliers = {
     99.0: 0.01,
 }
 
-MIN_NEG_EV = -24
+MIN_NEG_EV = -28
 
 filterMultipliers = []
 
-def calculateEVs(betMaxRange: int):
+def calculateEVs(betMinRange, betMaxRange: int):
 
     betsEVs = {}
-    for bet in range(1, betMaxRange + 1):
+    for bet in range(betMinRange, betMaxRange + 1):
         expectedValues = {}
         for multiplier in wrMultipliers.keys():
             if multiplier not in filterMultipliers and len(filterMultipliers) != 0: continue
@@ -146,4 +146,4 @@ def getBestEVs(bestEVs: dict):
 
 
 if __name__ == '__main__':
-    print(getBestEVs(calculateEVs(10000)))
+    print(getBestEVs(calculateEVs(0, 10000)))
