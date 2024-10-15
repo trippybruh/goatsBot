@@ -71,6 +71,8 @@ function logStatistics() {
 }
 
 async function performRequestCycle(bearerToken) {
+    await makeRequest(bearerToken);
+    logStatistics();
     setInterval(async () => {
         await makeRequest(bearerToken);
         logStatistics();
