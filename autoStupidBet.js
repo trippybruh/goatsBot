@@ -11,12 +11,7 @@ const bearerTokens = [
 ];
 
 const winChanceMilestone = 100;
-const bet_amount = 999999;
-const data = {
-    "point_milestone": winChanceMilestone,
-    "is_upper": false,
-    "bet_amount": bet_amount
-};
+const bet_amount = 999949;
 let successCount = 0;
 let failureCount = 0;
 
@@ -25,6 +20,12 @@ function getElapsedTimeInSeconds() {
 }
 
 async function makeRequest(bearerToken) {
+    const data = {
+        "point_milestone": winChanceMilestone,
+        "is_upper": false,
+        "bet_amount": bet_amount
+    };
+
     const options = {
         method: 'POST',
         url: 'https://api-dice.goatsbot.xyz/dice/action',
@@ -43,7 +44,7 @@ async function makeRequest(bearerToken) {
         successCount++;
         return jsonResponse;
     } catch (error) {
-        console.log(`Errore richiesta: ${(error.message).slice(0, 5)}`)
+        console.log(`Errore richiesta: ${(error.message).slice(0, 5)} - Ritento tra un minuto`)
         failureCount++;
         await sleep(66000);
         return makeRequest(bearerToken);
