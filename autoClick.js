@@ -3,15 +3,15 @@ const express = require('express');
 
 const app = express();
 const startTime = Date.now();
-const REQ_INTERVAL_DELAY = 330; // ms
+const REQ_INTERVAL_DELAY = 350; // ms
 const INTRA_REQ_DELAY = 300;
 const bearer = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjcwNzIxOTkwMTRmNDcwZTVhMDUxNjcxIiwiaWF0IjoxNzI4OTQ2MDU5LCJleHAiOjE3MjkwMzI0NTksInR5cGUiOiJhY2Nlc3MifQ.2mT7GFcGNNbD1bdD2g774SZkWGmSjBcQnWJTCq8ggjU';
 const bearerTokens = [
     bearer
 ];
 
-const winChanceMilestone = 90;
-const bet_amount = 5;
+const winChanceMilestone = 88;
+const bet_amount = 58;
 const data = {
     "point_milestone": winChanceMilestone,
     "is_upper": false,
