@@ -1,13 +1,13 @@
 const cloudscraper = require('cloudscraper');
 
 const startTime = Date.now();
-const myBearer = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjZmMDI2NGZhNzVkYjBjZjYzYmY4YjAwIiwiaWF0IjoxNzI5MDMzODYxLCJleHAiOjE3MjkxMjAyNjEsInR5cGUiOiJhY2Nlc3MifQ.OGmTht4BAmBXbGpB12d7rAPvn40hS6udj8ChPx8h3ZE';
+const myBearer = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjZmMDI2NGZhNzVkYjBjZjYzYmY4YjAwIiwiaWF0IjoxNzI5MTIxMjQ3LCJleHAiOjE3MjkyMDc2NDcsInR5cGUiOiJhY2Nlc3MifQ.jdmqoWMhFCV1oFTkeUGXfT39wFy4Mfd-9uqyW2aB0lY';
 const bearerTokens = [
     myBearer,
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjcwNDBhNjYzOGE4ZTVkMjY0YTk2Mjg2IiwiaWF0IjoxNzI5MDMzNzY5LCJleHAiOjE3MjkxMjAxNjksInR5cGUiOiJhY2Nlc3MifQ.CrKbdp4696WK-Zpo8JlxMR_knRWjohjsm_QX45XAxcY',
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjcwNDc5YTMwMTRmNDcwZTVhYjViZDdlIiwiaWF0IjoxNzI5MDMzNjk1LCJleHAiOjE3MjkxMjAwOTUsInR5cGUiOiJhY2Nlc3MifQ.GYz2_wnyAOug4A5JS1TQp4uR8E3rEYVDSOhlIS0Ni_Y',
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjcwNzIxOTkwMTRmNDcwZTVhMDUxNjcxIiwiaWF0IjoxNzI5MDM0MDg5LCJleHAiOjE3MjkxMjA0ODksInR5cGUiOiJhY2Nlc3MifQ.jmBBYtvCTp862om7RyvhD88RAv0We46qzPnH_y3B6a0',
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjcwNzI1NWM3NDU0ZmY1MGRmYjhjZjM0IiwiaWF0IjoxNzI5MDMzNTI4LCJleHAiOjE3MjkxMTk5MjgsInR5cGUiOiJhY2Nlc3MifQ.B_3pfLSP9jm4-mlzEDj0MyKG1joqvxDeQoLtvFk7HqM'
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjcwNDBhNjYzOGE4ZTVkMjY0YTk2Mjg2IiwiaWF0IjoxNzI5MTIxMDc2LCJleHAiOjE3MjkyMDc0NzYsInR5cGUiOiJhY2Nlc3MifQ.DZkeGRSETSzKUXVAN3qkudKbFyvyfvf9KA_DGuEL4DM',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjcwNDc5YTMwMTRmNDcwZTVhYjViZDdlIiwiaWF0IjoxNzI5MTIwOTU5LCJleHAiOjE3MjkyMDczNTksInR5cGUiOiJhY2Nlc3MifQ.mgPkCxloRcnkGfh8Uxhki1MF6PSMHab_Ht-mNaZvlRY',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjcwNzIxOTkwMTRmNDcwZTVhMDUxNjcxIiwiaWF0IjoxNzI5MTIwODY3LCJleHAiOjE3MjkyMDcyNjcsInR5cGUiOiJhY2Nlc3MifQ.TczAnB280jpDnAG9OVzHdCCCQlFy4iR4fQMbHUxjcos',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjcwNzI1NWM3NDU0ZmY1MGRmYjhjZjM0IiwiaWF0IjoxNzI5MTIwNzk1LCJleHAiOjE3MjkyMDcxOTUsInR5cGUiOiJhY2Nlc3MifQ.75xh7YwyycGtnaFMqU5OGWKLtvcV19EM2dsYlLMwvNk'
 ];
 
 const data = {
@@ -40,7 +40,7 @@ async function makeBetRequest(bearerToken) {
         const response = await cloudscraper(options);
         return JSON.parse(response);
     } catch (error) {
-        console.log(`Errore richiesta bet di controllo: ${(error.message).slice(0, 4)}`);
+        console.log(`Errore richiesta bet di controllo: ${(error.message).slice(0, 4)} --- Token: ${bearerToken.slice(0, 5)}...${bearerToken.slice(-5)}`);
         return null;
     }
 }
@@ -86,11 +86,11 @@ function logStatistics() {
 async function performRequestCycle(bearerToken) {
     setInterval(async () => {
         await makeRequest(bearerToken);
-        //await sleep(7500);
-        //const betResponse = await makeBetRequest(bearerToken);
-        //if (betResponse) {
-            //cumulativeBalance += +betResponse?.user?.balance;
-        //}
+        await sleep(7500);
+        const betResponse = await makeBetRequest(bearerToken);
+        if (betResponse) {
+            cumulativeBalance += +betResponse?.user?.balance;
+        }
         if (bearerTokens.indexOf(bearerToken) === bearerTokens.length - 1) {
             logStatistics();
             cumulativeBalance = 0;
@@ -163,7 +163,8 @@ async function processMissionsForBearer(bearerToken) {
 function startHourlyProcess() {
     for (const bearerToken of bearerTokens) {
         if (bearerTokens.indexOf(bearerToken) !== 0) {
-            sleep(5000 * bearerTokens.indexOf(bearerToken));
+            if (bearerToken === myBearer) continue;
+            sleep(2500 * bearerTokens.indexOf(bearerToken));
         }
         console.log(`Controllo missioni da eseguire per Bearer Token: ${bearerToken.slice(0, 5)}...${bearerToken.slice(-5)}`);
         processMissionsForBearer(bearerToken);
@@ -171,7 +172,8 @@ function startHourlyProcess() {
     setInterval(async () => {
         for (const bearerToken of bearerTokens) {
             if (bearerTokens.indexOf(bearerToken) !== 0) {
-                await sleep(5000 * bearerTokens.indexOf(bearerToken));
+                if (bearerToken === myBearer) continue;
+                await sleep(25000 * bearerTokens.indexOf(bearerToken));
             }
             console.log(`Controllo missioni da eseguire per Bearer Token: ${bearerToken.slice(0, 5)}...${bearerToken.slice(-5)}`);
             await processMissionsForBearer(bearerToken);
@@ -179,6 +181,6 @@ function startHourlyProcess() {
     }, 60 * 60 * 1000); // Ripeti ogni ora
 }
 
-//startHourlyProcess();
+startHourlyProcess();
 start();
 
