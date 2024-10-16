@@ -5,7 +5,7 @@ const app = express();
 const startTime = Date.now();
 const REQ_INTERVAL_DELAY = 350; // ms
 const INTRA_REQ_DELAY = 300;
-const bearer = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjZmMDI2NGZhNzVkYjBjZjYzYmY4YjAwIiwiaWF0IjoxNzI5MDMzODYxLCJleHAiOjE3MjkxMjAyNjEsInR5cGUiOiJhY2Nlc3MifQ.OGmTht4BAmBXbGpB12d7rAPvn40hS6udj8ChPx8h3ZE';
+const bearer = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjZmMDI2NGZhNzVkYjBjZjYzYmY4YjAwIiwiaWF0IjoxNzI5MTIxMjQ3LCJleHAiOjE3MjkyMDc2NDcsInR5cGUiOiJhY2Nlc3MifQ.jdmqoWMhFCV1oFTkeUGXfT39wFy4Mfd-9uqyW2aB0lY';
 const bearerTokens = [
     bearer
 ];
@@ -50,12 +50,6 @@ async function makeRequest(bearerToken) {
         }
         failureCount++;
         failureStreak++;
-        if (failureStreak >= 100) {
-            console.log(`100 richieste di fila fallite...
-            Ultimo errore richiesta: ${error.message} 
-            pausa 5 minuti autoclicker...`)
-            await sleep(300000);
-        }
         return null;
     }
 }
@@ -84,7 +78,14 @@ async function performRequestCycle(bearerToken) {
     const consoleLogStep = 500;
     let cycles = 0;
     setInterval(async () => {
-        await makeRequest(bearerToken);
+        const response = await makeRequest(bearerToken);
+        if (!response) {
+            if (failureStreak >= 100) {
+                console.log(`100 richieste di fila fallite... Autoclicker in pausa ciccone... 5 minuti e torna...`);
+                await sleep(300000);
+                console.log(`Riprendo i cicli richieste...`);
+            }
+        }
         if (cycles % consoleLogStep === 0) {
             logStatistics();
         }
