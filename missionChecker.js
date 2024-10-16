@@ -61,7 +61,7 @@ async function makeRequest(bearerToken) {
         successCount++;
         return jsonResponse;
     } catch (error) {
-        console.log(`Errore richiesta: ${(error.message).slice(0, 4)}`)
+        console.log(`Errore richiesta: ${(error.message).slice(0, 4)} --- Token: ${bearerToken.slice(0, 5)}...${bearerToken.slice(-5)}`);
         failureCount++;
         return null;
     }
