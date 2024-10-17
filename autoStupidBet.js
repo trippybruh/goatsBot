@@ -61,7 +61,7 @@ function logStatistics() {
     const elapsedTimeMin = elapsedTime/60;
 
     volume = (bet_amount-(Math.floor(bet_amount*0.01)))*successCount;
-    const gained = (-0.01*bet_amount*successCount);
+    const gained = Math.round((-0.01*bet_amount*successCount));
     let ratioWL = 'inf';
     if (failureCount !== 0) {
         ratioWL = (successCount/failureCount).toFixed(4);
@@ -69,7 +69,7 @@ function logStatistics() {
     console.log(`Tempo dall'avvio: ${Math.floor(elapsedTime/3600)} ore ${((elapsedTime/60) % 60).toFixed(0)} minuti ${(elapsedTime % 60).toFixed(0)} secondi`);
     console.log(`-> Richieste elaborate: ${successCount} --- Richieste fallite: ${failureCount} --- Richieste ancora necessarie: ${Math.ceil((target_volume-volume)/(volume/successCount))}`);
     console.log(`-> Successi/Fallimenti: ${ratioWL} --- Richieste totali/min: ${((successCount + failureCount)/(elapsedTimeMin)).toFixed(2)} (target: ${((60000)/REQ_INTERVAL_DELAY).toFixed(1)}/min)`);
-    console.log(`-> Perdite totali (stupid bet): ${Math.round(gained)} GOATS --- Volume generato per bet: ${volume/successCount} GOATS )`);
+    console.log(`-> Perdite totali (stupid bet): ${gained} GOATS --- Volume generato per bet: ${volume/successCount} GOATS )`);
     console.log(`-> Volume totale: ${volume} GOATS (${((volume/target_volume)*100).toFixed(1)}% del volume target) --- Tempo stimato al target: ${((REQ_INTERVAL_DELAY/1000)*Math.ceil((target_volume-volume)/(volume/successCount))).toFixed(1)} secondi`);
 }
 
@@ -84,7 +84,7 @@ async function performRequestCycle(bearerToken) {
             logStatistics();
         }
         if (volume >= target_volume) {
-            console.log(`Bet stupide eseguite :) -> CAPRE MUNTE: ${volume} GOATS`);
+            console.log(`TARGET RAGGIUNTO :) --- CAPRE MUNTE: ${volume} GOATS --> COSTO: ${Math.round(-0.01*bet_amount*successCount)} GOATS`);
             await sleep(3000);
             clearInterval(intervalId);
             process.exit(0);
