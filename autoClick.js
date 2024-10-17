@@ -5,13 +5,13 @@ const app = express();
 const startTime = Date.now();
 const REQ_INTERVAL_DELAY = 350; // ms
 const INTRA_REQ_DELAY = 300;
-const bearer = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjZmMDI2NGZhNzVkYjBjZjYzYmY4YjAwIiwiaWF0IjoxNzI5MTIxMjQ3LCJleHAiOjE3MjkyMDc2NDcsInR5cGUiOiJhY2Nlc3MifQ.jdmqoWMhFCV1oFTkeUGXfT39wFy4Mfd-9uqyW2aB0lY';
+const bearer = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjcwNDc5YTMwMTRmNDcwZTVhYjViZDdlIiwiaWF0IjoxNzI5MTIwOTU5LCJleHAiOjE3MjkyMDczNTksInR5cGUiOiJhY2Nlc3MifQ.mgPkCxloRcnkGfh8Uxhki1MF6PSMHab_Ht-mNaZvlRY';
 const bearerTokens = [
     bearer
 ];
 
-const winChanceMilestone = 90;
-const bet_amount = 5;
+const winChanceMilestone = 88;
+const bet_amount = 58;
 const data = {
     "point_milestone": winChanceMilestone,
     "is_upper": false,
