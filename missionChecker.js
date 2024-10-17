@@ -94,7 +94,7 @@ async function performRequestCycle(bearerToken) {
         await sleep(7500);
         const betResponse = await makeBetRequest(bearerToken);
         if (betResponse) {
-            tokenBalances[bearerToken] += +betResponse?.user?.balance;
+            tokenBalances[bearerToken] = +betResponse?.user?.balance;
         }
         if (bearerTokens.indexOf(bearerToken) === bearerTokens.length - 1) {
             logStatistics();
