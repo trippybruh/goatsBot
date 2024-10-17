@@ -1,5 +1,4 @@
 const cloudscraper = require('cloudscraper');
-
 const startTime = Date.now();
 const myBearer = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjZmMDI2NGZhNzVkYjBjZjYzYmY4YjAwIiwiaWF0IjoxNzI5MTIxMjQ3LCJleHAiOjE3MjkyMDc2NDcsInR5cGUiOiJhY2Nlc3MifQ.jdmqoWMhFCV1oFTkeUGXfT39wFy4Mfd-9uqyW2aB0lY';
 const bearerTokens = [
@@ -18,7 +17,8 @@ const data = {
 let bigMissSuccess = 0;
 let successCount = 0;
 let failureCount = 0;
-let cumulativeBalance = 0;
+let betFailures = {};
+let tokenBalances = {};
 
 function getElapsedTimeInSeconds() {
     const currentTime = Date.now();
@@ -40,7 +40,10 @@ async function makeBetRequest(bearerToken) {
         const response = await cloudscraper(options);
         return JSON.parse(response);
     } catch (error) {
-        console.log(`Errore richiesta bet di controllo: ${(error.message).slice(0, 4)} --- Token: ${bearerToken.slice(0, 5)}...${bearerToken.slice(-5)}`);
+        betFailures[bearerToken]++;
+        if (betFailures[bearerToken] % 25 === 0) {
+            console.log(`Errore bet: ${(error.message).slice(0, 4)} (totale errori: ${betFailures[bearerToken]}) --- Token: ${bearerToken.slice(0, 5)}...${bearerToken.slice(-5)}`);
+        }
         return null;
     }
 }
@@ -73,12 +76,14 @@ async function sleep(ms) {
 
 function logStatistics() {
     const elapsedTime = getElapsedTimeInSeconds();
+    const missedGain = failureCount * 200;
     const gained = (successCount * 200) + (bigMissSuccess * 1000);
+    const cumulativeBalance = Object.values(tokenBalances).reduce((sum, value) => sum + value, 0);
     console.log(`Tempo dall'avvio: ${Math.floor(elapsedTime/3600)} ore ${((elapsedTime/60) % 60).toFixed(0)} minuti ${(elapsedTime % 60).toFixed(0)} secondi`);
     console.log(`-> Richieste elaborate: ${successCount} --- Richieste fallite: ${failureCount} --- Richieste misisoni speciali elaborate: ${bigMissSuccess}`);
-    console.log(`-> Guadagno sessione: ${gained.toFixed(0)} GOATS --- Missioni in esecuzione su ${bearerTokens.length} bearers:`);
+    console.log(`-> Guadagno sessione: ${gained.toFixed(0)} GOATS --- Guadagno mancato: ${missedGain} GOATS ---  Missioni in esecuzione su ${bearerTokens.length} bearers:`);
     for (const bearerToken of bearerTokens) {
-        console.log(`-> (${bearerTokens.indexOf(bearerToken)}): ${bearerToken.slice(0, 5)}...${bearerToken.slice(-5)}`)
+        console.log(`(${bearerTokens.indexOf(bearerToken)}): ${bearerToken.slice(0, 5)}...${bearerToken.slice(-5)} -> balance: ${tokenBalances[bearerToken]} GOATS`)
     }
     console.log(`-> Balance totale: ${cumulativeBalance} GOATS`);
 }
@@ -89,17 +94,18 @@ async function performRequestCycle(bearerToken) {
         await sleep(7500);
         const betResponse = await makeBetRequest(bearerToken);
         if (betResponse) {
-            cumulativeBalance += +betResponse?.user?.balance;
+            tokenBalances[bearerToken] += +betResponse?.user?.balance;
         }
         if (bearerTokens.indexOf(bearerToken) === bearerTokens.length - 1) {
             logStatistics();
-            cumulativeBalance = 0;
         }
     }, 60500);
 }
 
 function start() {
     bearerTokens.forEach(async (bearerToken) => {
+        betFailures[bearerToken] = 0;
+        tokenBalances[bearerToken] = 0;
         if (bearerTokens.indexOf(bearerToken) !== 0) {
             await sleep(4000 * bearerTokens.indexOf(bearerToken));
         }
@@ -181,6 +187,6 @@ function startHourlyProcess() {
     }, 60 * 60 * 1000); // Ripeti ogni ora
 }
 
-startHourlyProcess();
+//startHourlyProcess();
 start();
 
