@@ -15,7 +15,7 @@ const bet_amount = 999949; // G
 const target_volume = 20000000; // G
 let successCount = 0;
 let failureCount = 0;
-let volume;
+let volume = 0;
 
 function getElapsedTimeInSeconds() {
     return ((Date.now() - startTime) / 1000).toFixed(2);
@@ -74,15 +74,10 @@ function logStatistics() {
 }
 
 async function performRequestCycle(bearerToken) {
-    await makeRequest(bearerToken);
-    logStatistics();
-    let consoleSteps = [3, 5, 7];
-    let cycles;
+    console.log(`Ok.. pronto a mungere circa ${target_volume} di CAPRE...`);
     const intervalId = setInterval(async () => {
         await makeRequest(bearerToken);
-        if (cycles % consoleSteps[Math.floor(Math.random() * consoleSteps.length)] === 0) {
-            logStatistics();
-        }
+        logStatistics();
         if (volume >= target_volume) {
             console.log(`TARGET RAGGIUNTO :) --- CAPRE MUNTE: ${volume} GOATS --> COSTO: ${Math.round(-0.01*bet_amount*successCount)} GOATS`);
             await sleep(3000);
@@ -96,7 +91,7 @@ async function performRequestCycle(bearerToken) {
 function start() {
     bearerTokens.forEach(async (bearerToken) => {
         console.log(`Inizio cicli di richieste per Bearer Token: ${bearerToken.slice(0, 5)}...${bearerToken.slice(-5)}
-        Configurato per eseguire max ${((60000*60)/REQ_INTERVAL_DELAY).toFixed(2)} richieste/min --- Timeout minimo tra una richiesta ed un altra: ${((60000)/REQ_INTERVAL_DELAY/1000).toFixed(3)} min`);
+        Configurato per eseguire max ${((60000)/REQ_INTERVAL_DELAY).toFixed(2)} richieste/min --- Timeout minimo tra una richiesta ed un altra: ${((60000)/REQ_INTERVAL_DELAY/1000).toFixed(3)} min`);
         await performRequestCycle(bearerToken);
     });
 }
