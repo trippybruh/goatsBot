@@ -10,9 +10,9 @@ const bearerTokens = [
     bearer
 ];
 
-const negEV = -7.88;
+const negEV = -11.92;
 const winChanceMilestone = 88;
-const bet_amount = 1481;
+const bet_amount = 2204;
 const data = {
     "point_milestone": winChanceMilestone,
     "is_upper": false,
