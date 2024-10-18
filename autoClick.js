@@ -77,13 +77,14 @@ function logStatistics() {
 async function performRequestCycle(bearerToken) {
     const consoleLogStep = 500;
     let cycles = 0;
-    setInterval(async () => {
+    const intervalId = setInterval(async () => {
         const response = await makeRequest(bearerToken);
         if (!response) {
-            if (failureStreak >= 100) {
-                console.log(`100 richieste di fila fallite... Autoclicker in pausa ciccone... 5 minuti e torna...`);
-                await sleep(300000);
-                console.log(`Riprendo i cicli richieste...`);
+            if (failureStreak >= 200) {
+                console.log(`200 richieste di fila fallite... Spegnimento autoclicker...`);
+                await sleep(1000);
+                clearInterval(intervalId);
+                process.exit(1);
             }
         }
         if (cycles % consoleLogStep === 0) {
