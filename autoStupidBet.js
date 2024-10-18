@@ -84,8 +84,7 @@ async function performRequestCycle(bearerToken) {
             clearInterval(intervalId);
             process.exit(0);
         }
-    }, REQ_INTERVAL_DELAY)
-    process.exit(0);
+    }, REQ_INTERVAL_DELAY);
 }
 
 function start() {
