@@ -60,8 +60,8 @@ function logStatistics() {
     const elapsedTime = getElapsedTimeInSeconds();
     const elapsedTimeMin = elapsedTime/60;
 
-    volume = (bet_amount-(Math.floor(bet_amount*0.01)))*successCount;
-    const gained = Math.round((-0.01*bet_amount*successCount));
+    volume = (bet_amount-(Math.floor(bet_amount*(1-(winChanceMilestone/100)))))*successCount;
+    const gained = Math.round(((winChanceMilestone/100)-1)*bet_amount*successCount);
     let ratioWL = 'inf';
     if (failureCount !== 0) {
         ratioWL = (successCount/failureCount).toFixed(4);
