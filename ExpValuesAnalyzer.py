@@ -103,7 +103,7 @@ wrMultipliers = {
     99.0: 0.01,
 }
 
-MIN_NEG_EV = -23
+MIN_NEG_EV = -8
 
 filterMultipliers = []
 
