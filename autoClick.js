@@ -69,7 +69,7 @@ function logStatistics() {
     const elapsedTime = getElapsedTimeInSeconds();
     const elapsedTimeMin = elapsedTime/60;
     const elapsedTimeHours = elapsedTime/3600;
-    const active_clickers = 3;
+    const active_clickers = 10;
     const avgClickerGainMin = 70;
     const gained = (successCount * negEV) + (elapsedTimeMin.toFixed(0) * 200);
     const volume = (bet_amount * successCount * (winChanceMilestone/100).toFixed(2));
