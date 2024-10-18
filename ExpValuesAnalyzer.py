@@ -105,7 +105,7 @@ wrMultipliers = {
 
 MIN_NEG_EV = -8
 
-filterMultipliers = []
+filterMultipliers = [1.13]
 
 def calculateEVs(betMinRange, betMaxRange: int):
 
