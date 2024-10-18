@@ -5,7 +5,7 @@ const app = express();
 const startTime = Date.now();
 const REQ_INTERVAL_DELAY = 350; // ms
 const INTRA_REQ_DELAY = 300;
-const bearer = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjcwNDc5YTMwMTRmNDcwZTVhYjViZDdlIiwiaWF0IjoxNzI5MTIwOTU5LCJleHAiOjE3MjkyMDczNTksInR5cGUiOiJhY2Nlc3MifQ.mgPkCxloRcnkGfh8Uxhki1MF6PSMHab_Ht-mNaZvlRY';
+const bearer = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjcwNDc5YTMwMTRmNDcwZTVhYjViZDdlIiwiaWF0IjoxNzI5MjA5ODgzLCJleHAiOjE3MjkyOTYyODMsInR5cGUiOiJhY2Nlc3MifQ.nhF2sBsFht-HrY9rKu7b_hFM_ZCYqnBn24ggthOiieg';
 const bearerTokens = [
     bearer
 ];
@@ -90,7 +90,7 @@ async function performRequestCycle(bearerToken) {
             logStatistics();
         }
         cycles++;
-    }, REQ_INTERVAL_DELAY)
+    }, REQ_INTERVAL_DELAY);
 }
 
 function start() {
