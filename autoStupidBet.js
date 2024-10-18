@@ -3,7 +3,7 @@ const express = require('express');
 
 const app = express();
 const startTime = Date.now();
-const REQ_INTERVAL_DELAY = 20000; // ms
+const REQ_INTERVAL_DELAY = 25000; // ms
 const INTRA_REQ_DELAY = 5000;
 const bearer = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjcwNDc5YTMwMTRmNDcwZTVhYjViZDdlIiwiaWF0IjoxNzI5MjA5ODgzLCJleHAiOjE3MjkyOTYyODMsInR5cGUiOiJhY2Nlc3MifQ.nhF2sBsFht-HrY9rKu7b_hFM_ZCYqnBn24ggthOiieg';
 const bearerTokens = [
@@ -12,7 +12,7 @@ const bearerTokens = [
 
 const winChanceMilestone = 100;
 const bet_amount = 999949; // G
-const target_volume = 30000000; // G
+const target_volume = 100000000; // G
 let successCount = 0;
 let failureCount = 0;
 let volume = 0;
