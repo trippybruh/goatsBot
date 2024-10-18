@@ -10,8 +10,8 @@ const bearerTokens = [
     bearer
 ];
 
-const winChanceMilestone = 97;
-const bet_amount = 25;
+const winChanceMilestone = 90;
+const bet_amount = 5;
 const data = {
     "point_milestone": winChanceMilestone,
     "is_upper": false,
