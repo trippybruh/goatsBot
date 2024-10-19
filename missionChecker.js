@@ -2,20 +2,21 @@ const cloudscraper = require('cloudscraper');
 const express = require('express');
 const app = express();
 const startTime = Date.now();
-const myBearer = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjZmMDI2NGZhNzVkYjBjZjYzYmY4YjAwIiwiaWF0IjoxNzI5MjExMDMwLCJleHAiOjE3MjkyOTc0MzAsInR5cGUiOiJhY2Nlc3MifQ.8DUjQ3WCODA3z1fDJ21c7Nuryc-mRQ5NCGXUOOBokig';
+const myBearer = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjZmMDI2NGZhNzVkYjBjZjYzYmY4YjAwIiwiaWF0IjoxNzI5MzQ0MjIwLCJleHAiOjE3Mjk0MzA2MjAsInR5cGUiOiJhY2Nlc3MifQ.vNUpQcj_6FxuBQ6PIQkyJof8U5DZKW7_RipnoDMulsA';
 const bearerTokens = [
     myBearer,
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjcwNDBhNjYzOGE4ZTVkMjY0YTk2Mjg2IiwiaWF0IjoxNzI5MjA5NDM0LCJleHAiOjE3MjkyOTU4MzQsInR5cGUiOiJhY2Nlc3MifQ.t5FnLoSnKwAAUi8eoR1OQygHeVt4ih92Oz1fZdKvCBo',
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjcwNDc5YTMwMTRmNDcwZTVhYjViZDdlIiwiaWF0IjoxNzI5MjA5ODgzLCJleHAiOjE3MjkyOTYyODMsInR5cGUiOiJhY2Nlc3MifQ.nhF2sBsFht-HrY9rKu7b_hFM_ZCYqnBn24ggthOiieg',
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjcwNzIxOTkwMTRmNDcwZTVhMDUxNjcxIiwiaWF0IjoxNzI5MjEwNDU5LCJleHAiOjE3MjkyOTY4NTksInR5cGUiOiJhY2Nlc3MifQ.g6FE10rsE7LWwRZUlJyvZkMAqPfs1RJgifw6dErpLGI',
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjcwNzI1NWM3NDU0ZmY1MGRmYjhjZjM0IiwiaWF0IjoxNzI5MjEwODgxLCJleHAiOjE3MjkyOTcyODEsInR5cGUiOiJhY2Nlc3MifQ.fNN_JmEO_VJJ2JSj9sKPqIq5jbg7hDd1SIKJwqeriW8',
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjcxMjYyMzFmMDNmYTFmNjhhYjcyZjhmIiwiaWF0IjoxNzI5MjYwMTkwLCJleHAiOjE3MjkzNDY1OTAsInR5cGUiOiJhY2Nlc3MifQ.ehCYXBZps4Q0294TFv0214llz7FAHCzWOrnfIRch5Dg'
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjcwNDBhNjYzOGE4ZTVkMjY0YTk2Mjg2IiwiaWF0IjoxNzI5MzQ0MTQyLCJleHAiOjE3Mjk0MzA1NDIsInR5cGUiOiJhY2Nlc3MifQ.tZgUfxho7pR5EDCBbIkH_RZ9b2gZHTNWpLMs1-4j21E',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjcwNDc5YTMwMTRmNDcwZTVhYjViZDdlIiwiaWF0IjoxNzI5MzQ0MDU1LCJleHAiOjE3Mjk0MzA0NTUsInR5cGUiOiJhY2Nlc3MifQ.dAh3Fin8FmWJWsuYIZzLwiL9rL-QidjkmOlximtvuXQ',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjcwNzIxOTkwMTRmNDcwZTVhMDUxNjcxIiwiaWF0IjoxNzI5MzQzOTc4LCJleHAiOjE3Mjk0MzAzNzgsInR5cGUiOiJhY2Nlc3MifQ.TJCOa1APJG0ZPEVU7ys2FbfEFtyL9uxNcJKbSQQcjCI',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjcwNzI1NWM3NDU0ZmY1MGRmYjhjZjM0IiwiaWF0IjoxNzI5MzQzOTA1LCJleHAiOjE3Mjk0MzAzMDUsInR5cGUiOiJhY2Nlc3MifQ.HdaQWaHhDvt6HMaB190p058gUyY7eyqkw_D45ZSzY1E',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjcxMjYyMzFmMDNmYTFmNjhhYjcyZjhmIiwiaWF0IjoxNzI5MzQzODE3LCJleHAiOjE3Mjk0MzAyMTcsInR5cGUiOiJhY2Nlc3MifQ.yqNRW750zwwAPjXtoiPneCu74e9SwIe60hp0uDaMO64',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjcxM2FiNDgzNmVmODEzMWM1MjAyNmE2IiwiaWF0IjoxNzI5MzQzNzI3LCJleHAiOjE3Mjk0MzAxMjcsInR5cGUiOiJhY2Nlc3MifQ.lBi0thBzRbWCdYfpRQvfSoY6bJ6zFWztvmBVLcLZlS8'
 ];
 
 const data = {
-    "point_milestone": 90,
+    "point_milestone": 97,
     "is_upper": false,
-    "bet_amount": 5
+    "bet_amount": 25
 };
 let bigMissSuccess = 0;
 let successCount = 0;
@@ -130,7 +131,7 @@ async function getMissions(bearerToken) {
         const response = await cloudscraper(options);
         return JSON.parse(response);
     } catch (error) {
-        console.error(`Errore nel recuperare le missioni per Bearer Token: ${bearerToken}`, error.message);
+        console.error(`Errore (${(error.message).slice(0, 4)}) nel recuperare le missioni per Token: ${bearerToken.slice(0, 5)}...${bearerToken.slice(-5)}`);
         return null;
     }
 }
@@ -144,13 +145,12 @@ async function executeMission(bearerToken, missionId) {
             'Content-Type': 'application/json'
         }
     };
-
     try {
         const response = await cloudscraper(options);
         console.log(`Missione ${missionId} completata con successo.`);
         return JSON.parse(response);
     } catch (error) {
-        console.error(`Errore nell'eseguire la missione ${missionId} per Bearer Token: ${bearerToken}`, error.message);
+        console.error(`Errore (${(error.message).slice(0, 4)}) nell'eseguire la missione ${missionId} per Token: ${bearerToken.slice(0, 5)}...${bearerToken.slice(-5)}`);
     }
 }
 
@@ -160,6 +160,7 @@ async function processMissionsForBearer(bearerToken) {
     for (const [missionGroup, missions] of Object.entries(missionsData)) {
         for (const mission of missions) {
             if (mission.status === false) {
+                await sleep(250);
                 await executeMission(bearerToken, mission._id);
                 bigMissSuccess++;
             } else {
@@ -169,31 +170,29 @@ async function processMissionsForBearer(bearerToken) {
     }
 }
 
-function startHourlyProcess() {
+async function startHourlyProcess() {
     for (const bearerToken of bearerTokens) {
         if (bearerTokens.indexOf(bearerToken) !== 0) {
-            if (bearerToken === myBearer) continue;
-            sleep(2500 * bearerTokens.indexOf(bearerToken));
+            await sleep(2500 * bearerTokens.indexOf(bearerToken));
         }
         console.log(`Controllo missioni da eseguire per Bearer Token: ${bearerToken.slice(0, 5)}...${bearerToken.slice(-5)}`);
-        processMissionsForBearer(bearerToken);
+        await processMissionsForBearer(bearerToken);
     }
     setInterval(async () => {
         for (const bearerToken of bearerTokens) {
             if (bearerTokens.indexOf(bearerToken) !== 0) {
-                if (bearerToken === myBearer) continue;
-                await sleep(25000 * bearerTokens.indexOf(bearerToken));
+                await sleep(5000 * bearerTokens.indexOf(bearerToken));
             }
             console.log(`Controllo missioni da eseguire per Bearer Token: ${bearerToken.slice(0, 5)}...${bearerToken.slice(-5)}`);
             await processMissionsForBearer(bearerToken);
         }
-    }, 60 * 60 * 1000); // Ripeti ogni ora
+    }, 60 * 60 * 1000 * 8); // Ripeti ogni 8 ore
 }
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
     console.log(`Service is running on port ${port}`);
 });
-//startHourlyProcess();
+startHourlyProcess();
 start();
 
