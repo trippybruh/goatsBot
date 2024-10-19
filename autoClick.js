@@ -66,7 +66,7 @@ function logStatistics() {
     if (failureCount !== 0) {
         ratioWL = (successCount/failureCount).toFixed(4);
     }
-    const gained = successCount * 0.4;
+    const gained = successCount * 0.22;
     const volume = bet_amount*successCount*(winChanceMilestone/100);
     console.log(`Tempo dall'avvio: ${Math.floor(elapsedTime/3600)} ore ${((elapsedTime/60) % 60).toFixed(0)} minuti ${(elapsedTime % 60).toFixed(0)} secondi`);
     console.log(`-> Richieste elaborate: ${successCount} --- Richieste fallite: ${failureCount} --- Richieste totali/min: ${((successCount + failureCount)/elapsedTimeMin).toFixed(2)} (target: ${(60000/REQ_INTERVAL_DELAY).toFixed(1)})`);
