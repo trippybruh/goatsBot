@@ -31,7 +31,21 @@ async function makeRequest(bearerToken) {
         url: 'https://api-dice.goatsbot.xyz/dice/action',
         headers: {
             'Authorization': `Bearer ${bearerToken}`,
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:131.0) Gecko/20100101 Firefox/131.0',
+            'Accept': 'application/json, text/plain, */*',
+            'Accept-Language': 'it-IT,it;q=0.8,en-US;q=0.5,en;q=0.3',
+            'Accept-Encoding': 'gzip, deflate, br, zstd',
+            'Origin': 'https://dev.goatsbot.xyz',
+            'DNT': '1',
+            'Connection': 'keep-alive',
+            'Referer': 'https://dev.goatsbot.xyz/',
+            'Sec-Fetch-Dest': 'empty',
+            'Sec-Fetch-Mode': 'cors',
+            'Sec-Fetch-Site': 'same-site',
+            'Sec-GPC': '1',
+            'Pragma': 'no-cache',
+            'Cache-Control': 'no-cache'
         },
         body: JSON.stringify(data),
         timeout: 5000
