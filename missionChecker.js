@@ -2,16 +2,15 @@ const cloudscraper = require('cloudscraper');
 const express = require('express');
 const app = express();
 const startTime = Date.now();
-const myBearer = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjZmMDI2NGZhNzVkYjBjZjYzYmY4YjAwIiwiaWF0IjoxNzI5Njk2OTExLCJleHAiOjE3Mjk3ODMzMTEsInR5cGUiOiJhY2Nlc3MifQ.kpErhP2SVNYfanp2dQY8Io8r3qKTe-EukgpTPeX4ko8';
+const myBearer = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjZmMDI2NGZhNzVkYjBjZjYzYmY4YjAwIiwiaWF0IjoxNzI5Nzg1ODI3LCJleHAiOjE3Mjk4NzIyMjcsInR5cGUiOiJhY2Nlc3MifQ.6-gOLgidKF_ft3LK4edCjKg4cYix2PKaSDrs_wCHuXw';
 const bearerTokens = [
     myBearer,
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjcwNDBhNjYzOGE4ZTVkMjY0YTk2Mjg2IiwiaWF0IjoxNzI5Njk3NDE5LCJleHAiOjE3Mjk3ODM4MTksInR5cGUiOiJhY2Nlc3MifQ.wmciy-1oMMi8tU8eFPCi3uoot9NF48e2mPUJScHHX4Q',
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjcwNDc5YTMwMTRmNDcwZTVhYjViZDdlIiwiaWF0IjoxNzI5Njk3NTE1LCJleHAiOjE3Mjk3ODM5MTUsInR5cGUiOiJhY2Nlc3MifQ.dYENfPhe83fNxVEvz4E8PRt0ckwbz1ZfCCwDcMJSEB0',
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjcwNzIxOTkwMTRmNDcwZTVhMDUxNjcxIiwiaWF0IjoxNzI5Njk3NTU4LCJleHAiOjE3Mjk3ODM5NTgsInR5cGUiOiJhY2Nlc3MifQ.cMammcGPnX3XW4vXeH6418-1eBrfIksF55ZZtIGd5m0',
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjcwNzI1NWM3NDU0ZmY1MGRmYjhjZjM0IiwiaWF0IjoxNzI5Njk3NjMyLCJleHAiOjE3Mjk3ODQwMzIsInR5cGUiOiJhY2Nlc3MifQ.khlikHDaSbEbWn7BMy2wcSwxhaAsDGljH0n3n7lrx_E',
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjcxMjYyMzFmMDNmYTFmNjhhYjcyZjhmIiwiaWF0IjoxNzI5Njk3NzUyLCJleHAiOjE3Mjk3ODQxNTIsInR5cGUiOiJhY2Nlc3MifQ.rNgs_xcUuT10NvQ17MU09IoE7DqHuSvQ8Z7pVpK9CJY',
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjcxM2FiNDgzNmVmODEzMWM1MjAyNmE2IiwiaWF0IjoxNzI5Njk3ODk5LCJleHAiOjE3Mjk3ODQyOTksInR5cGUiOiJhY2Nlc3MifQ.5bNsI4sOBpkvD4hjxf2hyjAk_H_vK8Ao_CxEA6-a4GE',
-
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjcwNDBhNjYzOGE4ZTVkMjY0YTk2Mjg2IiwiaWF0IjoxNzI5Nzg1OTIyLCJleHAiOjE3Mjk4NzIzMjIsInR5cGUiOiJhY2Nlc3MifQ.US1Z7vH_sP4qK8VEQexHHhapt2lZDHbWgtcUeQ3I-zI',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjcwNDc5YTMwMTRmNDcwZTVhYjViZDdlIiwiaWF0IjoxNzI5Nzg2MDM0LCJleHAiOjE3Mjk4NzI0MzQsInR5cGUiOiJhY2Nlc3MifQ.Q5S-bb53JMpXmzd1eoGGkIqVuEODRNkZPxot04NKxt4',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjcwNzIxOTkwMTRmNDcwZTVhMDUxNjcxIiwiaWF0IjoxNzI5Nzg2MDk1LCJleHAiOjE3Mjk4NzI0OTUsInR5cGUiOiJhY2Nlc3MifQ.5-5Y6QgBEhQ_MQgEY7FpZYAY-3OjullUNVIZ7YHqqeA',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjcwNzI1NWM3NDU0ZmY1MGRmYjhjZjM0IiwiaWF0IjoxNzI5Nzg2MTYxLCJleHAiOjE3Mjk4NzI1NjEsInR5cGUiOiJhY2Nlc3MifQ.rSo8suyK8qYEF5uY7gRKIY3V9qv-KfvE28ATC9WJdNk',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjcxMjYyMzFmMDNmYTFmNjhhYjcyZjhmIiwiaWF0IjoxNzI5Nzg2Mjc1LCJleHAiOjE3Mjk4NzI2NzUsInR5cGUiOiJhY2Nlc3MifQ.kGGkzjghFQquWzljehDCJLYOZbPzL9IiH_9sljFw5d8',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjcxM2FiNDgzNmVmODEzMWM1MjAyNmE2IiwiaWF0IjoxNzI5Nzg2MzYyLCJleHAiOjE3Mjk4NzI3NjIsInR5cGUiOiJhY2Nlc3MifQ.2waGBgtrOSwuQ5s9yjzFfbnYhCTrWMNmxvasE-dE6hY',
 ];
 
 const data = {
@@ -113,7 +112,7 @@ function logStatistics() {
     const gained = (successCount * 200) + (bigMissSuccess * 1000);
     const cumulativeBalance = Object.values(tokenBalances).reduce((sum, value) => sum + value, 0);
     console.log(`Tempo dall'avvio: ${Math.floor(elapsedTime/3600)} ore ${((elapsedTime/60) % 60).toFixed(0)} minuti ${(elapsedTime % 60).toFixed(0)} secondi`);
-    console.log(`-> Richieste elaborate: ${successCount} --- Richieste fallite: ${failureCount} --- Richieste misisoni speciali elaborate: ${bigMissSuccess}`);
+    console.log(`-> Richieste elaborate: ${successCount} --- Richieste fallite: ${failureCount} --- Richieste missioni speciali elaborate: ${bigMissSuccess}`);
     console.log(`-> Guadagno sessione: ${gained.toFixed(0)} GOATS --- Guadagno mancato: ${missedGain} GOATS ---  Missioni in esecuzione su ${bearerTokens.length} bearers:`);
     for (const bearerToken of bearerTokens) {
         console.log(`(${bearerTokens.indexOf(bearerToken)}): ${bearerToken.slice(0, 5)}...${bearerToken.slice(-5)} -> balance: ${tokenBalances[bearerToken]} GOATS`)
@@ -174,7 +173,7 @@ async function getMissions(bearerToken) {
         const response = await cloudscraper(options);
         return JSON.parse(response);
     } catch (error) {
-        console.error(`Errore (${(error.message).slice(0, 4)}) nel recuperare le missioni per Token: ${bearerToken.slice(0, 5)}...${bearerToken.slice(-5)}`);
+        console.error(`Errore (${(error.message)}) nel recuperare le missioni per Token: ${bearerToken.slice(0, 5)}...${bearerToken.slice(-5)}`);
         return null;
     }
 }
