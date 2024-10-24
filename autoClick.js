@@ -3,8 +3,8 @@ const express = require('express');
 
 const app = express();
 const startTime = Date.now();
-const REQ_INTERVAL_DELAY = 475; // ms
-const INTRA_REQ_DELAY = 400;
+const REQ_INTERVAL_DELAY = 1000; // ms
+const INTRA_REQ_DELAY = 900;
 const bearer = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjcxMjYyMzFmMDNmYTFmNjhhYjcyZjhmIiwiaWF0IjoxNzI5Nzg2Mjc1LCJleHAiOjE3Mjk4NzI2NzUsInR5cGUiOiJhY2Nlc3MifQ.kGGkzjghFQquWzljehDCJLYOZbPzL9IiH_9sljFw5d8';
 const bearerTokens = [
     bearer
