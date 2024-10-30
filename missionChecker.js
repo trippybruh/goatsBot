@@ -13,13 +13,14 @@ const bearerTokens = [
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjcxM2FiNDgzNmVmODEzMWM1MjAyNmE2IiwiaWF0IjoxNzMwMzI0OTIxLCJleHAiOjE3MzA0MTEzMjEsInR5cGUiOiJhY2Nlc3MifQ.Km9ZgNQHqzFLPwkelxDKwI3dVUhSdMAHca3f-sbxayk',
 ]
 const data = {
-    "point_milestone": 88,
+    "point_milestone": 97,
     "is_upper": false,
-    "bet_amount": 58
+    "bet_amount": 25
 };
 let bigMissSuccess = 0;
 let successCount = 0;
 let failureCount = 0;
+let betSuccess = 0;
 let betFailures = {};
 let tokenBalances = {};
 
@@ -55,6 +56,7 @@ async function makeBetRequest(bearerToken) {
     };
     try {
         const response = await cloudscraper(options);
+        betSuccess++;
         return JSON.parse(response);
     } catch (error) {
         betFailures[bearerToken]++;
@@ -112,9 +114,10 @@ function logStatistics() {
     const cumulativeBalance = Object.values(tokenBalances).reduce((sum, value) => sum + value, 0);
     console.log(`Tempo dall'avvio: ${Math.floor(elapsedTime/3600)} ore ${((elapsedTime/60) % 60).toFixed(0)} minuti ${(elapsedTime % 60).toFixed(0)} secondi`);
     console.log(`-> Richieste elaborate: ${successCount} --- Richieste fallite: ${failureCount} --- Richieste missioni speciali elaborate: ${bigMissSuccess}`);
-    console.log(`-> Guadagno sessione: ${gained.toFixed(0)} GOATS --- Guadagno mancato: ${missedGain} GOATS ---  Missioni in esecuzione su ${bearerTokens.length} bearers:`);
+    console.log(`-> Guadagno sessione: ${gained.toFixed(0)} GOATS --- Guadagno mancato: ${missedGain} GOATS --- Guadagno bets ${(betSuccess*0.22).toFixed(0)} GOATS`);
+    console.log(`-> Missioni in esecuzione su ${bearerTokens.length} bearers:`);
     for (const bearerToken of bearerTokens) {
-        console.log(`(${bearerTokens.indexOf(bearerToken)}): ${bearerToken.slice(0, 5)}...${bearerToken.slice(-5)} -> balance: ${tokenBalances[bearerToken]} GOATS`)
+        console.log(`-> (${bearerTokens.indexOf(bearerToken) + 1}): ${bearerToken.slice(0, 5)}...${bearerToken.slice(-5)} -> balance: ${tokenBalances[bearerToken]} GOATS`)
     }
     console.log(`-> Balance totale: ${cumulativeBalance} GOATS`);
 }
