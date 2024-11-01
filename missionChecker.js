@@ -2,20 +2,16 @@ const cloudscraper = require('cloudscraper');
 const express = require('express');
 const app = express();
 const startTime = Date.now();
-const myBearer = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjZmMDI2NGZhNzVkYjBjZjYzYmY4YjAwIiwiaWF0IjoxNzMwMzI2MDUwLCJleHAiOjE3MzA0MTI0NTAsInR5cGUiOiJhY2Nlc3MifQ.WdR9iz2fyMb94DTbOHfPmT_g7tsqxcc1bauec1_X8Fw';
+const myBearer = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjZmMDI2NGZhNzVkYjBjZjYzYmY4YjAwIiwiaWF0IjoxNzMwNDc4NzY4LCJleHAiOjE3MzA1NjUxNjgsInR5cGUiOiJhY2Nlc3MifQ.VmITxILZ7oJQ4r8RvB2OUGhHSy_WEPC5tHGkmhiJ_5g';
 const bearerTokens = [
     myBearer,
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjcwNDBhNjYzOGE4ZTVkMjY0YTk2Mjg2IiwiaWF0IjoxNzMwMzI1NTQ1LCJleHAiOjE3MzA0MTE5NDUsInR5cGUiOiJhY2Nlc3MifQ.dkKCyBbTlPfKZsj3je7Lxh3m57xK4KdRNRZFd6SHLVQ',
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjcwNDc5YTMwMTRmNDcwZTVhYjViZDdlIiwiaWF0IjoxNzMwMzI1Mzg5LCJleHAiOjE3MzA0MTE3ODksInR5cGUiOiJhY2Nlc3MifQ.bj6dmFNG2ZohXBs1ZY8Yoo1yX2bnQxZuXCj3v9MTKi4',
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjcwNzIxOTkwMTRmNDcwZTVhMDUxNjcxIiwiaWF0IjoxNzMwMzI1MjY5LCJleHAiOjE3MzA0MTE2NjksInR5cGUiOiJhY2Nlc3MifQ.WtKLRe6ql8nfQU8ir6f4YkwMv4-OUpSc2SASAMGdfs4',
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjcwNzI1NWM3NDU0ZmY1MGRmYjhjZjM0IiwiaWF0IjoxNzMwMzI1MTQwLCJleHAiOjE3MzA0MTE1NDAsInR5cGUiOiJhY2Nlc3MifQ.1n1YskYlnwdY1Hy4PBFDSZ018hW5JLH6FUvehtQDG-g',
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjcxMjYyMzFmMDNmYTFmNjhhYjcyZjhmIiwiaWF0IjoxNzMwMzI1MDI0LCJleHAiOjE3MzA0MTE0MjQsInR5cGUiOiJhY2Nlc3MifQ.oly628TjxtBzJzqVzsx-DZQnlSycpz6NVJJoL8Gifj8',
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjcxM2FiNDgzNmVmODEzMWM1MjAyNmE2IiwiaWF0IjoxNzMwMzI0OTIxLCJleHAiOjE3MzA0MTEzMjEsInR5cGUiOiJhY2Nlc3MifQ.Km9ZgNQHqzFLPwkelxDKwI3dVUhSdMAHca3f-sbxayk',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjcxMjYyMzFmMDNmYTFmNjhhYjcyZjhmIiwiaWF0IjoxNzMwNDc4ODQ4LCJleHAiOjE3MzA1NjUyNDgsInR5cGUiOiJhY2Nlc3MifQ.BqPplLTvBhD9LORNAgTT5qw7MUsAcVL-5y-f6wq_Lzg',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjcxM2FiNDgzNmVmODEzMWM1MjAyNmE2IiwiaWF0IjoxNzMwNDc4OTEzLCJleHAiOjE3MzA1NjUzMTMsInR5cGUiOiJhY2Nlc3MifQ.4lDvW2500V884vOIZHUAnOBJIf3nKcLYRsuZOtD4zrw'
 ]
 const data = {
-    "point_milestone": 97,
+    "point_milestone": 90,
     "is_upper": false,
-    "bet_amount": 25
+    "bet_amount": 5
 };
 let bigMissSuccess = 0;
 let successCount = 0;
