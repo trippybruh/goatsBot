@@ -83,7 +83,7 @@ async function makeBetRequest(bearerToken) {
         url: execute_bet_balance_api_url,
         headers: {
             ...headersApi,
-            'Authorization': `Bearer ${bearerToken}`,
+            Authorization: `Bearer ${bearerToken}`,
         },
         body: JSON.stringify(betData),
         timeout: 5000
@@ -107,7 +107,7 @@ async function makeRequest(bearerToken) {
         url: 'https://dev-api.goatsbot.xyz/missions/action/66db47e2ff88e4527783327e',
         headers: {
             ...headersApi,
-            'Authorization': `Bearer ${bearerToken}`,
+            Authorization: `Bearer ${bearerToken}`,
         }
     };
 
@@ -173,7 +173,7 @@ async function getMissions(bearerToken) {
         url: get_mission_api_url,
         headers: {
             ...headersApi,
-            'Authorization': `Bearer ${bearerToken}`
+            Authorization: `Bearer ${bearerToken}`
         },
     };
 
@@ -192,7 +192,7 @@ async function executeMission(bearerToken, missionId) {
         url: `${execute_mission_api_url}${missionId}`,
         headers: {
             ...headersApi,
-            'Authorization': `Bearer ${bearerToken}`,
+            Authorization: `Bearer ${bearerToken}`,
         }
     };
     try {
