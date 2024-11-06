@@ -2,17 +2,47 @@ const cloudscraper = require('cloudscraper');
 const express = require('express');
 const app = express();
 const startTime = Date.now();
+
 const myBearer = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjZmMDI2NGZhNzVkYjBjZjYzYmY4YjAwIiwiaWF0IjoxNzMwODM1ODA0LCJleHAiOjE3MzA5MjIyMDQsInR5cGUiOiJhY2Nlc3MifQ.ietKKDAIFukRTkTMsz6xfV410Hf6oZ40KmR6LdZFBGg';
 const bearerTokens = [
     myBearer,
 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjcxMjYyMzFmMDNmYTFmNjhhYjcyZjhmIiwiaWF0IjoxNzMwODM1NTk1LCJleHAiOjE3MzA5MjE5OTUsInR5cGUiOiJhY2Nlc3MifQ.cmJW3XuW_RhMlu731Xk3gCAv1HhFJVqagcyKqo0kMAo',
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjcxM2FiNDgzNmVmODEzMWM1MjAyNmE2IiwiaWF0IjoxNzMwODM1NTE1LCJleHAiOjE3MzA5MjE5MTUsInR5cGUiOiJhY2Nlc3MifQ.9N8oXBPAn6pptlx-CtdpKYCQxLmU3OdB49ZPxSXJqiE'
 ]
-const data = {
+
+
+const betData = {
     "point_milestone": 90,
     "is_upper": false,
     "bet_amount": 5
 };
+
+const headersApi = {
+    'Content-Type': 'application/json',
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:131.0) Gecko/20100101 Firefox/131.0',
+    'Accept': 'application/json, text/plain, */*',
+    'Accept-Language': 'it-IT,it;q=0.8,en-US;q=0.5,en;q=0.3',
+    'Accept-Encoding': 'gzip, deflate, br, zstd',
+    'Origin': 'https://dev.goatsbot.xyz',
+    'DNT': '1',
+    'Connection': 'keep-alive',
+    'Referer': 'https://dev.goatsbot.xyz/',
+    'Sec-Fetch-Dest': 'empty',
+    'Sec-Fetch-Mode': 'cors',
+    'Sec-Fetch-Site': 'same-site',
+    'Sec-GPC': '1',
+    'Pragma': 'no-cache',
+    'Cache-Control': 'no-cache'
+}
+
+const get_mission_api_url = 'https://api-mission.goatsbot.xyz/missions/user';
+const get_checkin_api_url = 'https://api-checkin.goatsbot.xyz/checkin/user';
+const get_refresh_api_url = 'https://dev-api.goatsbot.xyz/auth/refresh-tokens'
+const execute_mission_api_url = 'https://dev-api.goatsbot.xyz/missions/action/'
+const execute_checkin_api_url = 'https://api-checkin.goatsbot.xyz/checkin/action/'
+const execute_cinema_api_url = 'https://dev-api.goatsbot.xyz/goat-cinema/watch'
+const execute_bet_balance_api_url = 'https://api-dice.goatsbot.xyz/dice/action'
+
 let bigMissSuccess = 0;
 let successCount = 0;
 let failureCount = 0;
@@ -20,34 +50,43 @@ let betSuccess = 0;
 let betFailures = {};
 let tokenBalances = {};
 
+// EXEC LOOP
+// loop().then()
+
 function getElapsedTimeInSeconds() {
     const currentTime = Date.now();
     return ((currentTime - startTime) / 1000).toFixed(2);
 }
 
+async function loop() {
+    console.log('🚀 Start')
+    while (true) {
+        await startLoopCycle();
+        // log shit
+    }
+}
+
+async function startLoopCycle() {
+    for (const token of userTokens) {
+        const {bearer, refresh} = token
+        await missions(bearer, refresh) // Ads compresa
+        await checkin(bearer, refresh)
+        await cinema(bearer, refresh)
+        await sumBalance(bearer, refresh) // senza bet disonesta
+        console.log(`📊 Token: ${bearer.slice(-5)} | Success: ${successCount} | Error: ${errorCount}`)
+        await pauseExecution(500)
+    }
+}
+
 async function makeBetRequest(bearerToken) {
     const options = {
         method: 'POST',
-        url: 'https://api-dice.goatsbot.xyz/dice/action',
+        url: execute_bet_balance_api_url,
         headers: {
+            ...headersApi,
             'Authorization': `Bearer ${bearerToken}`,
-            'Content-Type': 'application/json',
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:131.0) Gecko/20100101 Firefox/131.0',
-            'Accept': 'application/json, text/plain, */*',
-            'Accept-Language': 'it-IT,it;q=0.8,en-US;q=0.5,en;q=0.3',
-            'Accept-Encoding': 'gzip, deflate, br, zstd',
-            'Origin': 'https://dev.goatsbot.xyz',
-            'DNT': '1',
-            'Connection': 'keep-alive',
-            'Referer': 'https://dev.goatsbot.xyz/',
-            'Sec-Fetch-Dest': 'empty',
-            'Sec-Fetch-Mode': 'cors',
-            'Sec-Fetch-Site': 'same-site',
-            'Sec-GPC': '1',
-            'Pragma': 'no-cache',
-            'Cache-Control': 'no-cache'
         },
-        body: JSON.stringify(data),
+        body: JSON.stringify(betData),
         timeout: 5000
     };
     try {
@@ -68,22 +107,8 @@ async function makeRequest(bearerToken) {
         method: 'POST',
         url: 'https://dev-api.goatsbot.xyz/missions/action/66db47e2ff88e4527783327e',
         headers: {
+            ...headersApi,
             'Authorization': `Bearer ${bearerToken}`,
-            'Content-Type': 'application/json',
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:131.0) Gecko/20100101 Firefox/131.0',
-            'Accept': 'application/json, text/plain, */*',
-            'Accept-Language': 'it-IT,it;q=0.8,en-US;q=0.5,en;q=0.3',
-            'Accept-Encoding': 'gzip, deflate, br, zstd',
-            'Origin': 'https://dev.goatsbot.xyz',
-            'DNT': '1',
-            'Connection': 'keep-alive',
-            'Referer': 'https://dev.goatsbot.xyz/',
-            'Sec-Fetch-Dest': 'empty',
-            'Sec-Fetch-Mode': 'cors',
-            'Sec-Fetch-Site': 'same-site',
-            'Sec-GPC': '1',
-            'Pragma': 'no-cache',
-            'Cache-Control': 'no-cache'
         }
     };
 
@@ -146,24 +171,10 @@ function start() {
 async function getMissions(bearerToken) {
     const options = {
         method: 'GET',
-        url: 'https://api-mission.goatsbot.xyz/missions/user',
+        url: get_mission_api_url,
         headers: {
-            'Authorization': `Bearer ${bearerToken}`,
-            'Content-Type': 'application/json',
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:131.0) Gecko/20100101 Firefox/131.0',
-            'Accept': 'application/json, text/plain, */*',
-            'Accept-Language': 'it-IT,it;q=0.8,en-US;q=0.5,en;q=0.3',
-            'Accept-Encoding': 'gzip, deflate, br, zstd',
-            'Origin': 'https://dev.goatsbot.xyz',
-            'DNT': '1',
-            'Connection': 'keep-alive',
-            'Referer': 'https://dev.goatsbot.xyz/',
-            'Sec-Fetch-Dest': 'empty',
-            'Sec-Fetch-Mode': 'cors',
-            'Sec-Fetch-Site': 'same-site',
-            'Sec-GPC': '1',
-            'Pragma': 'no-cache',
-            'Cache-Control': 'no-cache'
+            ...headersApi,
+            'Authorization': `Bearer ${bearerToken}`
         },
     };
 
@@ -179,24 +190,10 @@ async function getMissions(bearerToken) {
 async function executeMission(bearerToken, missionId) {
     const options = {
         method: 'POST',
-        url: `https://dev-api.goatsbot.xyz/missions/action/${missionId}`,
+        url: `${execute_mission_api_url}${missionId}`,
         headers: {
+            ...headersApi,
             'Authorization': `Bearer ${bearerToken}`,
-            'Content-Type': 'application/json',
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:131.0) Gecko/20100101 Firefox/131.0',
-            'Accept': 'application/json, text/plain, */*',
-            'Accept-Language': 'it-IT,it;q=0.8,en-US;q=0.5,en;q=0.3',
-            'Accept-Encoding': 'gzip, deflate, br, zstd',
-            'Origin': 'https://dev.goatsbot.xyz',
-            'DNT': '1',
-            'Connection': 'keep-alive',
-            'Referer': 'https://dev.goatsbot.xyz/',
-            'Sec-Fetch-Dest': 'empty',
-            'Sec-Fetch-Mode': 'cors',
-            'Sec-Fetch-Site': 'same-site',
-            'Sec-GPC': '1',
-            'Pragma': 'no-cache',
-            'Cache-Control': 'no-cache'
         }
     };
     try {
