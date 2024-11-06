@@ -2,46 +2,17 @@ const cloudscraper = require('cloudscraper');
 const express = require('express');
 const app = express();
 const startTime = Date.now();
-
 const myBearer = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjZmMDI2NGZhNzVkYjBjZjYzYmY4YjAwIiwiaWF0IjoxNzMwOTMyMjAwLCJleHAiOjE3MzEwMTg2MDAsInR5cGUiOiJhY2Nlc3MifQ.ori1iYMpbCsYdbjbLfpz9J9jjBeMljHLcd3bTGlqlsk';
 const bearerTokens = [
     myBearer,
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjcxMjYyMzFmMDNmYTFmNjhhYjcyZjhmIiwiaWF0IjoxNzMwOTMyMzY4LCJleHAiOjE3MzEwMTg3NjgsInR5cGUiOiJhY2Nlc3MifQ.8i4TvFPlhy-fCxkO6rkxNoYGIls-n-CaOKXYP82PEAI',
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjcxM2FiNDgzNmVmODEzMWM1MjAyNmE2IiwiaWF0IjoxNzMwOTMyNDI3LCJleHAiOjE3MzEwMTg4MjcsInR5cGUiOiJhY2Nlc3MifQ.NSv8ub-bNPd9t4Qnjr7XMWD-McGA0lAFzJ0eLtEZaFI',
 ]
-
-const betData = {
+const data = {
     "point_milestone": 90,
     "is_upper": false,
     "bet_amount": 5
 };
-
-const headersApi = {
-    'Content-Type': 'application/json',
-    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:131.0) Gecko/20100101 Firefox/131.0',
-    'Accept': 'application/json, text/plain, */*',
-    'Accept-Language': 'it-IT,it;q=0.8,en-US;q=0.5,en;q=0.3',
-    'Accept-Encoding': 'gzip, deflate, br, zstd',
-    'Origin': 'https://dev.goatsbot.xyz',
-    'DNT': '1',
-    'Connection': 'keep-alive',
-    'Referer': 'https://dev.goatsbot.xyz/',
-    'Sec-Fetch-Dest': 'empty',
-    'Sec-Fetch-Mode': 'cors',
-    'Sec-Fetch-Site': 'same-site',
-    'Sec-GPC': '1',
-    'Pragma': 'no-cache',
-    'Cache-Control': 'no-cache'
-}
-
-const get_mission_api_url = 'https://api-mission.goatsbot.xyz/missions/user';
-const get_checkin_api_url = 'https://api-checkin.goatsbot.xyz/checkin/user';
-const get_refresh_api_url = 'https://dev-api.goatsbot.xyz/auth/refresh-tokens'
-const execute_mission_api_url = 'https://dev-api.goatsbot.xyz/missions/action/'
-const execute_checkin_api_url = 'https://api-checkin.goatsbot.xyz/checkin/action/'
-const execute_cinema_api_url = 'https://dev-api.goatsbot.xyz/goat-cinema/watch'
-const execute_bet_balance_api_url = 'https://api-dice.goatsbot.xyz/dice/action'
-
 let bigMissSuccess = 0;
 let successCount = 0;
 let failureCount = 0;
@@ -49,38 +20,15 @@ let betSuccess = 0;
 let betFailures = {};
 let tokenBalances = {};
 
-// EXEC LOOP
-// loop().then()
-
 function getElapsedTimeInSeconds() {
     const currentTime = Date.now();
     return ((currentTime - startTime) / 1000).toFixed(2);
 }
 
-async function loop() {
-    console.log('🚀 Start')
-    while (true) {
-        await startLoopCycle();
-        // log shit
-    }
-}
-
-async function startLoopCycle() {
-    for (const token of userTokens) {
-        const {bearer, refresh} = token
-        await missions(bearer, refresh) // Ads compresa
-        await checkin(bearer, refresh)
-        await cinema(bearer, refresh)
-        await sumBalance(bearer, refresh) // senza bet disonesta
-        console.log(`📊 Token: ${bearer.slice(-5)} | Success: ${successCount} | Error: ${errorCount}`)
-        await pauseExecution(500)
-    }
-}
-
 async function makeBetRequest(bearerToken) {
     const options = {
         method: 'POST',
-        url: execute_bet_balance_api_url,
+        url: 'https://api-dice.goatsbot.xyz/dice/action',
         headers: {
             'Authorization': `Bearer ${bearerToken}`,
             'Content-Type': 'application/json',
@@ -97,9 +45,9 @@ async function makeBetRequest(bearerToken) {
             'Sec-Fetch-Site': 'same-site',
             'Sec-GPC': '1',
             'Pragma': 'no-cache',
-            'Cache-Control': 'no-cache',
+            'Cache-Control': 'no-cache'
         },
-        body: JSON.stringify(betData),
+        body: JSON.stringify(data),
         timeout: 5000
     };
     try {
@@ -135,7 +83,7 @@ async function makeRequest(bearerToken) {
             'Sec-Fetch-Site': 'same-site',
             'Sec-GPC': '1',
             'Pragma': 'no-cache',
-            'Cache-Control': 'no-cache',
+            'Cache-Control': 'no-cache'
         }
     };
 
@@ -198,7 +146,7 @@ function start() {
 async function getMissions(bearerToken) {
     const options = {
         method: 'GET',
-        url: get_mission_api_url,
+        url: 'https://api-mission.goatsbot.xyz/missions/user',
         headers: {
             'Authorization': `Bearer ${bearerToken}`,
             'Content-Type': 'application/json',
@@ -215,7 +163,7 @@ async function getMissions(bearerToken) {
             'Sec-Fetch-Site': 'same-site',
             'Sec-GPC': '1',
             'Pragma': 'no-cache',
-            'Cache-Control': 'no-cache',
+            'Cache-Control': 'no-cache'
         },
     };
 
@@ -231,7 +179,7 @@ async function getMissions(bearerToken) {
 async function executeMission(bearerToken, missionId) {
     const options = {
         method: 'POST',
-        url: `${execute_mission_api_url}${missionId}`,
+        url: `https://dev-api.goatsbot.xyz/missions/action/${missionId}`,
         headers: {
             'Authorization': `Bearer ${bearerToken}`,
             'Content-Type': 'application/json',
@@ -248,7 +196,7 @@ async function executeMission(bearerToken, missionId) {
             'Sec-Fetch-Site': 'same-site',
             'Sec-GPC': '1',
             'Pragma': 'no-cache',
-            'Cache-Control': 'no-cache',
+            'Cache-Control': 'no-cache'
         }
     };
     try {
@@ -301,4 +249,6 @@ app.listen(port, () => {
 });
 startHourlyProcess();
 start();
+
+
 
