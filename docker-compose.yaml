@@ -10,7 +10,7 @@ services:
       - .:/usr/src/app
     networks:
       - coolify-network
-    command: "node missionChecker.js"
+    command: "node auto_script.js"
 
 networks:
   coolify-network:
