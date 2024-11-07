@@ -148,11 +148,10 @@ async function getMissions(bearerToken) {
 
     try {
         const response = await cloudscraper(options);
-        console.log("Risposta ricevuta:", response); // Log della risposta per verificare il contenuto
         try{
             return JSON.parse(response);
         } catch (jsonError) {
-            console.error("Errore di parsing JSON:", jsonError);
+            console.error("Errore di parsing JSON:", jsonError.message);
             return null;
         }
     } catch (error) {
