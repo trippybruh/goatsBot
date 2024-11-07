@@ -1,5 +1,6 @@
 const cloudscraper = require('cloudscraper');
 const express = require('express');
+const zlib = require('zlib');
 const app = express();
 const startTime = Date.now();
 
@@ -144,12 +145,14 @@ async function getMissions(bearerToken) {
             ...headerApi,
             Authorization: `Bearer ${bearerToken}`,
         },
+        encoding: null,
     };
 
     try {
         const response = await cloudscraper(options);
+        const decompressed = gunzipSync(response).toString('utf-8');
         try{
-            return JSON.parse(response);
+            return JSON.parse(decompressed);
         } catch (jsonError) {
             console.error("Errore di parsing JSON:", jsonError.message);
             return null;
