@@ -2,17 +2,38 @@ const cloudscraper = require('cloudscraper');
 const express = require('express');
 const app = express();
 const startTime = Date.now();
+
 const myBearer = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjZmMDI2NGZhNzVkYjBjZjYzYmY4YjAwIiwiaWF0IjoxNzMwOTMyMjAwLCJleHAiOjE3MzEwMTg2MDAsInR5cGUiOiJhY2Nlc3MifQ.ori1iYMpbCsYdbjbLfpz9J9jjBeMljHLcd3bTGlqlsk';
 const bearerTokens = [
     myBearer,
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjcxMjYyMzFmMDNmYTFmNjhhYjcyZjhmIiwiaWF0IjoxNzMwOTMyMzY4LCJleHAiOjE3MzEwMTg3NjgsInR5cGUiOiJhY2Nlc3MifQ.8i4TvFPlhy-fCxkO6rkxNoYGIls-n-CaOKXYP82PEAI',
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjcxM2FiNDgzNmVmODEzMWM1MjAyNmE2IiwiaWF0IjoxNzMwOTMyNDI3LCJleHAiOjE3MzEwMTg4MjcsInR5cGUiOiJhY2Nlc3MifQ.NSv8ub-bNPd9t4Qnjr7XMWD-McGA0lAFzJ0eLtEZaFI',
 ]
+
 const data = {
     "point_milestone": 90,
     "is_upper": false,
     "bet_amount": 5
 };
+
+const headerApi = {
+    'Content-Type': 'application/json',
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) ' +
+        'AppleWebKit/537.36 (KHTML, like Gecko) ' +
+        'Chrome/129.0.0.0 Safari/537.36',
+    'Accept': 'application/json, text/plain, */*',
+    'Accept-Encoding': 'gzip, deflate, br, zstd',
+    'Accept-Language': 'it-IT,it;q=0.9,en-US;q=0.8,en;q=0.7',
+    'Origin': 'https://dev.goatsbot.xyz',
+    'Referer': 'https://dev.goatsbot.xyz/',
+    'Sec-CH-UA': '"Google Chrome";v="129", "Not=A?Brand";v="8", "Chromium";v="129"',
+    'Sec-CH-UA-Mobile': '?0',
+    'Sec-CH-UA-Platform': '"Windows"',
+    'Sec-Fetch-Dest': 'empty',
+    'Sec-Fetch-Mode': 'cors',
+    'Sec-Fetch-Site': 'same-site',
+}
+
 let bigMissSuccess = 0;
 let successCount = 0;
 let failureCount = 0;
@@ -30,22 +51,8 @@ async function makeBetRequest(bearerToken) {
         method: 'POST',
         url: 'https://api-dice.goatsbot.xyz/dice/action',
         headers: {
-            'Authorization': `Bearer ${bearerToken}`,
-            'Content-Type': 'application/json',
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:131.0) Gecko/20100101 Firefox/131.0',
-            'Accept': 'application/json, text/plain, */*',
-            'Accept-Language': 'it-IT,it;q=0.8,en-US;q=0.5,en;q=0.3',
-            'Accept-Encoding': 'gzip, deflate, br, zstd',
-            'Origin': 'https://dev.goatsbot.xyz',
-            'DNT': '1',
-            'Connection': 'keep-alive',
-            'Referer': 'https://dev.goatsbot.xyz/',
-            'Sec-Fetch-Dest': 'empty',
-            'Sec-Fetch-Mode': 'cors',
-            'Sec-Fetch-Site': 'same-site',
-            'Sec-GPC': '1',
-            'Pragma': 'no-cache',
-            'Cache-Control': 'no-cache'
+            ...headerApi,
+            Authorization: `Bearer ${bearerToken}`,
         },
         body: JSON.stringify(data),
         timeout: 5000
@@ -68,23 +75,9 @@ async function makeRequest(bearerToken) {
         method: 'POST',
         url: 'https://dev-api.goatsbot.xyz/missions/action/66db47e2ff88e4527783327e',
         headers: {
-            'Authorization': `Bearer ${bearerToken}`,
-            'Content-Type': 'application/json',
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:131.0) Gecko/20100101 Firefox/131.0',
-            'Accept': 'application/json, text/plain, */*',
-            'Accept-Language': 'it-IT,it;q=0.8,en-US;q=0.5,en;q=0.3',
-            'Accept-Encoding': 'gzip, deflate, br, zstd',
-            'Origin': 'https://dev.goatsbot.xyz',
-            'DNT': '1',
-            'Connection': 'keep-alive',
-            'Referer': 'https://dev.goatsbot.xyz/',
-            'Sec-Fetch-Dest': 'empty',
-            'Sec-Fetch-Mode': 'cors',
-            'Sec-Fetch-Site': 'same-site',
-            'Sec-GPC': '1',
-            'Pragma': 'no-cache',
-            'Cache-Control': 'no-cache'
-        }
+            ...headerApi,
+            Authorization: `Bearer ${bearerToken}`,
+        },
     };
 
     try {
@@ -148,22 +141,8 @@ async function getMissions(bearerToken) {
         method: 'GET',
         url: 'https://api-mission.goatsbot.xyz/missions/user',
         headers: {
-            'Authorization': `Bearer ${bearerToken}`,
-            'Content-Type': 'application/json',
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:131.0) Gecko/20100101 Firefox/131.0',
-            'Accept': 'application/json, text/plain, */*',
-            'Accept-Language': 'it-IT,it;q=0.8,en-US;q=0.5,en;q=0.3',
-            'Accept-Encoding': 'gzip, deflate, br, zstd',
-            'Origin': 'https://dev.goatsbot.xyz',
-            'DNT': '1',
-            'Connection': 'keep-alive',
-            'Referer': 'https://dev.goatsbot.xyz/',
-            'Sec-Fetch-Dest': 'empty',
-            'Sec-Fetch-Mode': 'cors',
-            'Sec-Fetch-Site': 'same-site',
-            'Sec-GPC': '1',
-            'Pragma': 'no-cache',
-            'Cache-Control': 'no-cache'
+            ...headerApi,
+            Authorization: `Bearer ${bearerToken}`,
         },
     };
 
@@ -187,23 +166,9 @@ async function executeMission(bearerToken, missionId) {
         method: 'POST',
         url: `https://dev-api.goatsbot.xyz/missions/action/${missionId}`,
         headers: {
-            'Authorization': `Bearer ${bearerToken}`,
-            'Content-Type': 'application/json',
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:131.0) Gecko/20100101 Firefox/131.0',
-            'Accept': 'application/json, text/plain, */*',
-            'Accept-Language': 'it-IT,it;q=0.8,en-US;q=0.5,en;q=0.3',
-            'Accept-Encoding': 'gzip, deflate, br, zstd',
-            'Origin': 'https://dev.goatsbot.xyz',
-            'DNT': '1',
-            'Connection': 'keep-alive',
-            'Referer': 'https://dev.goatsbot.xyz/',
-            'Sec-Fetch-Dest': 'empty',
-            'Sec-Fetch-Mode': 'cors',
-            'Sec-Fetch-Site': 'same-site',
-            'Sec-GPC': '1',
-            'Pragma': 'no-cache',
-            'Cache-Control': 'no-cache'
-        }
+            ...headerApi,
+            Authorization: `Bearer ${bearerToken}`,
+        },
     };
     try {
         const response = await cloudscraper(options);
