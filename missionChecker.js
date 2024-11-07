@@ -152,6 +152,7 @@ async function getMissions(bearerToken) {
         const response = await cloudscraper(options);
         const decompressed = gunzipSync(response).toString('utf-8');
         try{
+            console.log('Risposta decompressa:', decompressed)
             return JSON.parse(decompressed);
         } catch (jsonError) {
             console.error("Errore di parsing JSON:", jsonError.message);
