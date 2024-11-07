@@ -70,7 +70,7 @@ async function start() {
         await cinema(bearer, refresh)
         await sumBalance(bearer, refresh) // senza bet disonesta
         console.log(`📊 Token: ${bearer.slice(-5)} | Success: ${successCount} | Error: ${errorCount}`)
-        await pauseExecution(500)
+        await pauseExecution(20000)
     }
 }
 
