@@ -150,7 +150,7 @@ async function getMissions(bearerToken) {
 
     try {
         const response = await cloudscraper(options);
-        const decompressed = gunzipSync(response).toString('utf-8');
+        const decompressed = zlib.gunzipSync(response).toString('utf-8');
         try{
             console.log('Risposta decompressa:', decompressed)
             return JSON.parse(decompressed);
