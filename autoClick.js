@@ -5,7 +5,7 @@ const app = express();
 const startTime = Date.now();
 const REQ_INTERVAL_DELAY = 825; // ms
 const INTRA_REQ_DELAY = 700;
-const bearer = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjZmMDI2NGZhNzVkYjBjZjYzYmY4YjAwIiwiaWF0IjoxNzMwOTMyMjAwLCJleHAiOjE3MzEwMTg2MDAsInR5cGUiOiJhY2Nlc3MifQ.ori1iYMpbCsYdbjbLfpz9J9jjBeMljHLcd3bTGlqlsk';
+const bearer = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjZmMDI2NGZhNzVkYjBjZjYzYmY4YjAwIiwiaWF0IjoxNzMwOTk2MDQzLCJleHAiOjE3MzEwODI0NDMsInR5cGUiOiJhY2Nlc3MifQ.q5TWceLeRCUHf7nA2INzQBqxzi5lR0K-FwejqVVzTzQ';
 const bearerTokens = [
     bearer
 ];
