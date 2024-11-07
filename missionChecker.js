@@ -169,7 +169,13 @@ async function getMissions(bearerToken) {
 
     try {
         const response = await cloudscraper(options);
-        return JSON.parse(response);
+        console.log("Risposta ricevuta:", response); // Log della risposta per verificare il contenuto
+        try{
+            return JSON.parse(response);
+        } catch (jsonError) {
+            console.error("Errore di parsing JSON:", jsonError);
+            return null;
+        }
     } catch (error) {
         console.error(`Errore (${(error.message)}) nel recuperare le missioni per Token: ${bearerToken.slice(0, 5)}...${bearerToken.slice(-5)}`);
         return null;
