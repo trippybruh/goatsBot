@@ -1,4 +1,5 @@
 const cloudscraper = require('cloudscraper');
+const axios = require('axios')
 const express = require('express');
 const zlib = require('zlib');
 const app = express();
@@ -138,29 +139,31 @@ function start() {
 
 async function getMissions(bearerToken) {
     const options = {
-        method: 'GET',
-        url: 'https://api-mission.goatsbot.xyz/missions/user',
+        responseType: 'arraybuffer',
         headers: {
             ...headerApi,
             Authorization: `Bearer ${bearerToken}`,
-        },
-        encoding: null,
+        }
     };
 
-    try {
-        const response = await cloudscraper(options);
-        const decompressed = zlib.gunzipSync(response).toString('utf-8');
-        try{
-            console.log('Risposta decompressa:', decompressed)
-            return JSON.parse(decompressed);
-        } catch (jsonError) {
-            console.error("Errore di parsing JSON:", jsonError.message);
-            return null;
+     try {
+        const response = await axios.get('https://api-mission.goatsbot.xyz/missions/user', options)
+        const encoding = response.headers['content-encoding'];
+        let data;
+        if (encoding === 'gzip') {
+            data = zlib.gunzipSync(response.data).toString();
+        } else if (encoding === 'deflate') {
+            data = zlib.inflateSync(response.data).toString();
+        } else if (encoding === 'br') {
+            data = zlib.brotliDecompressSync(response.data).toString();
+        } else {
+            data = response.data.toString();
         }
-    } catch (error) {
+        return JSON.parse(data);
+     } catch (error) {
         console.error(`Errore (${(error.message)}) nel recuperare le missioni per Token: ${bearerToken.slice(0, 5)}...${bearerToken.slice(-5)}`);
         return null;
-    }
+     }
 }
 
 async function executeMission(bearerToken, missionId) {
