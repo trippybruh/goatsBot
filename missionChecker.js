@@ -23,7 +23,7 @@ const headerApi = {
         'AppleWebKit/537.36 (KHTML, like Gecko) ' +
         'Chrome/129.0.0.0 Safari/537.36',
     'Accept': 'application/json, text/plain, */*',
-    'Accept-Encoding': 'gzip, deflate, br, zstd',
+    'Accept-Encoding': 'gzip, deflate, br',
     'Accept-Language': 'it-IT,it;q=0.9,en-US;q=0.8,en;q=0.7',
     'Origin': 'https://dev.goatsbot.xyz',
     'Referer': 'https://dev.goatsbot.xyz/',
