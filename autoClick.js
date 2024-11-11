@@ -3,9 +3,9 @@ const express = require('express');
 
 const app = express();
 const startTime = Date.now();
-const REQ_INTERVAL_DELAY = 485; // ms
-const INTRA_REQ_DELAY = 400;
-const bearer = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjZmMDI2NGZhNzVkYjBjZjYzYmY4YjAwIiwiaWF0IjoxNzMxMjY0NjUzLCJleHAiOjE3MzEzNTEwNTMsInR5cGUiOiJhY2Nlc3MifQ.iawuG8tEps09AJB36uCRUEEyCmn-4i0hEkGxpbX2Myo';
+const REQ_INTERVAL_DELAY = 435; // ms
+const INTRA_REQ_DELAY = 350;
+const bearer = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjZmMDI2NGZhNzVkYjBjZjYzYmY4YjAwIiwiaWF0IjoxNzMxMzUxNzMzLCJleHAiOjE3MzE0MzgxMzMsInR5cGUiOiJhY2Nlc3MifQ.iYsCkBbTm5qXo55Xkd6YhcXzGjZ9UNMI2AWO9-_FA0g';
 const bearerTokens = [
     bearer
 ];
