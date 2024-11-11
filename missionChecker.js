@@ -6,10 +6,10 @@ const app = express();
 const startTime = Date.now();
 
 const bearerTokens = [
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjZmMDI2NGZhNzVkYjBjZjYzYmY4YjAwIiwiaWF0IjoxNzMxMjY0NjUzLCJleHAiOjE3MzEzNTEwNTMsInR5cGUiOiJhY2Nlc3MifQ.iawuG8tEps09AJB36uCRUEEyCmn-4i0hEkGxpbX2Myo',
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjcxMjYyMzFmMDNmYTFmNjhhYjcyZjhmIiwiaWF0IjoxNzMxMjY0NTg0LCJleHAiOjE3MzEzNTA5ODQsInR5cGUiOiJhY2Nlc3MifQ.MpN0r-sOMT5Y5LhcUxP0zpqFnTDEZZ4PBVfED2oa2rE',
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjcxM2FiNDgzNmVmODEzMWM1MjAyNmE2IiwiaWF0IjoxNzMxMjY0NTMxLCJleHAiOjE3MzEzNTA5MzEsInR5cGUiOiJhY2Nlc3MifQ.ektWc8PrbKdVvq6Kig_eFsaT4cXBE6GA-lweK3W_kR0',
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjcxNmEzOGMxOTM3ZDJlZWU3MWI2YTM4IiwiaWF0IjoxNzMxMjY0NDgyLCJleHAiOjE3MzEzNTA4ODIsInR5cGUiOiJhY2Nlc3MifQ.WWyqSUoHcqjKQ3y7HKP2FyUbjxQyqlLUYIZRXT9mQvw'
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjZmMDI2NGZhNzVkYjBjZjYzYmY4YjAwIiwiaWF0IjoxNzMxMzUxNzMzLCJleHAiOjE3MzE0MzgxMzMsInR5cGUiOiJhY2Nlc3MifQ.iYsCkBbTm5qXo55Xkd6YhcXzGjZ9UNMI2AWO9-_FA0g',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjcxMjYyMzFmMDNmYTFmNjhhYjcyZjhmIiwiaWF0IjoxNzMxMzUxNjgzLCJleHAiOjE3MzE0MzgwODMsInR5cGUiOiJhY2Nlc3MifQ.RAEa6t6N9ACjR2PTFK4GfMTzJWSt0cwJ2gXNnyQCtHY',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjcxM2FiNDgzNmVmODEzMWM1MjAyNmE2IiwiaWF0IjoxNzMxMzUxNjI4LCJleHAiOjE3MzE0MzgwMjgsInR5cGUiOiJhY2Nlc3MifQ.PpHBk64RlTkWTkTo88SadXPDTZpNQL7m75n4UErOvFQ',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjcxNmEzOGMxOTM3ZDJlZWU3MWI2YTM4IiwiaWF0IjoxNzMxMzUxNTgwLCJleHAiOjE3MzE0Mzc5ODAsInR5cGUiOiJhY2Nlc3MifQ.wo2KCm0lHyYn3BcwRAEeDQEg5MihWALxP_qeP9x-gxI'
 ]
 
 const data = {
@@ -36,12 +36,38 @@ const headerApi = {
     'Sec-Fetch-Site': 'same-site',
 }
 
+const get_mission_api_url = 'https://api-mission.goatsbot.xyz/missions/user';
+const get_checkin_api_url = 'https://api-checkin.goatsbot.xyz/checkin/user';
+const execute_mission_api_url = 'https://dev-api.goatsbot.xyz/missions/action/'
+const execute_checkin_api_url = 'https://api-checkin.goatsbot.xyz/checkin/action/'
+const execute_cinema_api_url = 'https://dev-api.goatsbot.xyz/goat-cinema/watch'
+const execute_bet_balance_api_url = 'https://api-dice.goatsbot.xyz/dice/action'
+
 let bigMissSuccess = 0;
 let successCount = 0;
 let failureCount = 0;
 let betSuccess = 0;
 let betFailures = {};
 let tokenBalances = {};
+
+function logStatistics() {
+    const elapsedTime = getElapsedTimeInSeconds();
+    const missedGain = failureCount * 200;
+    const gained = (successCount * 200) + (bigMissSuccess * 1000);
+    const cumulativeBalance = Object.values(tokenBalances).reduce((sum, value) => sum + value, 0);
+    console.log(`IN ESECUZIONNE DA: ${Math.floor(elapsedTime/3600)} ore ${((elapsedTime/60) % 60).toFixed(0)} minuti ${(elapsedTime % 60).toFixed(0)} secondi`);
+    console.log(`-> Richieste elaborate: ${successCount} --- Richieste fallite: ${failureCount} --- Richieste missioni speciali elaborate: ${bigMissSuccess}`);
+    console.log(`-> Guadagno sessione: ${gained.toFixed(0)} GOATS --- Guadagno mancato: ${missedGain} GOATS --- Guadagno bets ${(betSuccess*0.22).toFixed(0)} GOATS`);
+    console.log(`-> Missioni in esecuzione su ${bearerTokens.length} bearers:`);
+    for (const bearerToken of bearerTokens) {
+        console.log(`-> (${bearerTokens.indexOf(bearerToken) + 1}): ${bearerToken.slice(0, 5)}...${bearerToken.slice(-5)} -> balance: ${tokenBalances[bearerToken]} GOATS`)
+    }
+    console.log(`---> Balance totale: ${cumulativeBalance} GOATS <---`);
+}
+
+async function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
 
 function getElapsedTimeInSeconds() {
     const currentTime = Date.now();
@@ -51,7 +77,7 @@ function getElapsedTimeInSeconds() {
 async function makeBetRequest(bearerToken) {
     const options = {
         method: 'POST',
-        url: 'https://api-dice.goatsbot.xyz/dice/action',
+        url: execute_bet_balance_api_url,
         headers: {
             ...headerApi,
             Authorization: `Bearer ${bearerToken}`,
@@ -72,16 +98,15 @@ async function makeBetRequest(bearerToken) {
     }
 }
 
-async function makeRequest(bearerToken) {
+async function makeMissionRequest(bearerToken) {
     const options = {
         method: 'POST',
-        url: 'https://dev-api.goatsbot.xyz/missions/action/66db47e2ff88e4527783327e',
+        url: `${execute_mission_api_url}66db47e2ff88e4527783327e`,
         headers: {
             ...headerApi,
             Authorization: `Bearer ${bearerToken}`,
         },
     };
-
     try {
         const response = await cloudscraper(options);
         const jsonResponse = JSON.parse(response);
@@ -94,28 +119,9 @@ async function makeRequest(bearerToken) {
     }
 }
 
-async function sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-}
-
-function logStatistics() {
-    const elapsedTime = getElapsedTimeInSeconds();
-    const missedGain = failureCount * 200;
-    const gained = (successCount * 200) + (bigMissSuccess * 1000);
-    const cumulativeBalance = Object.values(tokenBalances).reduce((sum, value) => sum + value, 0);
-    console.log(`Tempo dall'avvio: ${Math.floor(elapsedTime/3600)} ore ${((elapsedTime/60) % 60).toFixed(0)} minuti ${(elapsedTime % 60).toFixed(0)} secondi`);
-    console.log(`-> Richieste elaborate: ${successCount} --- Richieste fallite: ${failureCount} --- Richieste missioni speciali elaborate: ${bigMissSuccess}`);
-    console.log(`-> Guadagno sessione: ${gained.toFixed(0)} GOATS --- Guadagno mancato: ${missedGain} GOATS --- Guadagno bets ${(betSuccess*0.22).toFixed(0)} GOATS`);
-    console.log(`-> Missioni in esecuzione su ${bearerTokens.length} bearers:`);
-    for (const bearerToken of bearerTokens) {
-        console.log(`-> (${bearerTokens.indexOf(bearerToken) + 1}): ${bearerToken.slice(0, 5)}...${bearerToken.slice(-5)} -> balance: ${tokenBalances[bearerToken]} GOATS`)
-    }
-    console.log(`-> Balance totale: ${cumulativeBalance} GOATS`);
-}
-
 async function performRequestCycle(bearerToken) {
     setInterval(async () => {
-        await makeRequest(bearerToken);
+        await makeMissionRequest(bearerToken);
         await sleep(7500);
         const betResponse = await makeBetRequest(bearerToken);
         if (betResponse) {
@@ -127,17 +133,6 @@ async function performRequestCycle(bearerToken) {
     }, 60500);
 }
 
-function start() {
-    bearerTokens.forEach(async (bearerToken) => {
-        betFailures[bearerToken] = 0;
-        tokenBalances[bearerToken] = 0;
-        if (bearerTokens.indexOf(bearerToken) !== 0) {
-            await sleep(4000 * bearerTokens.indexOf(bearerToken));
-        }
-        await performRequestCycle(bearerToken); 
-    });
-}
-
 async function getMissions(bearerToken) {
     const options = {
         responseType: 'arraybuffer',
@@ -146,9 +141,8 @@ async function getMissions(bearerToken) {
             Authorization: `Bearer ${bearerToken}`,
         }
     };
-
-     try {
-        const response = await axios.get('https://api-mission.goatsbot.xyz/missions/user', options)
+    try {
+        const response = await axios.get(get_mission_api_url, options)
         const encoding = response.headers['content-encoding'];
         let data;
         if (encoding === 'gzip') {
@@ -161,16 +155,16 @@ async function getMissions(bearerToken) {
             data = response.data.toString();
         }
         return JSON.parse(data);
-     } catch (error) {
+    } catch (error) {
         console.error(`Errore (${(error.message)}) nel recuperare le missioni per Token: ${bearerToken.slice(0, 5)}...${bearerToken.slice(-5)}`);
         return null;
-     }
+    }
 }
 
 async function executeMission(bearerToken, missionId) {
     const options = {
         method: 'POST',
-        url: `https://dev-api.goatsbot.xyz/missions/action/${missionId}`,
+        url: `${execute_mission_api_url}${missionId}`,
         headers: {
             ...headerApi,
             Authorization: `Bearer ${bearerToken}`,
@@ -178,7 +172,7 @@ async function executeMission(bearerToken, missionId) {
     };
     try {
         const response = await cloudscraper(options);
-        console.log(`Missione ${missionId} completata con successo.`);
+        console.log(`---> Missione ...${missionId.slice(-5)} completata con successo <---`);
         return JSON.parse(response);
     } catch (error) {
         console.error(`Errore (${(error.message).slice(0, 4)}) nell'eseguire la missione ${missionId} per Token: ${bearerToken.slice(0, 5)}...${bearerToken.slice(-5)}`);
@@ -195,37 +189,119 @@ async function processMissionsForBearer(bearerToken) {
                 await executeMission(bearerToken, mission._id);
                 bigMissSuccess++;
             } else {
-                console.log(`Missione ${mission._id} risulta già eseguita`)
+                console.log(`-> Missione ...${mission._id.slice(-5)} risulta già eseguita`)
             }
         }
     }
 }
 
-async function startHourlyProcess() {
-    for (const bearerToken of bearerTokens) {
+async function cinema(bearer) {
+    for (let i = 0; i < 3; i++) {
+        if (await executeCinema(bearer)) {
+            console.log(`---> Cinema per ${bearer.slice(0, 5)}...${bearer.slice(-5)} (${i}/3) <---`);
+        }
+    }
+}
+
+async function executeCinema(bearer) {
+    const options = {
+        method: 'POST',
+        url: execute_cinema_api_url,
+        headers: {
+            ...headerApi,
+            Authorization: `Bearer ${bearer}`,
+        }
+    }
+    try {
+        const response = await cloudscraper(options);
+        return JSON.parse(response);
+    } catch (error) {
+        console.error(`Errore (${(error.message)}) nell'eseguire cinema per: ${bearer.slice(0, 5)}...${bearer.slice(-5)}`);
+        return null;
+    }
+}
+
+async function checkin(bearer) {
+    const checkinData = await getCheckin(bearer)
+    if (checkinData) {
+        for (const checkin of checkinData.result) {
+            if (checkin.status === false) {
+                await executeCheckin(bearer, checkin._id);
+                break;
+            }
+        }
+        console.log(`---> Check-in completato per ${bearer.slice(0, 5)}...${bearer.slice(-5)} <---`);
+    }
+}
+
+async function executeCheckin(bearer, checkinId) {
+    const options = {
+        method: 'POST',
+        url: `${execute_checkin_api_url}${checkinId}`,
+        headers: {
+            ...headerApi,
+            Authorization: `Bearer ${bearer}`,
+        }
+    }
+    try {
+        const response = await cloudscraper(options);
+        return JSON.parse(response);
+    } catch (error) {
+        console.error(`Errore (${(error.message)}) nell'eseguire check-in per: ${bearer.slice(0, 5)}...${bearer.slice(-5)} e check in ID ${checkinId}`);
+    }
+}
+
+async function getCheckin(bearer) {
+    const options = {
+        method: 'GET',
+        url: get_checkin_api_url,
+        headers: {
+            ...headerApi,
+            Authorization: `Bearer ${bearer}`
+        }
+    }
+    try {
+        const response = await cloudscraper(options);
+        return JSON.parse(response);
+    } catch (error) {
+        console.error(`Errore (${(error.message)}) nel recuperare check-in per: ${bearer.slice(0, 5)}...${bearer.slice(-5)}`);
+        return null;
+    }
+}
+
+function loop() {
+    const port = process.env.PORT || 3000;
+    app.listen(port, () => {
+        console.log(`---------->>> Service is running on port ${port} <<<----------`);
+    });
+
+    // one time per day
+    bearerTokens.forEach(async (bearerToken) => {
         if (bearerTokens.indexOf(bearerToken) !== 0) {
             await sleep(2500 * bearerTokens.indexOf(bearerToken));
         }
-        console.log(`Controllo missioni da eseguire per Bearer Token: ${bearerToken.slice(0, 5)}...${bearerToken.slice(-5)}`);
+        console.log(`-> Esecuzione missioni/cinema/check-in per Bearer Token: ${bearerToken.slice(0, 5)}...${bearerToken.slice(-5)}`);
         await processMissionsForBearer(bearerToken);
-    }
-    setInterval(async () => {
-        for (const bearerToken of bearerTokens) {
-            if (bearerTokens.indexOf(bearerToken) !== 0) {
-                await sleep(5000 * bearerTokens.indexOf(bearerToken));
-            }
-            console.log(`Controllo missioni da eseguire per Bearer Token: ${bearerToken.slice(0, 5)}...${bearerToken.slice(-5)}`);
-            await processMissionsForBearer(bearerToken);
+        await sleep(250);
+        await cinema(bearerToken);
+        await sleep(250);
+        await checkin(bearerToken);
+        await sleep(250);
+    });
+    // loop all day
+    bearerTokens.forEach(async (bearerToken) => {
+        betFailures[bearerToken] = 0;
+        tokenBalances[bearerToken] = 0;
+        if (bearerTokens.indexOf(bearerToken) !== 0) {
+            await sleep(4000 * bearerTokens.indexOf(bearerToken));
         }
-    }, 60 * 60 * 1000 * 8); // Ripeti ogni 8 ore
+        console.log(`-> Avvio loop al minuto per Bearer Token: ${bearerToken.slice(0, 5)}...${bearerToken.slice(-5)}`)
+        await performRequestCycle(bearerToken);
+    });
 }
 
-const port = process.env.PORT || 3000;
-app.listen(port, () => {
-    console.log(`Service is running on port ${port}`);
-});
-startHourlyProcess();
-start();
+// main
+loop();
 
 
 
