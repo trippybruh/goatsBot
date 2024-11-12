@@ -113,7 +113,7 @@ async function makeMissionRequest(bearerToken) {
         successCount++;
         return jsonResponse;
     } catch (error) {
-        console.log(`Errore richiesta: ${(error.message).slice(0, 4)} --- Token: ${bearerToken.slice(0, 5)}...${bearerToken.slice(-5)}`);
+        console.log(`Errore richiesta: ${(error.message)} --- Token: ${bearerToken.slice(0, 5)}...${bearerToken.slice(-5)}`);
         failureCount++;
         return null;
     }
@@ -172,7 +172,7 @@ async function executeMission(bearerToken, missionId) {
     };
     try {
         const response = await cloudscraper(options);
-        console.log(`---> Missione ...${missionId.slice(-5)} completata con successo <---`);
+        console.log(`---> Missione ...${missionId.slice(-5)} completata con successo`);
         return JSON.parse(response);
     } catch (error) {
         console.error(`Errore (${(error.message).slice(0, 4)}) nell'eseguire la missione ${missionId} per Token: ${bearerToken.slice(0, 5)}...${bearerToken.slice(-5)}`);
@@ -198,7 +198,7 @@ async function processMissionsForBearer(bearerToken) {
 async function cinema(bearer) {
     for (let i = 0; i < 3; i++) {
         if (await executeCinema(bearer)) {
-            console.log(`---> Cinema per ${bearer.slice(0, 5)}...${bearer.slice(-5)} (${i}/3) <---`);
+            console.log(`---> Cinema per ${bearer.slice(0, 5)}...${bearer.slice(-5)} (${i+1}/3)`);
         }
     }
 }
@@ -226,11 +226,12 @@ async function checkin(bearer) {
     if (checkinData) {
         for (const checkin of checkinData.result) {
             if (checkin.status === false) {
-                await executeCheckin(bearer, checkin._id);
+                if (await executeCheckin(bearer, checkin._id)) {
+                    console.log(`---> Check-in completato per ${bearer.slice(0, 5)}...${bearer.slice(-5)}`);
+                }
                 break;
             }
         }
-        console.log(`---> Check-in completato per ${bearer.slice(0, 5)}...${bearer.slice(-5)} <---`);
     }
 }
 
