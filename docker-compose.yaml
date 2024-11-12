@@ -11,6 +11,8 @@ services:
     networks:
       - coolify-network
     command: "node missionChecker.js"
+    ports:
+      - "0:3000"
 
 networks:
   coolify-network:
