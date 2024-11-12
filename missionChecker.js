@@ -284,9 +284,9 @@ function loop() {
         console.log(`-> Esecuzione missioni/cinema/check-in per Bearer Token: ${bearerToken.slice(0, 5)}...${bearerToken.slice(-5)}`);
         await processMissionsForBearer(bearerToken);
         await sleep(250);
-        await cinema(bearerToken);
+        // await cinema(bearerToken);
         await sleep(250);
-        await checkin(bearerToken);
+        // await checkin(bearerToken);
         await sleep(250);
     });
     // loop all day
@@ -296,7 +296,7 @@ function loop() {
         if (bearerTokens.indexOf(bearerToken) !== 0) {
             await sleep(4000 * bearerTokens.indexOf(bearerToken));
         }
-        console.log(`-> Avvio loop al minuto per Bearer Token: ${bearerToken.slice(0, 5)}...${bearerToken.slice(-5)}`)
+        console.log(`-> Avvio loop per Bearer Token: ${bearerToken.slice(0, 5)}...${bearerToken.slice(-5)}`)
         await performRequestCycle(bearerToken);
     });
 }
