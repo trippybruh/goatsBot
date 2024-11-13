@@ -116,7 +116,7 @@ function start() {
     });
 }
 
-const port = process.env.PORT;
+const port = Math.floor(Math.random() * (9000 - 2000 + 1)) + 2000;
 app.listen(port, () => {
     console.log(`Service is running on port ${port}`);
 });
