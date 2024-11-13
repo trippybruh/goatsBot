@@ -12,7 +12,7 @@ services:
       - coolify-network
     command: "node autoClick.js"
     ports:
-      - "0:3000"
+      - "0:4000"
 
 networks:
   coolify-network:

@@ -3,7 +3,7 @@ const express = require('express');
 
 const app = express();
 const startTime = Date.now();
-const REQ_INTERVAL_DELAY = 435; // ms
+const REQ_INTERVAL_DELAY = 485; // ms
 const INTRA_REQ_DELAY = 350;
 const bearer = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjZmMDI2NGZhNzVkYjBjZjYzYmY4YjAwIiwiaWF0IjoxNzMxNDM3NTY2LCJleHAiOjE3MzE1MjM5NjYsInR5cGUiOiJhY2Nlc3MifQ.u9RRKaIRXUIZaMFS4gzOzKNuW_ugyG1b_3Us_ztTqSg';
 const bearerTokens = [
@@ -116,7 +116,7 @@ function start() {
     });
 }
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT;
 app.listen(port, () => {
     console.log(`Service is running on port ${port}`);
 });
