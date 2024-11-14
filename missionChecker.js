@@ -6,10 +6,10 @@ const app = express();
 const startTime = Date.now();
 
 const bearerTokens = [
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjZmMDI2NGZhNzVkYjBjZjYzYmY4YjAwIiwiaWF0IjoxNzMxNDM3NTY2LCJleHAiOjE3MzE1MjM5NjYsInR5cGUiOiJhY2Nlc3MifQ.u9RRKaIRXUIZaMFS4gzOzKNuW_ugyG1b_3Us_ztTqSg',
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjcxMjYyMzFmMDNmYTFmNjhhYjcyZjhmIiwiaWF0IjoxNzMxNDM3NDQxLCJleHAiOjE3MzE1MjM4NDEsInR5cGUiOiJhY2Nlc3MifQ.x3iAdCR35utnSEFRsutLlcs4lq6vJcx-vfLGekL1clE',
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjcxM2FiNDgzNmVmODEzMWM1MjAyNmE2IiwiaWF0IjoxNzMxNDM3Mzg0LCJleHAiOjE3MzE1MjM3ODQsInR5cGUiOiJhY2Nlc3MifQ.mzRBDtRaCrEqxsqKgGSqIyptvo99DtVdTgNGnKi-bRc',
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjcxNmEzOGMxOTM3ZDJlZWU3MWI2YTM4IiwiaWF0IjoxNzMxNDM3MzMwLCJleHAiOjE3MzE1MjM3MzAsInR5cGUiOiJhY2Nlc3MifQ.eClyxkDRdTGRks5Q9CJ4c2weBPCWvLRzw4i-wI3Uf-k'
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjZmMDI2NGZhNzVkYjBjZjYzYmY4YjAwIiwiaWF0IjoxNzMxNTQyMDM5LCJleHAiOjE3MzE2Mjg0MzksInR5cGUiOiJhY2Nlc3MifQ.a5t6iszjazdqeNk7z7I8LYviPNvwPtudfzm89GFvaY4',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjcxMjYyMzFmMDNmYTFmNjhhYjcyZjhmIiwiaWF0IjoxNzMxNTQzMTAwLCJleHAiOjE3MzE2Mjk1MDAsInR5cGUiOiJhY2Nlc3MifQ.MOFxMH4MTVLXOta8Ny-9RaM53MNcFjHhk4Ktpb5yTgA',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjcxM2FiNDgzNmVmODEzMWM1MjAyNmE2IiwiaWF0IjoxNzMxNTQzMDU4LCJleHAiOjE3MzE2Mjk0NTgsInR5cGUiOiJhY2Nlc3MifQ.LhDn1WG8fNnM4DwpSn8Tb6DaFvquz20npj5rD5uOYu4',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjcxNmEzOGMxOTM3ZDJlZWU3MWI2YTM4IiwiaWF0IjoxNzMxNTQzMDA1LCJleHAiOjE3MzE2Mjk0MDUsInR5cGUiOiJhY2Nlc3MifQ.s5ALBkAmIrNN1ZbIgVxdgK_lRKnCOoCN5ijNumh_m6s'
 ]
 
 const data = {
@@ -99,24 +99,41 @@ async function makeBetRequest(bearerToken) {
 }
 
 async function makeMissionRequest(bearerToken) {
-    const options = {
-        method: 'POST',
-        url: `${execute_mission_api_url}66db47e2ff88e4527783327e`,
-        headers: {
-            ...headerApi,
-            Authorization: `Bearer ${bearerToken}`,
-        },
-    };
-    try {
-        const response = await cloudscraper(options);
-        const jsonResponse = JSON.parse(response);
-        successCount++;
-        return jsonResponse;
-    } catch (error) {
-        console.log(`Errore richiesta: ${(error.message)} --- Token: ${bearerToken.slice(0, 5)}...${bearerToken.slice(-5)}`);
-        failureCount++;
+    let proceed = false;
+    const missionsData = await getMissions(bearerToken);
+    if (!missionsData) return;
+    for (const [missionGroup, missions] of Object.entries(missionsData)) {
+        for (const mission of missions) {
+            if (mission._id === '66db47e2ff88e4527783327e' && mission.count < 50) {
+                proceed = true;
+                break;
+            }
+        }
+    }
+    if (proceed) {
+        const options = {
+            method: 'POST',
+            url: `${execute_mission_api_url}66db47e2ff88e4527783327e`,
+            headers: {
+                ...headerApi,
+                Authorization: `Bearer ${bearerToken}`,
+            },
+        };
+        try {
+            const response = await cloudscraper(options);
+            const jsonResponse = JSON.parse(response);
+            successCount++;
+            return jsonResponse;
+        } catch (error) {
+            console.log(`Errore richiesta: ${(error.message)} --- Token: ${bearerToken.slice(0, 5)}...${bearerToken.slice(-5)}`);
+            failureCount++;
+            return null;
+        }
+    } else {
+        console.log(`Missioni da 1 minuto esaurite --- Token: ${bearerToken.slice(0, 5)}...${bearerToken.slice(-5)}`);
         return null;
     }
+
 }
 
 async function performRequestCycle(bearerToken) {
@@ -284,9 +301,9 @@ function loop() {
         console.log(`-> Esecuzione missioni/cinema/check-in per Bearer Token: ${bearerToken.slice(0, 5)}...${bearerToken.slice(-5)}`);
         await processMissionsForBearer(bearerToken);
         await sleep(250);
-        // await cinema(bearerToken);
+        await cinema(bearerToken);
         await sleep(250);
-        // await checkin(bearerToken);
+        await checkin(bearerToken);
         await sleep(250);
     });
     // loop all day
