@@ -296,7 +296,7 @@ function loop() {
     // one time per day
     bearerTokens.forEach(async (bearerToken) => {
         if (bearerTokens.indexOf(bearerToken) !== 0) {
-            await sleep(2500 * bearerTokens.indexOf(bearerToken));
+            await sleep(10000 * bearerTokens.indexOf(bearerToken));
         }
         console.log(`-> Esecuzione missioni/cinema/check-in per Bearer Token: ${bearerToken.slice(0, 5)}...${bearerToken.slice(-5)}`);
         await processMissionsForBearer(bearerToken);
