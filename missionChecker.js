@@ -6,10 +6,9 @@ const app = express();
 const startTime = Date.now();
 
 const bearerTokens = [
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjZmMDI2NGZhNzVkYjBjZjYzYmY4YjAwIiwiaWF0IjoxNzMxNjA4OTc2LCJleHAiOjE3MzE2OTUzNzYsInR5cGUiOiJhY2Nlc3MifQ.e1bX6SJfC2vemNkqdQi42o04LgQeZdP6XxAigOSk9T8',
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjcxMjYyMzFmMDNmYTFmNjhhYjcyZjhmIiwiaWF0IjoxNzMxNjM0MDQ4LCJleHAiOjE3MzE3MjA0NDgsInR5cGUiOiJhY2Nlc3MifQ.jgqh3G6CHzmqmsIgshYKUQf4hpX_n9s02qRxslb8Mpg',
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjcxM2FiNDgzNmVmODEzMWM1MjAyNmE2IiwiaWF0IjoxNzMxNjMzOTgyLCJleHAiOjE3MzE3MjAzODIsInR5cGUiOiJhY2Nlc3MifQ.khnDz0bZX2VccXidUE--LMVC6t3sMKcmxCWDdJ3NGWc',
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjcxNmEzOGMxOTM3ZDJlZWU3MWI2YTM4IiwiaWF0IjoxNzMxNjM0MDkxLCJleHAiOjE3MzE3MjA0OTEsInR5cGUiOiJhY2Nlc3MifQ.6bdAcc5vuwBuyKwIMeH99D7uBL9SOd42ja2pv4LBRsw'
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjcxMjYyMzFmMDNmYTFmNjhhYjcyZjhmIiwiaWF0IjoxNzMxODgwODA3LCJleHAiOjE3MzE5NjcyMDcsInR5cGUiOiJhY2Nlc3MifQ.oNwCbiawgj6T43AFjFgsiIZesjULQPmQdOvw6SXc9s0',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjcxM2FiNDgzNmVmODEzMWM1MjAyNmE2IiwiaWF0IjoxNzMxODgxMjUxLCJleHAiOjE3MzE5Njc2NTEsInR5cGUiOiJhY2Nlc3MifQ.5SsAfSqQ3J3MNqh_8nfcLtmoGebNJf3JNbFB0CGufrg',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjcxNmEzOGMxOTM3ZDJlZWU3MWI2YTM4IiwiaWF0IjoxNzMxODgxMzU4LCJleHAiOjE3MzE5Njc3NTgsInR5cGUiOiJhY2Nlc3MifQ.OPzrIFdcMH1T6u7nV1xEPcqKrxfmtfGMHt4VfXYEMtc'
 ]
 
 const data = {
@@ -140,10 +139,10 @@ async function performRequestCycle(bearerToken) {
     setInterval(async () => {
         await makeMissionRequest(bearerToken);
         await sleep(7500);
-        const betResponse = await makeBetRequest(bearerToken);
-        if (betResponse) {
-            tokenBalances[bearerToken] = +betResponse?.user?.balance;
-        }
+        // const betResponse = await makeBetRequest(bearerToken);
+        //if (betResponse) {
+            //tokenBalances[bearerToken] = +betResponse?.user?.balance;
+        //}
         if (bearerTokens.indexOf(bearerToken) === bearerTokens.length - 1) {
             logStatistics();
         }
