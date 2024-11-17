@@ -3,9 +3,9 @@ const express = require('express');
 
 const app = express();
 const startTime = Date.now();
-const REQ_INTERVAL_DELAY = 435; // ms
-const INTRA_REQ_DELAY = 350;
-const bearer = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjZmMDI2NGZhNzVkYjBjZjYzYmY4YjAwIiwiaWF0IjoxNzMxNjA4OTc2LCJleHAiOjE3MzE2OTUzNzYsInR5cGUiOiJhY2Nlc3MifQ.e1bX6SJfC2vemNkqdQi42o04LgQeZdP6XxAigOSk9T8';
+const REQ_INTERVAL_DELAY = 5000; // ms
+const INTRA_REQ_DELAY = 3500;
+const bearer = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjcxMjYyMzFmMDNmYTFmNjhhYjcyZjhmIiwiaWF0IjoxNzMxODgwODA3LCJleHAiOjE3MzE5NjcyMDcsInR5cGUiOiJhY2Nlc3MifQ.oNwCbiawgj6T43AFjFgsiIZesjULQPmQdOvw6SXc9s0';
 const bearerTokens = [
     bearer
 ];
@@ -59,6 +59,7 @@ async function makeRequest(bearerToken) {
         failureStreak = 1;
         return jsonResponse;
     } catch (error) {
+        console.log(`Errore richiesta: ${(error.message)}`)
         if (failureStreak % 25 === 0) {
             console.log(`Errore richiesta: ${(error.message).slice(0, 4)}`)
         }
@@ -89,7 +90,7 @@ function logStatistics() {
 }
 
 async function performRequestCycle(bearerToken) {
-    const consoleLogStep = 500;
+    const consoleLogStep = 1;
     let cycles = 0;
     const intervalId = setInterval(async () => {
         const response = await makeRequest(bearerToken);
