@@ -90,7 +90,7 @@ function logStatistics() {
 }
 
 async function performRequestCycle(bearerToken) {
-    const consoleLogStep = 1;
+    const consoleLogStep = 50;
     let cycles = 0;
     const intervalId = setInterval(async () => {
         const response = await makeRequest(bearerToken);
