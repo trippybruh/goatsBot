@@ -6,9 +6,9 @@ const app = express();
 const startTime = Date.now();
 
 const bearerTokens = [
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjcxMjYyMzFmMDNmYTFmNjhhYjcyZjhmIiwiaWF0IjoxNzMxODgwODA3LCJleHAiOjE3MzE5NjcyMDcsInR5cGUiOiJhY2Nlc3MifQ.oNwCbiawgj6T43AFjFgsiIZesjULQPmQdOvw6SXc9s0',
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjcxM2FiNDgzNmVmODEzMWM1MjAyNmE2IiwiaWF0IjoxNzMxODgxMjUxLCJleHAiOjE3MzE5Njc2NTEsInR5cGUiOiJhY2Nlc3MifQ.5SsAfSqQ3J3MNqh_8nfcLtmoGebNJf3JNbFB0CGufrg',
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjcxNmEzOGMxOTM3ZDJlZWU3MWI2YTM4IiwiaWF0IjoxNzMxODgxMzU4LCJleHAiOjE3MzE5Njc3NTgsInR5cGUiOiJhY2Nlc3MifQ.OPzrIFdcMH1T6u7nV1xEPcqKrxfmtfGMHt4VfXYEMtc'
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjcxMjYyMzFmMDNmYTFmNjhhYjcyZjhmIiwiaWF0IjoxNzMyMDMxMzcxLCJleHAiOjE3MzIxMTc3NzEsInR5cGUiOiJhY2Nlc3MifQ.lX_ysfWVwwkYcyotnpQZp9Q29fnfqA3E3dZ3u1zZUy8',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjcxM2FiNDgzNmVmODEzMWM1MjAyNmE2IiwiaWF0IjoxNzMyMDc0MTc0LCJleHAiOjE3MzIxNjA1NzQsInR5cGUiOiJhY2Nlc3MifQ.fqX2kebVa7L0VVEwG6l-zcmrp7fVptyFMSiEPu4WAlc',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjcxNmEzOGMxOTM3ZDJlZWU3MWI2YTM4IiwiaWF0IjoxNzMyMDc0MjI3LCJleHAiOjE3MzIxNjA2MjcsInR5cGUiOiJhY2Nlc3MifQ.Ldl8UzA2y3I3_7Bg_SM52dndbKsUODmdKYiV3Eo7sWs'
 ]
 
 const data = {
@@ -51,8 +51,8 @@ let tokenBalances = {};
 
 function logStatistics() {
     const elapsedTime = getElapsedTimeInSeconds();
-    const missedGain = failureCount * 200;
-    const gained = (successCount * 200) + (bigMissSuccess * 1000);
+    const missedGain = failureCount * 50;
+    const gained = (successCount * 50) + (bigMissSuccess * 100);
     const cumulativeBalance = Object.values(tokenBalances).reduce((sum, value) => sum + value, 0);
     console.log(`IN ESECUZIONNE DA: ${Math.floor(elapsedTime/3600)} ore ${((elapsedTime/60) % 60).toFixed(0)} minuti ${(elapsedTime % 60).toFixed(0)} secondi`);
     console.log(`-> Richieste elaborate: ${successCount} --- Richieste fallite: ${failureCount} --- Richieste missioni speciali elaborate: ${bigMissSuccess}`);
