@@ -115,6 +115,7 @@ async function performRequestCycle(bearerToken) {
             startingBalance += +response?.user?.balance;
         }
         if (!response) {
+            newBet = baseBet;
             if (failureStreak >= 200) {
                 console.log(`200 richieste di fila fallite... Spegnimento autoclicker...`);
                 await sleep(1000);
