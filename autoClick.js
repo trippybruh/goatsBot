@@ -128,12 +128,16 @@ async function performRequestCycle(bearerToken) {
                 lossStreak += 1
                 wheelGames.losses += 1;
                 wheelBalanceGain.lossTotal += lastBetAmount;
-                if (1 <= lossStreak <= 4) {
+                if (lossStreak === 1) {
+                    newBet = lastBetAmount * 10
+                } else if (lossStreak === 2) {
                     newBet = lastBetAmount * 5;
+                } else if (3 <= lossStreak <= 4) {
+                    newBet = Math.floor(lastBetAmount * 2.5);
                 } else if (5 <= lossStreak <= 6){
-                    newBet = lastBetAmount * 2;
+                    newBet = lastBetAmount * 3;
                 } else {
-                    newBet = lastBetAmount;
+                    newBet = baseBet;
                 }
                 if (lossStreak > maxLossStreak) {
                     maxLossStreak = lossStreak;
