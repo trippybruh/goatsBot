@@ -3,28 +3,24 @@ const express = require('express');
 
 const app = express();
 const startTime = Date.now();
-const REQ_INTERVAL_DELAY = 5000; // ms
-const INTRA_REQ_DELAY = 3500;
+const REQ_INTERVAL_DELAY = 7500; // ms
+const INTRA_REQ_DELAY = 5500;
 const bearer = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjcxNmEzOGMxOTM3ZDJlZWU3MWI2YTM4IiwiaWF0IjoxNzMyMDc0MjI3LCJleHAiOjE3MzIxNjA2MjcsInR5cGUiOiJhY2Nlc3MifQ.Ldl8UzA2y3I3_7Bg_SM52dndbKsUODmdKYiV3Eo7sWs';
 const bearerTokens = [
     bearer
 ];
-const wheelMult = {
-    0 : 0.35,
-    1.1 : 0.28,
-    1.6 : 0.28,
-    1.9 : 0.09
-}
-const bet_amount = 10;
+
+const baseBet = 5;
 let successCount = 0;
 let failureCount = 0;
 let failureStreak = 1;
-let balanceChange = 0;
 let wheelGames = {
-    0 : 0,
-    1.1: 0,
-    1.6 : 0,
-    1.8 : 0,
+    'losses' : 0,
+    'wins': 0
+}
+let wheelBalanceGain = {
+    'lossTotal' : 0,
+    'winTotal': 0
 }
 
 function getElapsedTimeInSeconds() {
@@ -76,13 +72,16 @@ async function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-function logStatistics() {
+function logStatistics(startingBalance, nextBetAmount, lossStreak, maxLossStreak) {
     const elapsedTime = getElapsedTimeInSeconds();
     const elapsedTimeMin = elapsedTime/60;
+    const winCount = wheelGames.wins;
+    const lossCount = wheelGames.losses;
     let ratioWL = 'inf';
     let winRate = 'inf';
-    let winCount = wheelGames["1.1"] + wheelGames["1.6"] + wheelGames["1.8"];
-    let lossCount = wheelGames["0"];
+    let totalGain = wheelBalanceGain.winTotal;
+    let totalLoss = wheelBalanceGain.lossTotal;
+    let performance = totalGain - totalLoss;
     if (failureCount !== 0) {
         ratioWL = (successCount/failureCount).toFixed(4);
     }
@@ -90,24 +89,31 @@ function logStatistics() {
         winRate = (winCount/lossCount).toFixed(4) * 100;
     }
 
-
-    const volume = bet_amount*successCount*(winChanceMilestone/100);
     console.log(`Tempo dall'avvio: ${Math.floor(elapsedTime/3600)} ore ${((elapsedTime/60) % 60).toFixed(0)} minuti ${(elapsedTime % 60).toFixed(0)} secondi`);
     console.log(`-> Richieste elaborate: ${successCount} --- Richieste fallite: ${failureCount} --- Richieste totali/min: ${((successCount + failureCount)/elapsedTimeMin).toFixed(2)} (target: ${(60000/REQ_INTERVAL_DELAY).toFixed(1)})`);
     console.log(`-> Successi/Fallimenti: ${ratioWL} --- Successi/min: ${(successCount/elapsedTimeMin).toFixed(2)} --- Fallimenti/min: ${(failureCount/elapsedTimeMin).toFixed(2)}`);
-    console.log(`-> Vittorie: ${winCount} --- Sconfitte: ${lossCount} --- Wr%: ${winRate} --- Bet base: ${bet_amount} GOATS`);
-    console.log(`-> Performance: ${Math.round(gained)} GOATS --- Volume: ${Math.round(volume)} GOATS`);
+    console.log(`-> Vittorie: ${winCount} --- Sconfitte: ${lossCount} --- Wr%: ${winRate} --- Bet base: ${baseBet} GOATS`);
+    console.log(`-> Performance: ${performance} GOATS --- Balance iniziale: ${startingBalance} GOATS --- Balance attuale: ${startingBalance - performance} GOATS`);
+    console.log(`-> Streak sconfitte: ${lossStreak} (Max streak: ${maxLossStreak}) --- Prossima bet: ${nextBetAmount} GOATS`);
 }
 
 async function performRequestCycle(bearerToken) {
     const consoleLogStep = 1;
     let cycles = 0;
+    let startingBalance = 0
+    let data = {
+        "bet_amount": baseBet,
+        "wheel_seg": 'Low'
+    };
+    let lossStreak = 0;
+    let maxLossStreak = 0;
+
     const intervalId = setInterval(async () => {
-        let data = {
-            "bet_amount": bet_amount,
-            "wheel_seg": 'Low'
-        };
         const response = await makeRequest(bearerToken, data);
+        let newBet = 0;
+        if (cycles === 0 || startingBalance === 0) {
+            startingBalance += +response?.user?.balance;
+        }
         if (!response) {
             if (failureStreak >= 200) {
                 console.log(`200 richieste di fila fallite... Spegnimento autoclicker...`);
@@ -116,10 +122,38 @@ async function performRequestCycle(bearerToken) {
                 process.exit(1);
             }
         } else {
-
+            let lastBetAmount = +response?.wheel?.bet_amount;
+            if (!response?.wheel?.is_win) {
+                lossStreak += 1
+                wheelGames.losses += 1;
+                wheelBalanceGain.lossTotal += lastBetAmount;
+                if (lossStreak === 1) {
+                    newBet = lastBetAmount * 2;
+                } else if (lossStreak === 2) {
+                    newBet = lastBetAmount * 4;
+                } else if (lossStreak === 3) {
+                    newBet = lastBetAmount * 6;
+                } else if (lossStreak === 4) {
+                    newBet = lastBetAmount * 10;
+                } else {
+                    newBet = lastBetAmount;
+                }
+                if (lossStreak > maxLossStreak) {
+                    maxLossStreak = lossStreak;
+                }
+            } else {
+                lossStreak = 0;
+                wheelGames.wins += 1;
+                wheelBalanceGain.winTotal += (+response?.wheel?.reward - lastBetAmount);
+                newBet = baseBet;
+            }
+            data = {
+                "bet_amount": newBet,
+                "wheel_seg": 'Low'
+            }
         }
         if (cycles % consoleLogStep === 0) {
-            logStatistics();
+            logStatistics(startingBalance, newBet, lossStreak, maxLossStreak);
         }
         cycles++;
     }, REQ_INTERVAL_DELAY);
