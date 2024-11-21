@@ -50,8 +50,8 @@ let tokenBalances = {};
 
 function logStatistics() {
     const elapsedTime = getElapsedTimeInSeconds();
-    const missedGain = failureCount * 200;
-    const gained = (successCount * 200) + (bigMissSuccess * 1000);
+    const missedGain = failureCount * 50;
+    const gained = (successCount * 50) + (bigMissSuccess * 100);
     const cumulativeBalance = Object.values(tokenBalances).reduce((sum, value) => sum + value, 0);
     console.log(`IN ESECUZIONNE DA: ${Math.floor(elapsedTime/3600)} ore ${((elapsedTime/60) % 60).toFixed(0)} minuti ${(elapsedTime % 60).toFixed(0)} secondi`);
     console.log(`-> Richieste elaborate: ${successCount} --- Richieste fallite: ${failureCount} --- Richieste missioni speciali elaborate: ${bigMissSuccess}`);
@@ -97,34 +97,51 @@ async function makeBetRequest(bearerToken) {
 }
 
 async function makeMissionRequest(bearerToken) {
-    const options = {
-        method: 'POST',
-        url: `${execute_mission_api_url}66db47e2ff88e4527783327e`,
-        headers: {
-            ...headerApi,
-            Authorization: `Bearer ${bearerToken}`,
-        },
-    };
-    try {
-        const response = await cloudscraper(options);
-        const jsonResponse = JSON.parse(response);
-        successCount++;
-        return jsonResponse;
-    } catch (error) {
-        console.log(`Errore richiesta: ${(error.message)} --- Token: ${bearerToken.slice(0, 5)}...${bearerToken.slice(-5)}`);
-        failureCount++;
+    let proceed = false;
+    const missionsData = await getMissions(bearerToken);
+    if (!missionsData) return;
+    for (const [missionGroup, missions] of Object.entries(missionsData)) {
+        for (const mission of missions) {
+            if (mission._id === '66db47e2ff88e4527783327e' && mission.count < 50) {
+                proceed = true;
+                break;
+            }
+        }
+    }
+    if (proceed) {
+        const options = {
+            method: 'POST',
+            url: `${execute_mission_api_url}66db47e2ff88e4527783327e`,
+            headers: {
+                ...headerApi,
+                Authorization: `Bearer ${bearerToken}`,
+            },
+        };
+        try {
+            const response = await cloudscraper(options);
+            const jsonResponse = JSON.parse(response);
+            successCount++;
+            return jsonResponse;
+        } catch (error) {
+            console.log(`Errore richiesta: ${(error.message)} --- Token: ${bearerToken.slice(0, 5)}...${bearerToken.slice(-5)}`);
+            failureCount++;
+            return null;
+        }
+    } else {
+        console.log(`Missioni da 1 minuto esaurite --- Token: ${bearerToken.slice(0, 5)}...${bearerToken.slice(-5)}`);
         return null;
     }
+
 }
 
 async function performRequestCycle(bearerToken) {
     setInterval(async () => {
         await makeMissionRequest(bearerToken);
         await sleep(7500);
-        const betResponse = await makeBetRequest(bearerToken);
-        if (betResponse) {
-            tokenBalances[bearerToken] = +betResponse?.user?.balance;
-        }
+        // const betResponse = await makeBetRequest(bearerToken);
+        //if (betResponse) {
+            //tokenBalances[bearerToken] = +betResponse?.user?.balance;
+        //}
         if (bearerTokens.indexOf(bearerToken) === bearerTokens.length - 1) {
             logStatistics();
         }
@@ -277,14 +294,14 @@ function loop() {
     // one time per day
     bearerTokens.forEach(async (bearerToken) => {
         if (bearerTokens.indexOf(bearerToken) !== 0) {
-            await sleep(2500 * bearerTokens.indexOf(bearerToken));
+            await sleep(10000 * bearerTokens.indexOf(bearerToken));
         }
         console.log(`-> Esecuzione missioni/cinema/check-in per Bearer Token: ${bearerToken.slice(0, 5)}...${bearerToken.slice(-5)}`);
         await processMissionsForBearer(bearerToken);
         await sleep(250);
-        // await cinema(bearerToken);
+        await cinema(bearerToken);
         await sleep(250);
-        // await checkin(bearerToken);
+        await checkin(bearerToken);
         await sleep(250);
     });
     // loop all day
