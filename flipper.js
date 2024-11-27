@@ -158,16 +158,12 @@ function printStatistics() {
     if (failureCount !== 0) {
         ratioWLreq = (successCount/failureCount).toFixed(4);
     }
-    let currentVolume = (winCount*betAmount*2) + (lossCount*betAmount);
-
-    console.log(`Tempo dall'avvio: ${elapsedTime} secondi (${(elapsedTimeMin).toFixed(0)} minuti) --- Al completamento: ${expectedTimeRequired - elapsedTime} secondi
-        Richieste totali: ${successCount + failureCount} --- Richieste totali/min: ${((successCount + failureCount)/elapsedTimeMin).toFixed(2)} (target/min: ${60000/REQ_INTERVAL_DELAY})
-        Successi: ${successCount} --- Fallimenti: ${failureCount} --- Successi/Fallimenti: ${ratioWLreq}
-        Successi/min: ${(successCount/elapsedTimeMin).toFixed(2)} --- Fallimenti/min: ${(failureCount/elapsedTimeMin).toFixed(2)}
-        Vincite totali: ${winCount} --- Sconfitte totali: ${lossCount} --- Win rate attuale: ${winRate} % --- Guadagno/perdita: ${netChange} GOATS
-        Valore nominale stop loss: ${maxLoss} GOATS --- Attivato: ${netMaxDownside < maxLoss}
-        Serie più lunga di vittorie: ${winStreak} --- Serie più lunga di sconfitte: ${lossStreak} --- Max upside: ${netMaxUpside} G --- Max downside: ${netMaxDownside} G
-        Volume effettivo generato: ${currentVolume} GOATS (target: ${expectedVolume} -> ${(currentVolume/expectedVolume) * 100} % completato)`);
+    console.log(`Tempo dall'avvio: ${Math.floor(elapsedTime/3600)} ore ${((elapsedTime/60) % 60).toFixed(0)} minuti ${(elapsedTime % 60).toFixed(0)} secondi`);
+    console.log(`-> Richieste elaborate: ${successCount} --- Richieste fallite: ${failureCount} --- Richieste totali/min: ${((successCount + failureCount)/elapsedTimeMin).toFixed(2)} (target: ${(60000/REQ_INTERVAL_DELAY).toFixed(1)})`);
+    console.log(`-> Successi/Fallimenti: ${ratioWLreq} % --- Successi/min: ${(successCount/elapsedTimeMin).toFixed(2)} --- Fallimenti/min: ${(failureCount/elapsedTimeMin).toFixed(2)}`);
+    console.log(`-> Vittorie: ${winCount} --- Sconfitte: ${lossCount} --- Wr: ${winRate} % --- Bet base: 1000 GOATS`);
+    console.log(`-> Streak sconfitte: ${lossStreakCount} (Max streak: ${lossStreak}) --- Prossima bet: ${betAmount}`);
+    console.log(`-> Performance: ${netChange} GOATS --- Max upside: ${netMaxUpside} GOATS --- Max downside: ${netMaxDownside} GOATS`);
 }
 
 async function performRequestCycle(bearerToken) {
@@ -180,11 +176,13 @@ async function performRequestCycle(bearerToken) {
             process.exit(0);
         }
         const data = {
-            "head_tail": head_tail,
-            "bet_amount": betAmount
+            "bet_amount": betAmount,
+            "head_tail": head_tail
         };
         const response = await makeRequest(data, bearerToken);
-        logStats(response);
+        if (response) {
+            logStats(response);
+        }
         if (cycles % consoleLogStep === 0) {
             printStatistics();
         }
