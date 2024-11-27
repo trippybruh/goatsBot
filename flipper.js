@@ -7,6 +7,43 @@ const bearerTokens = [
     bearer
 ];
 
+const headerApi = {
+    'Content-Type': 'application/json',
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) ' +
+        'AppleWebKit/537.36 (KHTML, like Gecko) ' +
+        'Chrome/129.0.0.0 Safari/537.36',
+    'Accept': 'application/json, text/plain, */*',
+    'Accept-Encoding': 'gzip, deflate, br',
+    'Accept-Language': 'it-IT,it;q=0.9,en-US;q=0.8,en;q=0.7',
+    'Origin': 'https://dev.goatsbot.xyz',
+    'Referer': 'https://dev.goatsbot.xyz/',
+    'Sec-CH-UA': '"Google Chrome";v="129", "Not=A?Brand";v="8", "Chromium";v="129"',
+    'Sec-CH-UA-Mobile': '?0',
+    'Sec-CH-UA-Platform': '"Windows"',
+    'Sec-Fetch-Dest': 'empty',
+    'Sec-Fetch-Mode': 'cors',
+    'Sec-Fetch-Site': 'same-site',
+}
+
+const oldHeaderApi = {
+    'Content-Type': 'application/json',
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:131.0) Gecko/20100101 Firefox/131.0',
+    'Accept': 'application/json, text/plain, */*',
+    'Accept-Language': 'it-IT,it;q=0.8,en-US;q=0.5,en;q=0.3',
+    'Accept-Encoding': 'gzip, deflate, br, zstd',
+    'Authorization': `Bearer ${bearer}`,
+    'Origin': 'https://dev.goatsbot.xyz',
+    'DNT': '1',
+    'Connection': 'keep-alive',
+    'Referer': 'https://dev.goatsbot.xyz/',
+    'Sec-Fetch-Dest': 'empty',
+    'Sec-Fetch-Mode': 'cors',
+    'Sec-Fetch-Site': 'same-site',
+    'Sec-GPC': '1',
+    'Pragma': 'no-cache',
+    'Cache-Control': 'no-cache'
+}
+
 // request stats
 const REQ_INTERVAL_DELAY = 2000; // ms
 const INTRA_REQ_DELAY = 1500;
@@ -50,24 +87,9 @@ async function makeRequest(bearerToken, data) {
     const options = {
         method: 'POST',
         url: 'https://dev-api-v4.goatsbot.xyz/flips/action',
-        headers: {
-            'Content-Type': 'application/json',
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:131.0) Gecko/20100101 Firefox/131.0',
-            'Accept': 'application/json, text/plain, */*',
-            'Accept-Language': 'it-IT,it;q=0.8,en-US;q=0.5,en;q=0.3',
-            'Accept-Encoding': 'gzip, deflate, br, zstd',
-            'Authorization': `Bearer ${bearerToken}`,
-            'Origin': 'https://dev.goatsbot.xyz',
-            'DNT': '1',
-            'Connection': 'keep-alive',
-            'Referer': 'https://dev.goatsbot.xyz/',
-            'Sec-Fetch-Dest': 'empty',
-            'Sec-Fetch-Mode': 'cors',
-            'Sec-Fetch-Site': 'same-site',
-            'Sec-GPC': '1',
-            'Pragma': 'no-cache',
-            'Cache-Control': 'no-cache'
-        },
+        headers:
+            ...headerApi,
+            'Authorization': `Bearer ${bearerToken}`
         body: JSON.stringify(data),
         timeout: 5000
     };
