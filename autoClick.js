@@ -30,7 +30,7 @@ function getElapsedTimeInSeconds() {
 async function makeRequest(bearerToken, data) {
     const options = {
         method: 'POST',
-        url: 'https://api-wheel.goatsbot.xyz/wheel/action',
+        url: 'https://dev-api-v4.goatsbot.xyz/flips/action',
         headers: {
             'Authorization': `Bearer ${bearerToken}`,
             'Content-Type': 'application/json',
