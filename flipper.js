@@ -2,7 +2,7 @@ const cloudscraper = require('cloudscraper');
 const express = require('express');
 const app = express();
 const startTime = Date.now();
-const bearer = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjcxMjYyMzFmMDNmYTFmNjhhYjcyZjhmIiwiaWF0IjoxNzMyNjY5OTExLCJleHAiOjE3MzI3NTYzMTEsInR5cGUiOiJhY2Nlc3MifQ.Hx09q1Td_w_g68ryPJ2cHTvFOriZ1SWQ0Oc4i4kft5s';
+const bearer = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjcxMjYyMzFmMDNmYTFmNjhhYjcyZjhmIiwiaWF0IjoxNzMyNjcxMDAwLCJleHAiOjE3MzI3NTc0MDAsInR5cGUiOiJhY2Nlc3MifQ.dNKDBIKKi5ACxaJ7L5fb_ap4mhPR3AXtXaVuCH9-CXI';
 const bearerTokens = [
     bearer
 ];
