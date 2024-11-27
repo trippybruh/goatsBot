@@ -17,21 +17,22 @@ const data = {
 };
 
 const headerApi = {
-    'Content-Type': 'application/json',
-    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) ' +
-        'AppleWebKit/537.36 (KHTML, like Gecko) ' +
-        'Chrome/129.0.0.0 Safari/537.36',
+    'Host': 'api-mission.goatsbot.xyz',
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:132.0) Gecko/20100101 Firefox/132.0',
     'Accept': 'application/json, text/plain, */*',
+    'Accept-Language': 'it-IT,it;q=0.8,en-US;q=0.5,en;q=0.3',
     'Accept-Encoding': 'gzip, deflate, br',
-    'Accept-Language': 'it-IT,it;q=0.9,en-US;q=0.8,en;q=0.7',
     'Origin': 'https://dev.goatsbot.xyz',
+    'DNT': '1',
+    'Connection': 'keep-alive',
     'Referer': 'https://dev.goatsbot.xyz/',
-    'Sec-CH-UA': '"Google Chrome";v="129", "Not=A?Brand";v="8", "Chromium";v="129"',
-    'Sec-CH-UA-Mobile': '?0',
-    'Sec-CH-UA-Platform': '"Windows"',
     'Sec-Fetch-Dest': 'empty',
     'Sec-Fetch-Mode': 'cors',
     'Sec-Fetch-Site': 'same-site',
+    'Sec-GPC': '1',
+    'If-None-Match': 'W/"224f-fjf0+3S+ZTNnT4kXS0vnj6h9zOk"',
+    'Priority': 'u=0',
+    'TE': 'trailers'
 }
 
 const get_mission_api_url = 'https://api-mission.goatsbot.xyz/missions/user';
