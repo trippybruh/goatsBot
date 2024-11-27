@@ -51,7 +51,7 @@ let failureCount = 0;
 let failureStreak = 0;
 
 // head or tail game config
-const totalBets = 500;
+const totalBets = 50;
 let betAmount = 1000;
 const expectedTimeRequired = totalBets * (REQ_INTERVAL_DELAY/1000);
 let head_tail = "HEADS";
@@ -117,13 +117,16 @@ function adjustBetAmount() {
         newBetAmount = 2000;
     } else if (lossStreakCount === 2) {
         newBetAmount = 5000;
-    } else if (3 <= lossStreakCount <= 6) {
+    } else if (lossStreakCount === 3) {
         newBetAmount = 10000;
-    } else if (lossStreakCount === 7) {
+    } else if (lossStreakCount === 4) {
         newBetAmount = 50000;
-    } else if (lossStreakCount >= 8) {
+    } else if (lossStreakCount === 5) {
         newBetAmount = 100000;
-    } // play catching with 5 bombs
+    } else {
+        printStatistics();
+        process.exit(1);
+    }//or play catching with 5 bombs
     return newBetAmount;
 }
 
