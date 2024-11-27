@@ -2,7 +2,7 @@ const cloudscraper = require('cloudscraper');
 const express = require('express');
 const app = express();
 const startTime = Date.now();
-const bearer = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjcxMjYyMzFmMDNmYTFmNjhhYjcyZjhmIiwiaWF0IjoxNzMyNjcxMDAwLCJleHAiOjE3MzI3NTc0MDAsInR5cGUiOiJhY2Nlc3MifQ.dNKDBIKKi5ACxaJ7L5fb_ap4mhPR3AXtXaVuCH9-CXI';
+const bearer = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjcxNmEzOGMxOTM3ZDJlZWU3MWI2YTM4IiwiaWF0IjoxNzMyNjY5OTgyLCJleHAiOjE3MzI3NTYzODIsInR5cGUiOiJhY2Nlc3MifQ.MYaD0rU2ifto9-5ku2LcpOSbXbplm3Ey7fifHcMsqmg';
 const bearerTokens = [
     bearer
 ];
@@ -113,17 +113,17 @@ function adjustBetAmount() {
     let newBetAmount;
     if (lossStreakCount === 0) {
         newBetAmount = 1000;
-    } else if (1 <= lossStreakCount <= 2) {
+    } else if (lossStreakCount === 1) {
         newBetAmount = 2000;
-    } else if (lossStreakCount === 3) {
+    } else if (lossStreakCount === 2) {
         newBetAmount = 5000;
-    } else if (4 <= lossStreakCount <= 7) {
+    } else if (3 <= lossStreakCount <= 6) {
         newBetAmount = 10000;
-    } else if (lossStreakCount === 8) {
+    } else if (lossStreakCount === 7) {
         newBetAmount = 50000;
-    } else if (lossStreakCount >= 9) {
+    } else if (lossStreakCount > 8) {
         newBetAmount = 100000;
-    }
+    } // play catching with 5 bombs
     return newBetAmount;
 }
 
