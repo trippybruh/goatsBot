@@ -130,7 +130,7 @@ function adjustBetAmount() {
 function logStats(response) {
     const result = response?.flip?.is_win;
     if (result) {
-        netGain += (betAmount*2)
+        netGain += betAmount
         winCount++;
         if (winStreakCount === 0) {
             winStreakCount++;
@@ -184,7 +184,7 @@ function printStatistics() {
     console.log(`-> Richieste elaborate: ${successCount} --- Richieste fallite: ${failureCount} --- Richieste totali/min: ${((successCount + failureCount)/elapsedTimeMin).toFixed(2)} (target: ${(60000/REQ_INTERVAL_DELAY).toFixed(1)})`);
     console.log(`-> Successi/Fallimenti: ${ratioWLreq} % --- Successi/min: ${(successCount/elapsedTimeMin).toFixed(2)} --- Fallimenti/min: ${(failureCount/elapsedTimeMin).toFixed(2)}`);
     console.log(`-> Vittorie: ${winCount} --- Sconfitte: ${lossCount} --- Wr: ${winRate} % --- Bet base: 1000 GOATS`);
-    console.log(`-> Streak sconfitte: ${lossStreakCount} (Max streak: ${lossStreak}) --- Prossima bet: ${betAmount}`);
+    console.log(`-> Streak vittorie ${winStreakCount} (Max: ${winStreak}) --- Streak sconfitte: ${lossStreakCount} (Max: ${lossStreak}) --- Prossima bet: ${betAmount}`);
     console.log(`-> Performance: ${netChange} GOATS --- Max upside: ${netMaxUpside} GOATS --- Max downside: ${netMaxDownside} GOATS`);
 }
 
