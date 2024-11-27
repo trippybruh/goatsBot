@@ -8,15 +8,14 @@ const bearerTokens = [
 ];
 
 // request stats
-const REQ_INTERVAL_DELAY = 333; // ms
-const INTRA_REQ_DELAY = 300;
+const REQ_INTERVAL_DELAY = 2000; // ms
+const INTRA_REQ_DELAY = 1500;
 let successCount = 0;
 let failureCount = 0;
 
 // head or tail game config
-const totalBets = 10;
-const betAmount = 1000;
-const expectedVolume = totalBets * betAmount * 1.5;
+const totalBets = 1000;
+let betAmount = 1000;
 const expectedTimeRequired = totalBets * (REQ_INTERVAL_DELAY/1000);
 let head_tail = "HEADS";
 
@@ -31,11 +30,15 @@ let winStreak = 0;
 let lossStreak = 0;
 
 // balance stats
-const maxLoss = 300000;
 let netChange = 0;
+let netGain = 0;
+let netLoss = 0;
 let netMaxUpside = 0;
 let netMaxDownside = 0;
 
+async function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
 
 function getElapsedTimeInSeconds() {
     const currentTime = Date.now();
@@ -66,14 +69,32 @@ async function makeRequest(data, bearerToken) {
     }
 }
 
-async function sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
+function adjustBetAmount() {
+    let newBetAmount;
+    if (lossStreakCount === 0) {
+        newBetAmount = 1000;
+    } else if (1 <= lossStreakCount <= 2) {
+        newBetAmount = 2000;
+    } else if (lossStreakCount === 3) {
+        newBetAmount = 5000;
+    } else if (4 <= lossStreakCount <= 7) {
+        newBetAmount = 10000;
+    } else if (lossStreakCount === 8) {
+        newBetAmount = 50000;
+    } else if (lossStreakCount >= 9) {
+        newBetAmount = 100000;
+    }
+    return newBetAmount;
 }
 
-function logStatistics(response) {
+function logStats(response) {
     const result = response?.flip?.is_win;
     if (result) {
+        netGain += (betAmount*2)
         winCount++;
+        if (winStreakCount === 0) {
+            winStreakCount++;
+        }
         if (lastResult) {
             winStreakCount++;
         } else {
@@ -84,7 +105,11 @@ function logStatistics(response) {
         }
         lastResult = result;
     } else {
+        netLoss += betAmount;
         lossCount++;
+        if (lossStreakCount === 0) {
+            lossStreakCount++;
+        }
         if (!lastResult) {
             lossStreakCount++;
         } else {
@@ -95,15 +120,17 @@ function logStatistics(response) {
         }
         lastResult = result;
     }
+
     if (lossCount !== 0) {
         winRate = (winCount/(winCount+lossCount)).toFixed(4) * 100;
     }
-    netChange = (winCount*betAmount) - (lossCount*betAmount);
+    netChange = netGain - netLoss;
     if (netChange > netMaxUpside) {
         netMaxUpside = netChange;
     } else if (netChange < netMaxDownside) {
         netMaxDownside = netChange;
     }
+    betAmount = adjustBetAmount();
 }
 
 function printStatistics() {
@@ -126,21 +153,20 @@ function printStatistics() {
 }
 
 async function performRequestCycle(bearerToken) {
-    const consoleLogStep = 3;
+    const consoleLogStep = 5;
     let cycles = 0;
-    const data = {
-        "head_tail": head_tail,
-        "bet_amount": betAmount
-    };
-
     setInterval(async () => {
-        if (netMaxDownside < maxLoss || successCount === totalBets) {
+        if (successCount === totalBets) {
             printStatistics();
             await sleep(1000);
             process.exit(0);
         }
+        const data = {
+            "head_tail": head_tail,
+            "bet_amount": betAmount
+        };
         const response = await makeRequest(data, bearerToken);
-        logStatistics(response);
+        logStats(response);
         if (cycles % consoleLogStep === 0) {
             printStatistics();
         }
@@ -152,8 +178,7 @@ function start() {
     bearerTokens.forEach(async (bearerToken) => {
         console.log(`Inizio cicli di flipping per Bearer Token: ${bearerToken.slice(0, 5)}...${bearerToken.slice(-5)} --- YOU ARE NOT IN KANSAS ANYMORE!
         Configurato per eseguire max ${(1000/REQ_INTERVAL_DELAY).toFixed(2)} richieste/s --- Timeout minimo tra una richiesta ed un altra: ${(INTRA_REQ_DELAY/1000).toFixed(3)} s
-        Configurato per eseguire max ${totalBets} richieste (partite) --- Importo per partita: ${betAmount} GOATS --- Volume atteso: ${(expectedVolume)}
-        Tempo stimato per eseguire tutte le richieste: ${expectedTimeRequired} secondi (${(expectedTimeRequired/60).toFixed(0)} minuti)`);
+        Configurato per eseguire max ${totalBets} richieste (partite) --- Tempo stimato per eseguire tutte le richieste: ${expectedTimeRequired} secondi (${(expectedTimeRequired/60).toFixed(0)} minuti)`);
         await performRequestCycle(bearerToken);
     });
 }
