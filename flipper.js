@@ -135,34 +135,29 @@ function logStats(response) {
     if (result) {
         netGain += betAmount
         winCount++;
-        if (winStreakCount === 0) {
-            winStreakCount++;
-        }
+        lossStreakCount = 0;
         if (lastResult) {
             winStreakCount++;
-        } else {
             if (winStreakCount > winStreak) {
                 winStreak = winStreakCount;
             }
-            winStreakCount = 0;
+        } else {
+            winStreakCount = 1;
         }
-        lastResult = result;
     } else {
         netLoss += betAmount;
         lossCount++;
-        if (lossStreakCount === 0) {
-            lossStreakCount++;
-        }
+        winStreakCount = 0;
         if (!lastResult) {
             lossStreakCount++;
-        } else {
             if (lossStreakCount > lossStreak) {
                 lossStreak = lossStreakCount;
             }
-            lossStreakCount = 0;
+        } else {
+            lossStreakCount = 1;
         }
-        lastResult = result;
     }
+    lastResult = result;
 
     if (lossCount !== 0) {
         winRate = (winCount/(winCount+lossCount)).toFixed(4) * 100;
