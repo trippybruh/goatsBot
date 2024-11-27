@@ -51,12 +51,12 @@ async function makeRequest(bearerToken, data) {
         method: 'POST',
         url: 'https://dev-api-v4.goatsbot.xyz/flips/action',
         headers: {
-            'Authorization': `Bearer ${bearerToken}`,
             'Content-Type': 'application/json',
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:131.0) Gecko/20100101 Firefox/131.0',
             'Accept': 'application/json, text/plain, */*',
             'Accept-Language': 'it-IT,it;q=0.8,en-US;q=0.5,en;q=0.3',
             'Accept-Encoding': 'gzip, deflate, br, zstd',
+            'Authorization': `Bearer ${bearerToken}`,
             'Origin': 'https://dev.goatsbot.xyz',
             'DNT': '1',
             'Connection': 'keep-alive',
