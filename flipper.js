@@ -87,9 +87,10 @@ async function makeRequest(bearerToken, data) {
     const options = {
         method: 'POST',
         url: 'https://dev-api-v4.goatsbot.xyz/flips/action',
-        headers:
+        headers: {
             ...headerApi,
-            'Authorization': `Bearer ${bearerToken}`
+            Authorization: `Bearer ${bearerToken}`
+        },
         body: JSON.stringify(data),
         timeout: 5000
     };
