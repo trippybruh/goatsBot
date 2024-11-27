@@ -88,7 +88,7 @@ async function makeRequest(bearerToken, data) {
         url: 'https://dev-api-v4.goatsbot.xyz/flips/action',
         headers: {
             ...oldHeaderApi,
-            Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjcxMjYyMzFmMDNmYTFmNjhhYjcyZjhmIiwiaWF0IjoxNzMyNjcxMDAwLCJleHAiOjE3MzI3NTc0MDAsInR5cGUiOiJhY2Nlc3MifQ.dNKDBIKKi5ACxaJ7L5fb_ap4mhPR3AXtXaVuCH9-CXI',
+            Authorization: `Bearer ${bearerToken}`
         },
         body: JSON.stringify(data),
         timeout: 5000
@@ -201,7 +201,7 @@ async function performRequestCycle(bearerToken) {
             "bet_amount": betAmount,
             "head_tail": head_tail
         };
-        const response = await makeRequest(data, bearerToken);
+        const response = await makeRequest(bearerToken, data);
         if (response) {
             logStats(response);
         }
