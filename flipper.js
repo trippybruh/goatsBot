@@ -2,7 +2,7 @@ const cloudscraper = require('cloudscraper');
 const express = require('express');
 const app = express();
 const startTime = Date.now();
-const bearer = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjcxNmEzOGMxOTM3ZDJlZWU3MWI2YTM4IiwiaWF0IjoxNzMyNjY5OTgyLCJleHAiOjE3MzI3NTYzODIsInR5cGUiOiJhY2Nlc3MifQ.MYaD0rU2ifto9-5ku2LcpOSbXbplm3Ey7fifHcMsqmg';
+const bearer = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjZmMDI2NGZhNzVkYjBjZjYzYmY4YjAwIiwiaWF0IjoxNzMyNjc2MDM1LCJleHAiOjE3MzI3NjI0MzUsInR5cGUiOiJhY2Nlc3MifQ.niPxRxVVlbORVdfagOHi4sRr3JwuFQEPTy_gUKe1szE';
 const bearerTokens = [
     bearer
 ];
@@ -51,7 +51,7 @@ let failureCount = 0;
 let failureStreak = 0;
 
 // head or tail game config
-const totalBets = 1000;
+const totalBets = 500;
 let betAmount = 1000;
 const expectedTimeRequired = totalBets * (REQ_INTERVAL_DELAY/1000);
 let head_tail = "HEADS";
@@ -121,7 +121,7 @@ function adjustBetAmount() {
         newBetAmount = 10000;
     } else if (lossStreakCount === 7) {
         newBetAmount = 50000;
-    } else if (lossStreakCount > 8) {
+    } else if (lossStreakCount >= 8) {
         newBetAmount = 100000;
     } // play catching with 5 bombs
     return newBetAmount;
@@ -192,7 +192,7 @@ async function performRequestCycle(bearerToken) {
     const consoleLogStep = 5;
     let cycles = 0;
     setInterval(async () => {
-        if (successCount === totalBets) {
+        if (successCount === totalBets || netChange < -200000) {
             printStatistics();
             await sleep(1000);
             process.exit(0);
