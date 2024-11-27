@@ -31,7 +31,6 @@ const oldHeaderApi = {
     'Accept': 'application/json, text/plain, */*',
     'Accept-Language': 'it-IT,it;q=0.8,en-US;q=0.5,en;q=0.3',
     'Accept-Encoding': 'gzip, deflate, br, zstd',
-    'Authorization': `Bearer ${bearer}`,
     'Origin': 'https://dev.goatsbot.xyz',
     'DNT': '1',
     'Connection': 'keep-alive',
@@ -89,7 +88,7 @@ async function makeRequest(bearerToken, data) {
         url: 'https://dev-api-v4.goatsbot.xyz/flips/action',
         headers: {
             ...headerApi,
-            Authorization: `Bearer ${bearerToken}`
+            Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjcxMjYyMzFmMDNmYTFmNjhhYjcyZjhmIiwiaWF0IjoxNzMyNjcxMDAwLCJleHAiOjE3MzI3NTc0MDAsInR5cGUiOiJhY2Nlc3MifQ.dNKDBIKKi5ACxaJ7L5fb_ap4mhPR3AXtXaVuCH9-CXI',
         },
         body: JSON.stringify(data),
         timeout: 5000
