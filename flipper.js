@@ -87,7 +87,7 @@ async function makeRequest(bearerToken, data) {
         method: 'POST',
         url: 'https://dev-api-v4.goatsbot.xyz/flips/action',
         headers: {
-            ...headerApi,
+            ...oldHeaderApi,
             Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjcxMjYyMzFmMDNmYTFmNjhhYjcyZjhmIiwiaWF0IjoxNzMyNjcxMDAwLCJleHAiOjE3MzI3NTc0MDAsInR5cGUiOiJhY2Nlc3MifQ.dNKDBIKKi5ACxaJ7L5fb_ap4mhPR3AXtXaVuCH9-CXI',
         },
         body: JSON.stringify(data),
